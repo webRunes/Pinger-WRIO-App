@@ -1,0 +1,27 @@
+{
+  "name": "Titter-WRIO-App",
+  "version": "1.0.0",
+  "description": "(coming soon)",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/webRunes/Titter-WRIO-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/webRunes/Titter-WRIO-App/issues"
+  },
+  "homepage": "https://github.com/webRunes/Titter-WRIO-App",
+  "dependencies": {
+    "ejs": "^1.0.0",
+    "express": "^4.10.1",
+    "mysql": "^2.5.2",
+    "node-uuid": "^1.4.1",
+    "sequelize": "^2.0.0-rc2",
+    "sequelize-cli": "^0.3.3"
+  }
+}
