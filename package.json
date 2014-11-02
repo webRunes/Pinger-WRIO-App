@@ -1,0 +1,28 @@
+{
+  "name": "Titter-WRIO-App",
+  "version": "1.0.0",
+  "description": "(coming soon)",
+  "main": "gm-test.js",
+  "directories": {
+    "test": "test"
+  },
+  "dependencies": {
+    "gm": "^1.17.0",
+    "node-twitter": "^0.5.2",
+    "vows": "^0.7.0"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "vows test/titterPictureTest.js --spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elaich/Titter-WRIO-App.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/elaich/Titter-WRIO-App/issues"
+  },
+  "homepage": "https://github.com/elaich/Titter-WRIO-App"
+}
