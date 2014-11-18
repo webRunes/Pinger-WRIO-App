@@ -37,3 +37,4 @@ node_module/
 test/
 comment.png
 *.swp
+config.json
