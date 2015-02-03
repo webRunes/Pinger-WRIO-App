@@ -1,6 +1,7 @@
 var express = require('express');
 var app = require("./wrio_app.js").init(express);
 var server = require('http').createServer(app).listen(5000);
+var fs = require('fs');
 //var Canvas = require('canvas');
 var titterPicture = require('./titter-picture');
 var titterSender = require('./titter-sender');
@@ -52,12 +53,36 @@ app.post('/sendComment', function (request, response) {
 		 });
 		 });
 		 */
-		var message = request.body.comment;
-		var imagePath = "images/1.jpg";
-		titterSender.comment(message, imagePath);
+		/*
+		 var message = request.body.comment;
+		 var imagePath = "images/1.jpg";
+		 titterSender.comment(message, imagePath);
+		 */
+		var imageFileNameData = request.body.fileData;
+		var fileName = "data";
+		var buff = new Buffer(imageFileNameData.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
+		fs.writeFile('./images/' + fileName + '1.png', buff, function (err) {
+			console.log('done');
+		});
 
+		/*
+
+		 var decodedImage = new Buffer(imageFileNameData.substring("data:image/png;base64,".length + 1), 'base64');
+		 fs.writeFile("./images/" + fileName + ".png", decodedImage, function (err) {
+		 if (err) {
+		 console.log(err);
+		 } else {
+		 console.log("The file was saved!");
+		 }
+		 });
+		 */
+		var base64Data = imageFileNameData.replace(/^data:image\/png;base64,/, "");
+
+		fs.writeFile("./images/out.png", base64Data, 'base64', function (err) {
+			console.log(err);
+		});
 	} catch (error) {
-
+		console.log(error);
 	} finally {
 		response.render('index.ejs');
 		response.end()

@@ -7,7 +7,6 @@
 	"body-parser": "^1.9.2",
 	"ejs": "^1.0.0",
 	"express": "^4.10.1",
-	"canvas": "*",
 	"node-twitter": "*",
 	"nconf": "*",
 	"aws-sdk-apis": "*",
