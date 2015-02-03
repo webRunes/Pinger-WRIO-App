@@ -1,6 +1,7 @@
-var gm = require('gm');
+var fs = require('fs');
+var gm = require('gm').subClass({imageMagick: true});
 
-const MAXWIDTH = 500;
+const MAXWIDTH = 100;
 const LINEHEIGHT = 20;
 const PADDING = 20;
 const LETTERWIDTH = 6;
@@ -28,12 +29,16 @@ titterPicture.drawComment = function (comment, callback) {
 	}
 
 	var height = (LINEHEIGHT * picLines.length) + (PADDING * 2)
-
-	var image = gm(MAXWIDTH, height, '#ffffff00').setFormat('png');
-	for (var i = 0; i < picLines.length; i++) {
-		image.drawText(PADDING, PADDING + LINEHEIGHT * (i + 1 / 2), picLines[i]);
-	}
-	callback(null, image)
+	/*
+	 var image = gm(10, 20, '#ffffff00');
+	 for (var i = 0; i < picLines.length; i++) {
+	 image.drawText(PADDING, PADDING + LINEHEIGHT * (i + 1 / 2), picLines[i]);
+	 }
+	 */
+	gm(20, 20, "#ddff99f3").drawText(0, 0, "from scratch").write("/", function (err) {
+		console.log(err);
+	});
+	//callback(null, image)
 }
 
 module.exports = titterPicture;
