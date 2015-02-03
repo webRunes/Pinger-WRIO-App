@@ -1,7 +1,5 @@
-var Twitter = require('node-twitter');
-var titterPicture = require('./titter-picture');
 var nconf = require("./wrio_nconf.js").init();
-
+var Twitter = require('node-twitter');
 var twitterClient = new Twitter.RestClient(
 	nconf.get('api:twitterLogin:consumerKey'),
 	nconf.get('api:twitterLogin:consumerSecret'),
@@ -10,7 +8,6 @@ var twitterClient = new Twitter.RestClient(
 )
 
 var titterSender = {};
-
 titterSender.comment = function (message, imagePath) {
 	twitterClient.statusesUpdateWithMedia(
 		{
@@ -21,7 +18,6 @@ titterSender.comment = function (message, imagePath) {
 			if (error) {
 				console.log('Error: ' + (error.code ? error.code + ' ' + error.message : error.message));
 			}
-
 			if (result) {
 				console.log(result);
 			}
