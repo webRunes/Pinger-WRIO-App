@@ -63,4 +63,4 @@ app.post('/sendComment', function (request, response) {
 		response.end()
 	}
 });
-console.log("Application Started !");
+console.log("Application Started!");
