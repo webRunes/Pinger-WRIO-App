@@ -1,8 +1,56 @@
 <html>
+<head>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<script type="text/javascript">
+		function createImage() {
+			var canvas = document.getElementById('twitterPost');
+			if (canvas.getContext) {
+				var ctx = canvas.getContext('2d');
+				ctx.clearRect(0, 0, canvas.width, canvas.height);
+				ctx.font = "18px Arial";
+				ctx.fillText(document.getElementById('comment').value, 10, 30);
+			}
+		}
+
+		function saveCanvas() {
+			createImage();
+			var canvas = document.getElementById('twitterPost');
+			var comment = document.getElementById('comment').value;
+			var imageData = canvas.toDataURL('image/png');
+
+			$.ajax({
+				url: '/sendComment',
+				type: 'post',
+				data: {
+					'fileData': imageData,
+					'comment': comment
+				},
+				dataType: 'json',
+				success: function (data) {
+					document.getElementById('comment').value = '';
+				},
+				error: function (request, error) {
+					//alert("Request: " + JSON.stringify(request));
+				}
+			});
+		}
+	</script>
+	<style type="text/css">
+		canvas {
+			border: 1px solid black;
+			display: none;
+		}
+	</style>
+</head>
 <body>
-<form method='POST'>
-  <textarea name="comment"></textarea>
-  <button type="submit">Send</button>
+<form method='POST' action="/sendComment">
+	<textarea name="comment" id="comment" onkeyup="createImage();"></textarea>
+	<!--
+	<button type="button" onclick="createImage();">Send</button>
+		<button type="submit">Send</button>
+		-->
+	<button type="button" onclick="saveCanvas();">Send</button>
+	<canvas id="twitterPost" width="150" height="150"></canvas>
 </form>
 </boyd>
 </html>

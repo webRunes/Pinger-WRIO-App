@@ -1,34 +1,29 @@
 {
-	"name": "Titter-WRIO-App",
-	"version": "1.0.0",
-	"description": "https://github.com/webRunes/Titter-WRIO-App/",
-	"main": "gm-test.js",
-	"directories": {
-		"test": "test"
-	},
-	"dependencies": {
-		"body-parser": "^1.9.2",
-		"ejs": "^1.0.0",
-		"express": "^4.10.1",
-		"gm": "^1.17.0",
-		"node-twitter": "^0.5.2",
-		"vows": "^0.7.0",
-		"nconf": "*",
-		"aws-sdk-apis": "*",
-		"supervisor": "*"
-	},
-	"devDependencies": {},
-	"scripts": {
-		"test": "vows test/titterPictureTest.js --spec"
-	},
-	"repository": {
-		"type": "git",
-		"url": "https://github.com/webRunes/Titter-WRIO-App.git"
-	},
-	"author": "webRunes",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/webRunes/Titter-WRIO-App/issues"
-	},
-	"homepage": "https://github.com/webRunes/Titter-WRIO-App"
+  "name": "Titter-WRIO-App",
+  "version": "1.0.0",
+  "description": "https://github.com/webRunes/Titter-WRIO-App/",
+  "main": "gm-test.js",
+  "dependencies": {
+	"body-parser": "^1.9.2",
+	"ejs": "^1.0.0",
+	"express": "^4.10.1",
+	"node-twitter": "*",
+	"nconf": "*",
+	"aws-sdk-apis": "*",
+	"supervisor": "*"
+  },
+  "devDependencies": {},
+  "scripts": {
+	"start": "echo \"Build Completed.\" "
+  },
+  "repository": {
+	"type": "git",
+	"url": "https://github.com/webRunes/Titter-WRIO-App.git"
+  },
+  "author": "webRunes",
+  "license": "MIT",
+  "bugs": {
+	"url": "https://github.com/webRunes/Titter-WRIO-App/issues"
+  },
+  "homepage": "https://github.com/webRunes/Titter-WRIO-App"
 }
