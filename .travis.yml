@@ -14,6 +14,6 @@ deploy:
     secure: G3QfqVMapeaGxersv8Oumdc9QWSnCNmq70hJNmD8OrFgOhKj7F48+uv9WLoBAJxw31WIBBWqMSY9l7CO3ur9plPwL+Gfda7yGUE8HDBMJ/pukL2DAzwd1pu/iPlt/+HMO4YYIDJZsDpSWN5PvxAf+MtsG7hXJUlJSy/nwpvpZ3M=
   bucket: wrio
   local-dir: widget
-  upload-dir: Titter-WRIO-App
+  upload-dir: Titter-WRIO-App/widget
   acl: public_read
 
