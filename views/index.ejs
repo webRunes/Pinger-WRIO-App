@@ -28,23 +28,41 @@
 					'fileData': imageData,
 					'comment': comment
 				},
-				
+
 
 			}).done(function(data) {
 				document.getElementById('comment').value = '';
 				console.log("successfully sent");
-				$('#result').html("Successfully sent!")
+				$('#result').html("Successfully sent!").removeClass("redError");
+
 			}).fail(function(request,error) {
 				console.log("Request: " + JSON.stringify(request));
-				$('#result').html("Error while executing your request :(");
+				$('#result').html("Error while executing your request :(").addClass("redError");
 			});
 
 		}
 	</script>
 	<style type="text/css">
+
+		.redError {
+			color: red;
+		}
 		canvas {
 			border: 1px solid black;
 			display: none;
+			padding-left: 0;
+			padding-right: 0;
+			margin-left: auto;
+			margin-right: auto;
+			display: block;
+
+		}
+		h3 {
+			text-align: center;
+		}
+		.well {
+			margin: 5px;
+			height: 300px;
 		}
 	</style>
 </head>
@@ -71,8 +89,8 @@
 
 	<div class="container">
 
-		<div id="titter-id">
-			<h1>Type text for your tweet here</h1>
+		<div id="titter-id" class="col-md-7 well">
+			<h2>Enter text in form below and press send</h2>
 			<form method='POST' action="/sendComment" class="margin-bottom" role="form">
 				<div class="form-group col-xs-12 has-error">
 					<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
@@ -80,26 +98,22 @@
 				</div>
 				<div class="form-group col-xs-12">
 					<div class="pull-right">
-						<label class="comment-limit">672</label>
+						<label class="comment-limit">10</label>
 						<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
 					</div>
 				</div>
 			</form>
-			<ul class="breadcrumb twitter">
-
-			<div>
-				<h2>Image to post</h2>
-				<h3 id="result">Result:</h3>
-				<div><canvas id="twitterPost" width="150" height="150"></canvas></div>
-			</div>
-			<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
-
-			</ul>
 
 
 		</div>
+		<div class="well col-md-4">
+			<h3>Image to post</h2>
+			<div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
+			<h3 id="result"></h3>
+		</div>
 
 	</div>
+
 
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </body>
