@@ -10,7 +10,8 @@
 	"node-twitter": "*",
 	"nconf": "*",
 	"aws-sdk-apis": "*",
-	"supervisor": "*"
+	"supervisor": "*",
+    "gm" : "^1.17.0"
   },
   "devDependencies": {},
   "scripts": {
