@@ -3,30 +3,26 @@
 
 <template id="titter-template">
     <div id="titter-id">
-        <form class="margin-bottom" role="form">
-            <div class="form-group col-xs-12 has-error">
-                <textarea rows="3" class="form-control" placeholder="Let us know your thoughts! Max 672 characters"></textarea>
-                <div class="help-block">Max 672 characters</div>
-            </div>
-            <div class="form-group col-xs-12">
-                <div class="btn-group tooltip-demo">
-                    <button type="button" class="btn btn-default active"><span class="glyphicon glyphicon-pencil"></span>Text</button>
-                    <button type="button" class="btn btn-default disabled" data-toggle="tooltip" data-placement="right" title="Coming soon"><span class="glyphicon glyphicon-camera"></span>Photo</button>
+        <div class="col-md-7 well">
+            <h2>Enter text in form below and press send</h2>
+            <form method='POST' action="/sendComment" class="margin-bottom" role="form">
+                <div class="form-group col-xs-12 has-error">
+                    <textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
+                    <div class="help-block"></div>
                 </div>
-                <div class="pull-right">
+                <div class="form-group col-xs-12">
                     <div class="pull-right">
-                        <label class="comment-limit">672</label>
-                        <button type="button" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span>Submit</button>
+                        <label class="comment-limit">10</label>
+                        <button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
                     </div>
                 </div>
-            </div>
-        </form>
-        <ul class="breadcrumb twitter">
-            <li class="active">Comments</li>
-            <li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
-        </ul> 
-        <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
-<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+            </form>
+        </div>
+        <div class="well col-md-4">
+            <h3 class="centertext">Image to post</h3>
+            <div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
+            <h3 id="result" class="centertext"></h3>
+        </div>
     </div>
 </template>
 
@@ -43,4 +39,68 @@
         };
         document.registerElement('titter-widget', {prototype: proto});
     })(jQuery);
+</script>
+
+<style type="text/css">
+
+    .redError {
+        color: red;
+    }
+    canvas {
+        border: 1px solid black;
+        display: none;
+        padding-left: 0;
+        padding-right: 0;
+        margin-left: auto;
+        margin-right: auto;
+        display: block;
+
+    }
+    .centertext {
+        text-align: center;
+    }
+    .well {
+        margin: 5px;
+        height: 300px;
+    }
+</style>
+<script type="text/javascript">
+    function createImage() {
+        var canvas = document.getElementById('twitterPost');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "18px Arial";
+            ctx.fillText(document.getElementById('comment').value, 10, 30);
+        }
+        $("#twitterPost").show();
+    }
+
+    function saveCanvas() {
+        createImage();
+        var canvas = document.getElementById('twitterPost');
+        var comment = document.getElementById('comment').value;
+        var imageData = canvas.toDataURL('image/png');
+
+        //dataType: 'json', removed because of ajax error
+        $.ajax({
+            url: 'http://titter.webrunes.com/sendComment',
+            type: 'post',
+            data: {
+                'fileData': imageData,
+                'comment': comment
+            },
+
+
+        }).done(function(data) {
+            document.getElementById('comment').value = '';
+            console.log("successfully sent");
+            $('#result').html("Successfully sent!").removeClass("redError");
+
+        }).fail(function(request,error) {
+            console.log("Request: " + JSON.stringify(request));
+            $('#result').html("Error while executing your request :(").addClass("redError");
+        });
+
+    }
 </script>
