@@ -3,25 +3,31 @@
 
 <template id="titter-template">
     <div id="titter-id">
-        <div>
-            <form method='POST' action="/sendComment" class="margin-bottom" role="form">
-                <div class="form-group col-xs-12 has-error">
-                    <textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
-                    <div class="help-block"></div>
-                </div>
-                <div class="form-group col-xs-12">
+        <form class="margin-bottom" role="form" action="/sendComment">
+            <div class="form-group col-xs-12 has-error">
+                <textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
+                <div id="result" class="help-block">Max 672 characters</div>
+            </div>
+            <div class="form-group col-xs-12">
+                <div class="pull-right">
                     <div class="pull-right">
-                        <label class="comment-limit">10</label>
+                        <label class="comment-limit">255</label>
                         <button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
                     </div>
                 </div>
-            </form>
-        </div>
-        <div>
+            </div>
+        </form>
+        <ul class="breadcrumb twitter">
+            <li class="active">Comments</li>
+            <li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
+        </ul>
+        <div style="display:none;">
             <h3 class="centertext">Image to post</h3>
             <div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
             <h3 id="result" class="centertext"></h3>
         </div>
+        <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
+<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>
 </template>
 
@@ -39,7 +45,6 @@
         document.registerElement('titter-widget', {prototype: proto});
     })(jQuery);
 </script>
-
 <script type="text/javascript">
     function createImage() {
         var canvas = document.getElementById('twitterPost');
@@ -81,23 +86,16 @@
     }
 </script>
 
-<style type="text/css">
 
-    .redError {
-        color: red;
-    }
-    #twitterPost {
-        border: 1px solid black;
-        display: none;
-        padding-left: 0;
-        padding-right: 0;
-        margin-left: auto;
-        margin-right: auto;
-        display: block;
 
-    }
-    .centertext {
-        text-align: center;
-    }
+<!-- bootstrap code, delete it -->
+<html>
+<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+<body></body>
+</html>
 
-</style>
+<script>
+    $text = $('#titter-template').html();
+    $('body').html($text)
+
+</script>
