@@ -3,7 +3,7 @@
 
 <template id="titter-template">
     <div id="titter-id">
-        <div class="col-md-7 well titterdiv">
+        <div class="col-md-7">
             <h2>Enter text in form below and press send</h2>
             <form method='POST' action="/sendComment" class="margin-bottom" role="form">
                 <div class="form-group col-xs-12 has-error">
@@ -18,7 +18,7 @@
                 </div>
             </form>
         </div>
-        <div class="well col-md-4 titterdiv">
+        <div class="well">
             <h3 class="centertext">Image to post</h3>
             <div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
             <h3 id="result" class="centertext"></h3>
@@ -100,8 +100,5 @@
     .centertext {
         text-align: center;
     }
-    .titterdiv {
-        margin: 5px;
-        height: 300px;
-    }
+
 </style>
