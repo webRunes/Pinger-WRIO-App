@@ -21,6 +21,7 @@
             <li class="active">Comments</li>
             <li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
         </ul>
+        <canvas id="twitterPost" width="150" height="150" style="display:none;"></canvas>
         <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
 <script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
     </div>
@@ -42,7 +43,6 @@
 </script>
 <script type="text/javascript">
     function createImage() {
-        return;
         var canvas = document.getElementById('twitterPost');
         if (canvas.getContext) {
             var ctx = canvas.getContext('2d');
@@ -57,7 +57,7 @@
         //createImage();
         var canvas = document.getElementById('twitterPost');
         var comment = document.getElementById('comment').value;
-        //var imageData = canvas.toDataURL('image/png');
+        var imageData = canvas.toDataURL('image/png');
 
         //dataType: 'json', removed because of ajax error
         $.ajax({
