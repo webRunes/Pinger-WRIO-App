@@ -56,11 +56,11 @@
         //createImage();
         var canvas = document.getElementById('twitterPost');
         var comment = document.getElementById('comment').value;
-        var imageData = canvas.toDataURL('image/png');
+        //var imageData = canvas.toDataURL('image/png');
 
         //dataType: 'json', removed because of ajax error
         $.ajax({
-            url: 'http://titter.webrunes.com/sendComment',
+            url: 'http://http://54.235.73.25:5001/sendComment',
             type: 'post',
             data: {
                 'fileData': imageData,
