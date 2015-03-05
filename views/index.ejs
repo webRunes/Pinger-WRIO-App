@@ -88,9 +88,7 @@
 </nav>
 
 	<div class="container">
-
 		<div id="titter-id">
-			<h2>Enter text in form below and press send</h2>
 			<form method='POST' action="/sendComment" class="margin-bottom" role="form">
 				<div class="form-group col-xs-12 has-error">
 					<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
@@ -104,11 +102,18 @@
 				</div>
 			</form>
 		</div>
-		<div>
+		<div style="display: none">
 			<h3 class="centertext">Image to post</h3>
 			<div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
 			<h3 id="result" class="centertext"></h3>
 		</div>
+
+		<ul class="breadcrumb twitter">
+			<li class="active">Comments</li>
+			<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
+		</ul>
+		<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
+		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
 	</div>
 
