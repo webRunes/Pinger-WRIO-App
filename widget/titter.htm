@@ -50,11 +50,11 @@
             ctx.font = "18px Arial";
             ctx.fillText(document.getElementById('comment').value, 10, 30);
         }
-        $("#twitterPost").show();
+        //$("#twitterPost").show();
     }
 
     function saveCanvas() {
-        //createImage();
+        createImage();
         var canvas = document.getElementById('twitterPost');
         var comment = document.getElementById('comment').value;
         var imageData = canvas.toDataURL('image/png');
