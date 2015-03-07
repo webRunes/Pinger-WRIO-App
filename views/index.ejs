@@ -21,17 +21,19 @@
 					line = testLine;
 				}
 			}
-			wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,13);
-			//context.fillText(line, x, y);
+
+			context.fillText(line, x, y);
 		}
 		function createImage() {
 			var canvas = document.getElementById('twitterPost');
 			if (canvas.getContext) {
 				var ctx = canvas.getContext('2d');
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.font = "18px Arial";
-				ctx.fillText(document.getElementById('comment').value, 10, 30);
+				ctx.font = "13px Arial";
+			//	ctx.fillText(document.getElementById('comment').value, 10, 30);
+				wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,13);
 			}
+
 			$("#twitterPost").show();
 		}
 
