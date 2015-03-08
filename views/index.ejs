@@ -3,14 +3,37 @@
 	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 	<script type="text/javascript">
+		function wrapText(context, text, x, y, maxWidth, lineHeight) {
+			console.log(text.length)
+			var words = text.split(' ');
+			var line = '';
+
+			for(var n = 0; n < words.length; n++) {
+				var testLine = line + words[n] + ' ';
+				var metrics = context.measureText(testLine);
+				var testWidth = metrics.width;
+				if (testWidth > maxWidth && n > 0) {
+					context.fillText(line, x, y);
+					line = words[n] + ' ';
+					y += lineHeight;
+				}
+				else {
+					line = testLine;
+				}
+			}
+
+			context.fillText(line, x, y);
+		}
 		function createImage() {
 			var canvas = document.getElementById('twitterPost');
 			if (canvas.getContext) {
 				var ctx = canvas.getContext('2d');
 				ctx.clearRect(0, 0, canvas.width, canvas.height);
-				ctx.font = "18px Arial";
-				ctx.fillText(document.getElementById('comment').value, 10, 30);
+				ctx.font = "13px Arial";
+			//	ctx.fillText(document.getElementById('comment').value, 10, 30);
+				wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,13);
 			}
+
 			$("#twitterPost").show();
 		}
 
