@@ -18,7 +18,7 @@ app.post('/sendComment', function (request, response) {
 		var message = request.body.comment;
 		titterPicture.drawComment(imageFileData, function (error, data) {
 			var imagePath = "./images/temp.png";
-			titterSender.comment(message, imagePath);
+			titterSender.comment(message+' Donate 0 WRG', imagePath);
 		});
 	} catch (error) {
 		console.log(error);
