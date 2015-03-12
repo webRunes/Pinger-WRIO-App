@@ -74,9 +74,9 @@
             ms_height = wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,lineHeight,true) + lineHeight*2;
             canvas.height = ms_height+5;
 
-            ctx.fillStyle = "#FFFFFF";
+            ctx.fillStyle = "#ffffff";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = "12px Verdana";
+            ctx.font = "12px Tahoma";
             ctx.fillStyle = "#292f33";
 
             wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,lineHeight);
@@ -127,21 +127,3 @@
     }
     $('')
 </script>
-
-<!--- remove this!!!!
-
-<html>
-<head>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-</head>
-<body></body></html>
-
-<script>
-
-    var template = $('#titter-template').html();
-    $('body').html(template);
-    $('canvas').show();
-
-</script>
--->
