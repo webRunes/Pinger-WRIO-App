@@ -22,7 +22,7 @@
             <li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
         </ul>
         <canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
-        <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
+        <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256" height="2048">Tweets about webrunes.com</a>
 
 </template>
 
@@ -67,7 +67,7 @@
 
     }
     function createImage() {
-        lineHeight = 13;
+        lineHeight = 14;
         var canvas = document.getElementById('twitterPost');
         if (canvas.getContext) {
             var ctx = canvas.getContext('2d');
@@ -76,7 +76,7 @@
 
             ctx.fillStyle = "#FFFFFF";
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            ctx.font = "11px Verdana";
+            ctx.font = "12px Verdana";
             ctx.fillStyle = "#292f33";
 
             wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,lineHeight);
@@ -114,6 +114,34 @@
 
     }
     // twitter code
-    !function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    //!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+    function onTimelineLoad() {
+        console.log('widget loaded');
+        $('#twitter-widget-0').contents().find('img.autosized-media').each(function(el,arr) {
+            $(arr).height('auto');
+            $(arr).width('auto');
+          //  console.log("Fixing",arr);
+        });
+        //$('#twitter-widget-0').width("640px");
+    }
+    $('')
 </script>
 
+<!--- remove this!!!!
+
+<html>
+<head>
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+</head>
+<body></body></html>
+
+<script>
+
+    var template = $('#titter-template').html();
+    $('body').html(template);
+    $('canvas').show();
+
+</script>
+-->
