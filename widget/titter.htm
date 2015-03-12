@@ -113,6 +113,24 @@
         });
 
     }
+
+    function extractLdJsonVersion() {
+        for (var i=0; i < wrio.jsons.length; i++) {
+            if (wrio.jsons[i]['@type'] == 'Article') {
+                return wrio.jsons[i].comment.version;
+            }
+        }
+
+    }
+
+    function getTwitterUrl() {
+        var url = window.location.href.replace(/http:\/\//,'')
+        return "https://twitter.com/search?q="+url;
+    }
+
+    $('a.twitter-timeline').attr('data-widget-id',extractLdJsonVersion());
+    $('a.twitter-timeline').attr('href',getTwitterUrl());
+
     // twitter code
     !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
     //!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
@@ -125,5 +143,5 @@
         });
         //$('#twitter-widget-0').width("640px");
     }
-    $('')
+
 </script>
