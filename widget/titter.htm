@@ -23,3 +23,154 @@
   </ul>
   <a itemprop="discussionUrl" class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256" data-show-replies="true" data-chrome="noheader nofooter noborders noscrollbar transparent">Tweets about webrunes.com</a>  
 </div>
+
+
+
+<!--<script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+
+
+<template id="titter-template">
+    <div id="titter-id">
+        <form class="margin-bottom" role="form" action="/sendComment">
+            <div class="form-group col-xs-12 has-error">
+                <textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
+                <div id="result" class="help-block">Max 672 characters</div>
+            </div>
+            <div class="form-group col-xs-12">
+                <div class="pull-right">
+                    <div class="pull-right">
+                        <label class="comment-limit">672</label>
+                        <button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
+                    </div>
+                </div>
+            </div>
+        </form>
+        <ul class="breadcrumb twitter">
+            <li class="active">Comments</li>
+            <li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
+        </ul>
+        <canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
+        <a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256" height="2048">Tweets about webrunes.com</a>
+
+</template>
+
+<script>
+    (function($){
+        var importDoc = document.currentScript.ownerDocument;
+
+        var template = importDoc.querySelector('#titter-template');
+        var $template = $(template.innerHTML);
+
+        var proto = Object.create(HTMLElement.prototype);
+        proto.createdCallback = function() {
+            this.outerHTML = $template.get(0).outerHTML;
+        };
+        document.registerElement('titter-widget', {prototype: proto});
+    })(jQuery);
+</script>
+<script type="text/javascript">
+    function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
+        console.log(text.length)
+        var words = text.split(' ');
+        var line = '';
+
+        for(var n = 0; n < words.length; n++) {
+            var testLine = line + words[n] + ' ';
+            var metrics = context.measureText(testLine);
+            var testWidth = metrics.width;
+            if (testWidth > maxWidth && n > 0) {
+                context.fillText(line, x, y);
+                line = words[n] + ' ';
+                y += lineHeight;
+            }
+            else {
+                line = testLine;
+            }
+        }
+        if (!simulate) {
+            context.fillText(line, x, y);
+        }
+        return y + lineHeight;
+
+
+    }
+    function createImage() {
+        lineHeight = 14;
+        var canvas = document.getElementById('twitterPost');
+        if (canvas.getContext) {
+            var ctx = canvas.getContext('2d');
+            ms_height = wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,lineHeight,true) + lineHeight*2;
+            canvas.height = ms_height+5;
+
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.font = "12px Tahoma";
+            ctx.fillStyle = "#292f33";
+
+            wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,lineHeight);
+            ctx.fillStyle = "#666666";
+            ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 2, ms_height);
+        }
+
+    }
+
+    function saveCanvas() {
+        createImage();
+        var canvas = document.getElementById('twitterPost');
+        var comment = document.getElementById('comment').value;
+        var imageData = canvas.toDataURL('image/png');
+
+        //dataType: 'json', removed because of ajax error
+        $.ajax({
+            url: 'http://54.235.73.25:5001/sendComment',
+            type: 'post',
+            data: {
+                'fileData': imageData,
+                'comment': window.location.origin
+            },
+
+
+        }).done(function(data) {
+            document.getElementById('comment').value = '';
+            console.log("successfully sent");
+            $('#result').html("Successfully sent!").removeClass("redError");
+
+        }).fail(function(request,error) {
+            console.log("Request: " + JSON.stringify(request));
+            $('#result').html("Error while executing your request :(").addClass("redError");
+        });
+
+    }
+
+    function extractLdJsonVersion() {
+        for (var i=0; i < wrio.jsons.length; i++) {
+            if (wrio.jsons[i]['@type'] == 'Article') {
+                return wrio.jsons[i].comment.version;
+            }
+        }
+
+    }
+
+    function getTwitterUrl() {
+        var url = window.location.href.replace(/http:\/\//,'')
+        return "https://twitter.com/search?q="+url;
+    }
+
+    $('a.twitter-timeline').attr('data-widget-id',extractLdJsonVersion());
+    $('a.twitter-timeline').attr('href',getTwitterUrl());
+
+    // twitter code
+    !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+    //!function (d, s, id) { var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https'; if (!d.getElementById(id)) { js = d.createElement(s); js.id = id; js.src = p + "://platform.twitter.com/widgets.js"; fjs.parentNode.insertBefore(js, fjs); } }(document, "script", "twitter-wjs");
+    function onTimelineLoad() {
+        console.log('widget loaded');
+        $('#twitter-widget-0').contents().find('img.autosized-media').each(function(el,arr) {
+            $(arr).height('auto');
+            $(arr).width('auto');
+          //  console.log("Fixing",arr);
+        });
+        //$('#twitter-widget-0').width("640px");
+    }
+
+</script>
+-->
