@@ -1,14 +1,15 @@
 var nconf = require("./wrio_nconf.js").init();
 var Twitter = require('node-twitter');
-var twitterClient = new Twitter.RestClient(
-	nconf.get('api:twitterLogin:consumerKey'),
-	nconf.get('api:twitterLogin:consumerSecret'),
-	nconf.get('api:twitterLogin:token'),
-	nconf.get('api:twitterLogin:tokenSecret')
-)
 
 var titterSender = {};
-titterSender.comment = function (message, imagePath) {
+titterSender.comment = function (cred, message, imagePath) {
+	var twitterClient = new Twitter.RestClient(
+		nconf.get('api:twitterLogin:consumerKey'),
+		nconf.get('api:twitterLogin:consumerSecret'),
+		cred.token,
+		cred.tokenSecret
+	)
+
 	twitterClient.statusesUpdateWithMedia(
 		{
 			'status': message,
