@@ -3,6 +3,16 @@
 	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 	<script type="text/javascript">
+
+		var loginUrl = "http://127.0.0.1:5000";
+		var callbackurl = window.location.href+'callback'
+		var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=400");
+
+		function setWRIOAuthData(sid) {
+			alert(sid);
+		}
+
+
 		function wrapText(context, text, x, y, maxWidth, lineHeight) {
 			console.log(text.length)
 			var words = text.split(' ');
@@ -67,6 +77,7 @@
 		}
 	</script>
 	<style type="text/css">
+
 
 		.redError {
 			color: red;

@@ -14,6 +14,10 @@ app.get('/', function (request, response) {
 })
 
 
+app.get('/callback',function(request,response) {
+	response.render('callback', {});
+})
+
 app.post('/sendComment', function (request, response) {
 	try {
 		var imageFileData = request.body.fileData;
