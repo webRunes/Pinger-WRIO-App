@@ -55,7 +55,6 @@ function deserialize(id, done) {
             return;
         }
 
-        console.log("USere deserialized "+id)
         done(err, rows[0]);
     });
 };
@@ -68,24 +67,26 @@ function loginWithSessionId(ssid,done) {
         return
     }
     q = "select * from sessions where session_id =\""+ssid+"\"";
-    console.log(q);
     connection.query(q,function(err,rows){
         if (err) {
             console.log("User not found",err);
             done(err);
             return;
         }
+        if (rows[0] == undefined) {
+            done("Session not found");
+            return;
+        }
         console.log("Session deserialized "+ssid, rows[0]);
         data = JSON.parse(rows[0].data);
         user = data.passport.user;
-        console.log("Deserializing user",user);
         if (user != undefined) {
             deserialize(user,done);
         } else {
             done("Wrong cookie")
         }
 
-        done(err, rows[0]);
+        //done(err, rows[0]);
     });
 }
 
@@ -94,6 +95,7 @@ function getTwitterCredentials(sessionId,done) {
     loginWithSessionId(sessionId,function callback(err,res) {
         if (err) {
             console.log("Error executing request");
+            done(err);
         } else {
             if (res.token && res.tokenSecret) {
                 done(null,{"token":res.token,"tokenSecret":res.tokenSecret})

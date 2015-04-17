@@ -26,20 +26,35 @@ app.post('/sendComment', function (request, response) {
 		wrioLogin.getTwitterCredentials(ssid, function (err,cred) {
 			if (err) {
 				console.log ("Twitter auth failed");
+				//response.send('Failed');
+				response.status(401);
+				response.send('Failed: '+err);
+				response.end()
+				return;
 			} else {
 				console.log("got keys",cred);
 				titterPicture.drawComment(imageFileData, function (error, data) {
 					var imagePath = "./images/temp.png";
-					titterSender.comment(cred, message+' Donate 0 WRG', imagePath);
+					titterSender.comment(cred, message+' Donate 0 WRG', imagePath,function done(err,res) {
+						if (err) {
+							response.status(400);
+							response.send(err);
+							response.end()
+						} else {
+							response.send('Done');
+							response.end()
+						}
+					});
+
 				});
 			}
 		});
 
 	} catch (error) {
-		console.log(error);
+		console.log("Error in sendcomment ",error);
 	} finally {
-		response.send('Done');
-		response.end()
+
+		//
 	}
 });
 console.log("Application Started!");

@@ -4,13 +4,34 @@
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 	<script type="text/javascript">
 
-		var loginUrl = "http://127.0.0.1:5000";
-		var callbackurl = window.location.href+'callback'
-		var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=400");
+		// возвращает cookie с именем name, если есть, если нет, то undefined
+		function getCookie(name) {
+			var matches = document.cookie.match(new RegExp(
+					"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			));
+			return matches ? decodeURIComponent(matches[1]) : undefined;
+		}
+
+		function openAuthPopup() {
+			var loginUrl = "http://127.0.0.1:5000";
+			var callbackurl = window.location.href+'callback'
+			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=400");
+		}
+
+		function checkLoggedIn() {
+			console.log(document.cookie);
+			if (!getCookie('sid')) {
+				openAuthPopup();
+			}
+
+		}
 
 		function setWRIOAuthData(sid) {
-			alert(sid);
+			console.log("Got session id "+sid);
+			document.cookie="sid="+sid;
 		}
+
+		checkLoggedIn();
 
 
 		function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -60,8 +81,8 @@
 				data: {
 					'fileData': imageData,
 					'comment': comment,
-					'ssid': 'zzzz'
-				},
+					'ssid': getCookie('sid')
+				}
 
 
 			}).done(function(data) {
