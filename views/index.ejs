@@ -18,6 +18,10 @@
 			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=400");
 		}
 
+		function logoff() {
+			document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+		}
+
 		function checkLoggedIn() {
 			console.log(document.cookie);
 			if (!getCookie('sid')) {
@@ -142,7 +146,7 @@
 		</div><!--/.nav-collapse -->
 	</div>
 </nav>
-
+	<a href="javascript:;" onclick="logoff();">Logoff</a>
 	<div class="container">
 		<div id="titter-id">
 			<form method='POST' action="/sendComment" class="margin-bottom" role="form">

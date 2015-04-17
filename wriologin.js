@@ -104,12 +104,7 @@ function getTwitterCredentials(sessionId,done) {
             }
         }
     });
-
 }
 
-
-/*
-
- */
 module.exports.loginWithSessionId = loginWithSessionId;
 module.exports.getTwitterCredentials = getTwitterCredentials;
