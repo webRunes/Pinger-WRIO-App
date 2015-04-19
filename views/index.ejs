@@ -35,6 +35,7 @@
 		function setWRIOAuthData(sid) {
 			console.log("Got session id "+sid);
 			//document.cookie="sid="+sid;
+			location.reload();
 		}
 
 
@@ -130,26 +131,6 @@
 </head>
 <body>
 
-<nav class="navbar navbar-inverse navbar-default nav-padless" role="navigation">
-	<div>
-		<div class="navbar-header">
-			<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
-				<span class="sr-only">Toggle</span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-				<span class="icon-bar"></span>
-			</button>
-			<a class="navbar-brand" href="#">Titter-WRIO App</a>
-		</div>
-		<div id="navbar" class="collapse navbar-collapse">
-			<ul class="nav navbar-nav">
-
-			</ul>
-		</div><!--/.nav-collapse -->
-	</div>
-</nav>
-
-
 <% if (!user) { %>
 <div>
 	<div>Not logged in</div>
@@ -157,7 +138,7 @@
 </div>
 
 <% } else { %>
-<h2>Hello, <%= user.displayName %>.</h2>
+<h2>Hello, <%= user.lastName %>.</h2>
 <a href="javascript:;" onclick="logoff();">Logoff</a>
 <% } %>
 

@@ -48,7 +48,7 @@ handleDisconnect();
 // used to deserialize the user
 function deserialize(id, done) {
     console.log("Deserializing user by id="+id)
-    connection.query("select * from `webRunes_Login-Twitter` where userID ="+id,function(err,rows){
+    connection.query("select * from `webRunes_Users` where userID ="+id,function(err,rows){
         if (err) {
             console.log("User not found",err);
             done(err);
