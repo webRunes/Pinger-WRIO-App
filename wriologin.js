@@ -79,7 +79,15 @@ function loginWithSessionId(ssid,done) {
         }
         console.log("Session deserialized "+ssid, rows[0]);
         data = JSON.parse(rows[0].data);
-        user = data.passport.user;
+
+        if (data.passport) {
+            user = data.passport.user;
+        } else {
+            user = undefined;
+        }
+
+
+
         if (user != undefined) {
             deserialize(user,done);
         } else {

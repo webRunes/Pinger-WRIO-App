@@ -13,9 +13,9 @@
 		}
 
 		function openAuthPopup() {
-			var loginUrl = "http://127.0.0.1:5000";
+			var loginUrl = "http://login.wr.io";
 			var callbackurl = window.location.href+'callback'
-			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=400");
+			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=700");
 		}
 
 		function logoff() {
@@ -26,16 +26,18 @@
 			console.log(document.cookie);
 			if (!getCookie('sid')) {
 				openAuthPopup();
+			} else {
+				console.log("Cookie exists, aborting");
 			}
 
 		}
 
 		function setWRIOAuthData(sid) {
 			console.log("Got session id "+sid);
-			document.cookie="sid="+sid;
+			//document.cookie="sid="+sid;
 		}
 
-		checkLoggedIn();
+
 
 
 		function wrapText(context, text, x, y, maxWidth, lineHeight) {
@@ -146,7 +148,20 @@
 		</div><!--/.nav-collapse -->
 	</div>
 </nav>
-	<a href="javascript:;" onclick="logoff();">Logoff</a>
+
+
+<% if (!user) { %>
+<div>
+	<div>Not logged in</div>
+	<button onclick="openAuthPopup();" class="btn">Login with WEBRUNES</button>
+</div>
+
+<% } else { %>
+<h2>Hello, <%= user.displayName %>.</h2>
+<a href="javascript:;" onclick="logoff();">Logoff</a>
+<% } %>
+
+
 	<div class="container">
 		<div id="titter-id">
 			<form method='POST' action="/sendComment" class="margin-bottom" role="form">

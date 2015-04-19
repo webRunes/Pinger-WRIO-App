@@ -12,7 +12,10 @@
 	"aws-sdk-apis": "*",
 	"supervisor": "*",
     "gm" : "^1.17.0",
-    "mysql":"*"
+    "mysql":"*",
+    "cookie-parser":"*",
+    "express-session":"*",
+    "express-mysql-session":"*"
   },
   "devDependencies": {},
   "scripts": {
