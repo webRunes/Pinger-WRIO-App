@@ -1,12 +1,13 @@
+var nconf = require("./wrio_nconf.js").init();
 var express = require('express');
 var app = require("./wrio_app.js").init(express);
-var server = require('http').createServer(app).listen(5001);
+var server = require('http').createServer(app).listen(nconf.get("server:port"));
 var fs = require('fs');
 
 
-var nconf = require("./wrio_nconf.js").init();
+
 var session = require('express-session');
-var SessionStore = require('express-mysql-session')
+var SessionStore = require('express-mysql-session');
 var cookieParser = require('cookie-parser');
 
 var wrioLogin = require('./wriologin');
@@ -34,20 +35,24 @@ var session_options = {
 	database: MYSQL_DB
 }
 
-var sessionStore = new SessionStore(session_options)
-
+var cookie_secret = nconf.get("server:cookiesecret");
+var sessionStore = new SessionStore(session_options);
+app.use(cookieParser(cookie_secret));
 app.use(session(
 	{
-		secret: 'keyboard cat',
-		saveUninitialized: false,
+
+		secret: cookie_secret,
+		saveUninitialized: true,
 		store: sessionStore,
-		resave: false,
-		cookie: {domain:DOMAIN},
+		resave: true,
+		cookie: {
+			secure:false,
+			domain:DOMAIN,
+			maxAge: 1000 * 60 * 24 * 30
+		},
 		key: 'sid'
 	}
 ));
-
-app.use(cookieParser());
 
 
 app.get('/', function (request, response) {
