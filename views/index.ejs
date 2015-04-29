@@ -12,16 +12,22 @@
 			return matches ? decodeURIComponent(matches[1]) : undefined;
 		}
 
-		function openAuthPopup() {
+		function getLoginUrl() {
+
 			var host = window.location.host;
 			host = host.replace('titter.','login.');
-			var loginUrl = "http://"+host;
+			return "http://"+host;
+
+		}
+
+		function openAuthPopup() {
+			var loginUrl = getLoginUrl();
 			var callbackurl = window.location.href+'callback'
 			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=700");
 		}
 
 		function logoff() {
-			document.cookie = "sid=; expires=Thu, 01 Jan 1970 00:00:00 UTC";
+			$.ajax(getLoginUrl()+'/logout');
 		}
 
 		function checkLoggedIn() {
@@ -157,6 +163,8 @@
 </head>
 <body>
 
+<div class="container">
+
 <% if (!user) { %>
 <div>
 	<div>Not logged in</div>
@@ -165,36 +173,37 @@
 
 <% } else { %>
 <h2>Hello, <%= user.lastName %>.</h2>
-<a href="javascript:;" onclick="logoff();">Logoff</a>
-<% } %>
+<button onclick="logoff();" class="btn">Logoff</button>
 
-
-	<div class="container">
-		<div id="titter-id">
-			<form method='POST' action="/sendComment" class="margin-bottom" role="form">
-				<div class="form-group col-xs-12 has-error">
-					<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
-					<div class="help-block"></div>
+	<div id="titter-id">
+		<form method='POST' action="/sendComment" class="margin-bottom" role="form">
+			<div class="form-group col-xs-12 has-error">
+				<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
+				<div class="help-block"></div>
+			</div>
+			<div class="form-group col-xs-12">
+				<div class="pull-right">
+					<label class="comment-limit">10</label>
+					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
 				</div>
-				<div class="form-group col-xs-12">
-					<div class="pull-right">
-						<label class="comment-limit">10</label>
-						<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
-					</div>
-				</div>
-			</form>
-		</div>
-		<div style="display: none">
-			<h3 class="centertext">Image to post</h3>
+			</div>
+		</form>
+	</div>
+	<div style="display: none">
+		<h3 class="centertext">Image to post</h3>
 
-			<h3 id="result" class="centertext"></h3>
-		</div>
+		<h3 id="result" class="centertext"></h3>
+	</div>
 
-		<ul class="breadcrumb twitter">
-			<li class="active">Comments</li>
-			<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
-		</ul>
-		<canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
+	<ul class="breadcrumb twitter">
+		<li class="active">Comments</li>
+		<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
+	</ul>
+	<canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
+
+
+	<% } %>
+
 		<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
