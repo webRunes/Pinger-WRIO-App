@@ -13,7 +13,9 @@
 		}
 
 		function openAuthPopup() {
-			var loginUrl = "http://login.webrunes.com";
+			var host = window.location.host;
+			host = host.replace('titter.','login.');
+			var loginUrl = "http://"+host;
 			var callbackurl = window.location.href+'callback'
 			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=700");
 		}
@@ -47,6 +49,16 @@
 			if (canvas.getContext) {
 				var ctx = canvas.getContext('2d');
 				var context = ctx;
+
+				ms_height = y + lineHeight + lineHeight * 2;
+				canvas.height = ms_height + 5;
+				ctx.fillStyle = '#ffffff';
+				ctx.fillRect(0, 0, canvas.width, canvas.height);
+				ctx.font = '12px Tahoma';
+				ctx.fillStyle = '#292f33';
+				ctx.fillStyle = '#666666';
+				ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 2, ms_height);
+
 				var text = document.getElementById('comment').value;
 				var x = 5;
 				var y = 20;
@@ -73,15 +85,6 @@
 
 				context.fillText(line, x, y);
 
-				ms_height = y + lineHeight + lineHeight * 2;
-				canvas.height = ms_height + 5;
-				ctx.fillStyle = '#ffffff';
-				ctx.fillRect(0, 0, canvas.width, canvas.height);
-				ctx.font = '12px Tahoma';
-				ctx.fillStyle = '#292f33';
-				ctx.fillStyle = '#666666';
-				ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 2, ms_height);
-
 			}
 		}
 		function createImage() {
@@ -94,7 +97,7 @@
 				wrapText(ctx,document.getElementById('comment').value,5,20,canvas.width,13);
 			}
 
-			$("#twitterPost").show();
+			//$("#twitterPost").show();
 		}
 
 		function saveCanvas() {
@@ -107,9 +110,10 @@
 			$.ajax({
 				url: '/sendComment',
 				type: 'post',
+				'dataType':'json',
 				data: {
 					'fileData': imageData,
-					'comment': comment,
+					'comment' : window.location.origin,
 					'ssid': getCookie('sid')
 				}
 
@@ -182,7 +186,7 @@
 		</div>
 		<div style="display: none">
 			<h3 class="centertext">Image to post</h3>
-			<div><canvas id="twitterPost" width="150" height="150" class="img-responsive canvascenter"></canvas></div>
+
 			<h3 id="result" class="centertext"></h3>
 		</div>
 
@@ -190,6 +194,7 @@
 			<li class="active">Comments</li>
 			<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
 		</ul>
+		<canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
 		<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 
