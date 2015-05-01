@@ -46,7 +46,19 @@
 			location.reload();
 		}
 
+		function loadDraft() {
+			if (window.localStorage['draft']) {
+				document.getElementById('comment').value = window.localStorage['draft'];
+				window.localStorage.removeItem('draft');
+			}
 
+
+		}
+
+		function saveDraft() {
+			var text = document.getElementById('comment').value;
+			window.localStorage['draft'] = text;
+		}
 
 
 		function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
@@ -135,6 +147,9 @@
 			});
 
 		}
+		$(document).ready(function() {
+			loadDraft();
+		});
 	</script>
 	<style type="text/css">
 
@@ -165,26 +180,25 @@
 
 <div class="container">
 
-<% if (!user) { %>
-<div>
-	<div>Not logged in</div>
-	<button onclick="openAuthPopup();" class="btn">Login with WEBRUNES</button>
-</div>
-
-<% } else { %>
-<h2>Hello, <%= user.lastName %>.</h2>
-<button onclick="logoff();" class="btn">Logoff</button>
-
 	<div id="titter-id">
+
 		<form method='POST' action="/sendComment" class="margin-bottom" role="form">
 			<div class="form-group col-xs-12 has-error">
 				<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
 				<div class="help-block"></div>
 			</div>
 			<div class="form-group col-xs-12">
+				<% if (user) { %>
+				<h4>as <%= user.lastName %>.</h4>
+				<a href="/logoff">Logoff</a>
+				<% } %>
 				<div class="pull-right">
 					<label class="comment-limit">10</label>
+					<% if (user) { %>
 					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
+					<% } else { %>
+					<button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span>Login and post</button>
+					<% } %>
 				</div>
 			</div>
 		</form>
@@ -200,10 +214,6 @@
 		<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
 	</ul>
 	<canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
-
-
-	<% } %>
-
 		<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
 		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
 

@@ -68,13 +68,21 @@ app.get('/', function (request, response) {
 			console.log("User found "+res);
 		}
 	})
-})
+});
+
+
+app.get('/logoff',function(request,response) {
+	console.log("Logoff called");
+	response.clearCookie('sid',{'path':'/','domain':DOMAIN});
+	response.redirect('/');
+
+});
 
 
 app.get('/callback',function(request,response) {
 	console.log("Our callback called");
 	response.render('callback', {});
-})
+});
 
 app.post('/sendComment', function (request, response) {
 
