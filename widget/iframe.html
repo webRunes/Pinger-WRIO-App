@@ -6,7 +6,16 @@
 </head>
 <body>
 
-<iframe src="http://titter.webrunes.com" width="720" height="780" frameborder="no" scrolling="no"></iframe>
+<iframe id="tiiteriframe" src="http://titter.webrunes.com" width="720" height="780" frameborder="no" scrolling="no"></iframe>
+<script>
+    !function (d,elementId) {
 
+        var el = d.getElementById(elementId);
+        el.onload = function () {
+            var w= el.contentWindow;
+            w.postMessage(window.location.href, "*");
+        }
+    }(document,"tiiteriframe");
+</script>
 </body>
 </html>
