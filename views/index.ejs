@@ -4,6 +4,8 @@
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 	<script type="text/javascript">
 
+		var posturl = 'http://webrunes.com'; //default one, will be changed by incoming message
+
 		// возвращает cookie с именем name, если есть, если нет, то undefined
 		function getCookie(name) {
 			var matches = document.cookie.match(new RegExp(
@@ -131,7 +133,7 @@
 				'dataType':'json',
 				data: {
 					'fileData': imageData,
-					'comment' : window.location.origin,
+					'comment' : url,
 					'ssid': getCookie('sid')
 				}
 
@@ -150,6 +152,39 @@
 		$(document).ready(function() {
 			loadDraft();
 		});
+
+
+		function createTwitterWidget() {
+
+			var frameheight = $(window).height();
+			var headerheight = $('.twitter').outerHeight()
+
+			var twheight = frameheight - headerheight - 45;
+
+			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + url + '" data-widget-id="570802230606176256" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + url + '</a>'
+			$('.container').append(twitter_template);
+			!function(d,s,id){
+				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+				if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
+					fjs.parentNode.insertBefore(js,fjs);
+				}
+			}(document,"script","twitter-wjs");
+
+		}
+
+		$(document).ready(function () {
+			createTwitterWidget();
+			console.log("Iframe loaded");
+			window.addEventListener('message', function(e) {
+				var message = e.data;
+				console.log("Got message ",message);
+				url = message;
+			});
+		});
+
+
+
+
 	</script>
 	<style type="text/css">
 
@@ -214,8 +249,8 @@
 		<li class="pull-right"><!--<a href="#" class="lin"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
 	</ul>
 	<canvas id="twitterPost" width="400" height="150" style="display:none;"></canvas>
-		<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256">Tweets about webrunes.com</a>
-		<script>!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");</script>
+
+	<script></script>
 
 	</div>
 
