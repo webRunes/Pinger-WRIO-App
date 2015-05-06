@@ -161,7 +161,7 @@
 
 			var twheight = frameheight - headerheight - 45;
 
-			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=webrunes.com" data-widget-id="570802230606176256" width="'+$(window).width()+'" height="'+twheight+'">Tweets about webrunes.com</a>'
+			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + url + '" data-widget-id="570802230606176256" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + url + '</a>'
 			$('.container').append(twitter_template);
 			!function(d,s,id){
 				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
