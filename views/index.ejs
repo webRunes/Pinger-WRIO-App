@@ -153,7 +153,7 @@
 			loadDraft();
 		});
 
-
+		var commentId = '570802230606176256'; //default id, used if no value specified in LD+JSON
 		function createTwitterWidget() {
 
 			var frameheight = $(window).height();
@@ -161,7 +161,7 @@
 
 			var twheight = frameheight - headerheight - 45;
 
-			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + url + '" data-widget-id="570802230606176256" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + url + '</a>'
+			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + posturl + '</a>'
 			$('.container').append(twitter_template);
 			!function(d,s,id){
 				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
@@ -173,12 +173,21 @@
 		}
 
 		$(document).ready(function () {
-			createTwitterWidget();
+
 			console.log("Iframe loaded");
 			window.addEventListener('message', function(e) {
 				var message = e.data;
 				console.log("Got message ",message);
-				url = message;
+				var msgParsed = JSON.parse(message);
+				posturl = msgParsed['url'];
+				if (msgParsed['commentid']) {
+					commentId = msgParsed['commentid'];
+					console.log("Got comment id, embedding "+commentId);
+				} else {
+					console.log("No commend id, using default one");
+				}
+				createTwitterWidget();
+
 			});
 		});
 
