@@ -6,7 +6,7 @@
 
 		var posturl = 'http://webrunes.com'; //default one, will be changed by incoming message
 
-		// возвращает cookie с именем name, если есть, если нет, то undefined
+		// Return cookie as "name". "undefined" is a default name
 		function getCookie(name) {
 			var matches = document.cookie.match(new RegExp(
 					"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
@@ -190,8 +190,6 @@
 
 			});
 		});
-
-
 
 
 	</script>
