@@ -1,9 +1,6 @@
 /**
  * Created by mich.bil on 16.04.15.
  */
-/**
- * Created by mich.bil on 16.04.15.
- */
 
 var nconf = require("./wrio_nconf.js").init();
 var mysql = require('mysql');
