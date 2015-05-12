@@ -85,9 +85,13 @@
 				var maxWidth = canvas.width;
 				var lineHeight = lineHeight;
 
-				console.log(text.length);
+
 				var limit = $('#comment').attr('maxlength');
-				$('label.comment-limit').html(limit - text.length);
+				var delta = limit - text.length;
+
+				console.log(text.length,delta);
+
+				$('label.comment-limit').html(delta);
 				var words = text.split(' ');
 				var line = '';
 
@@ -251,7 +255,7 @@
 				<a href="/logoff">Logoff</a>
 				<% } %>
 				<div class="pull-right">
-					<label class="comment-limit">10</label>
+					<label class="comment-limit">1024</label>
 					<% if (user) { %>
 					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Send</button>
 					<% } else { %>
