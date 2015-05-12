@@ -85,7 +85,9 @@
 				var maxWidth = canvas.width;
 				var lineHeight = lineHeight;
 
-				console.log(text.length)
+				console.log(text.length);
+				var limit = $('#comment').attr('maxlength');
+				$('label.comment-limit').html(limit - text.length);
 				var words = text.split(' ');
 				var line = '';
 
@@ -240,7 +242,7 @@
 	<div id="titter-id">
 		<form method='POST' action="/sendComment" class="margin-bottom" role="form">
 			<div class="form-group col-xs-12 has-error">
-				<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
+				<textarea maxlength="1024" rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
 				<div class="help-block"></div>
 			</div>
 			<div class="form-group col-xs-12">
