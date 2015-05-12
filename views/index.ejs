@@ -162,7 +162,7 @@
 			var twheight = frameheight - headerheight - 45;
 
 			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + posturl + '</a>'
-			$('.container').append(twitter_template);
+			$('#frame_container').append(twitter_template);
 			!function(d,s,id){
 				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
 				if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
@@ -220,10 +220,8 @@
 </head>
 <body>
 
-<div class="container">
-
+<div id="frame_container">
 	<div id="titter-id">
-
 		<form method='POST' action="/sendComment" class="margin-bottom" role="form">
 			<div class="form-group col-xs-12 has-error">
 				<textarea rows="3" class="form-control" placeholder="Type text to post on our page" name="comment" id="comment" onkeyup="createImage();"></textarea>
