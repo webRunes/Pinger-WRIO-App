@@ -154,6 +154,15 @@
 		});
 
 		var commentId = '570802230606176256'; //default id, used if no value specified in LD+JSON
+
+		function onTimelineLoad() {
+			$('#twitter-widget-0').contents().find('img.autosized-media').each(function (el, arr) {
+				console.log("Changed");
+				$(arr).height('initial');
+				$(arr).width('initial');
+			});
+		};
+
 		function createTwitterWidget() {
 
 			var frameheight = $(window).height();
@@ -163,12 +172,13 @@
 
 			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + posturl + '</a>'
 			$('#frame_container').append(twitter_template);
-			!function(d,s,id){
-				var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-				if(!d.getElementById(id)){js=d.createElement(s);js.id=id;js.src=p+"://platform.twitter.com/widgets.js";
-					fjs.parentNode.insertBefore(js,fjs);
-				}
-			}(document,"script","twitter-wjs");
+
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+				if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+					js.src=p+"://platform.twitter.com/widgets.js";
+					js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");
+				fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
 
 		}
 
@@ -194,6 +204,10 @@
 
 	</script>
 	<style type="text/css">
+		.twitter-timeline {
+			width: 100% !important;
+			height: 10000px !important;
+		}
 
 
 		.redError {
