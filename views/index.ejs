@@ -100,10 +100,10 @@
 						    ctx.fillStyle = "#ffffff";
 				            ctx.fillRect(0, 0, canvas.width, canvas.height);
 				            ctx.font = "12px Tahoma";
-				            ctx.fillStyle = "#292f33";
-
-						    wrapText(ctx,text, 5,20,canvas.width,lineHeight);
 				            ctx.fillStyle = "#666666";
+						    wrapText(ctx,text, 5,20,canvas.width,lineHeight);
+
+				            ctx.fillStyle = "#aaa";
 				            ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 2, ms_height);
 
 						    var limit = $('#comment').attr('maxlength');
@@ -216,11 +216,14 @@
 		var commentId = '570802230606176256'; //default id, used if no value specified in LD+JSON
 
 		function onTimelineLoad() {
-			$('#twitter-widget-0').contents().find('img.autosized-media').each(function (el, arr) {
+
+			$('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html()+"img.autosized-media {width:initial;height:initial;}")
+
+			/*$('#twitter-widget-0').contents().find('img.autosized-media').each(function (el, arr) {
 				console.log("Changed");
 				$(arr).height('initial');
 				$(arr).width('initial');
-			});
+			}); */
 		};
 
 		function createTwitterWidget() {
