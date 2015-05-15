@@ -172,7 +172,7 @@ define(['react','showdown','jquery'], function(React) {
             },
             render: function () {
                 if (this.state.data) {
-                    return (<iframe id="titteriframe" src="http://titter.webrunes.com" width="100%" height="2000" frameBorder="no" scrolling="no"></iframe>);
+                    return (<iframe id="titteriframe" src="http://titter.webrunes.com" id="titteriframe" frameBorder="no" scrolling="no"></iframe>);
                 } else {
                     return false;
                 }
