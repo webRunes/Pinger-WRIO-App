@@ -234,7 +234,7 @@
 
 			var twheight = frameheight - headerheight - 45;
 
-			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'">Tweets about ' + posturl + '</a>'
+			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" chrome="noscrollbar nofooter">Tweets about ' + posturl + '</a>'
 			$('#frame_container').append(twitter_template);
 
 			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
@@ -260,7 +260,7 @@
 				} else {
 					console.log("No commend id, using default one");
 				}
-				createTwitterWidget();
+				//createTwitterWidget();
 
 			});
 		});

@@ -93,6 +93,30 @@ define(['react','showdown','jquery'], function(React) {
 
     getScripts();
 
+    window.onTimelineLoad = function () {
+        $('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
+    }
+
+    function createTwitterWidget(commentId) {
+
+        var frameheight = $(window).height();
+        var headerheight = $('.twitter').outerHeight()
+
+        var twheight = frameheight - headerheight - 45;
+        $('#titteriframe').height("190px");
+
+        var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>'
+        $('#titter_frame_container').append(twitter_template);
+
+        !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+            if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+                js.src=p+"://platform.twitter.com/widgets.js";
+                js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");
+                fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
+
+    }
+
     var CreateTitter = React.createClass({
             loadTwittCommentsFromServer: function () {
                 var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
@@ -143,6 +167,7 @@ define(['react','showdown','jquery'], function(React) {
                                 url: window.location.href
                             };
                             var id = CommendId();
+                            createTwitterWidget(id);
                             if (id) {
                                 data['commentid'] = id;
                             }
@@ -159,20 +184,15 @@ define(['react','showdown','jquery'], function(React) {
             },
             componentDidMount: function () {
                 this.loadTwittCommentsFromServer();
-                //setInterval(this.loadCommentsFromServer, this.props.pollInterval);
-                !function (d, s, id) {
-                    var js, fjs = d.getElementsByTagName(s)[0], p = /^http:/.test(d.location) ? 'http' : 'https';
-                    if (!d.getElementById(id)) {
-                        js = d.createElement(s);
-                        js.id = id;
-                        js.src = p + "://platform.twitter.com/widgets.js";
-                        fjs.parentNode.insertBefore(js, fjs);
-                    }
-                }(document, "script", "twitter-wjs");
+
             },
             render: function () {
                 if (this.state.data) {
-                    return (<iframe id="titteriframe" src="http://titter.webrunes.com" id="titteriframe" frameBorder="no" scrolling="no"></iframe>);
+                    return (
+                        <section id="titter_frame_container">
+                            <iframe id="titteriframe" src="http://titter.webrunes.com" id="titteriframe" frameBorder="no" scrolling="no"></iframe>
+                        </section>
+                    );
                 } else {
                     return false;
                 }
