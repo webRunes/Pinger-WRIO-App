@@ -1,7 +1,9 @@
 /**
  * titter related stuff
  */
-define(['react','showdown','jquery'], function(React) {
+
+
+define(['react','showdown','jquery','attrchange'], function(React) {
 
     var importUrl = 'http://wrio.s3-website-us-east-1.amazonaws.com/';
     var converter = new Showdown.converter();
@@ -94,15 +96,45 @@ define(['react','showdown','jquery'], function(React) {
     getScripts();
 
     window.onTimelineLoad = function () {
-        $('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
+        console.log("Processing triggers when timeline loaded");
+        $twitter = $('#twitter-widget-0').contents();
+        function autoSizeTimeline() {
+            var twitterht = $twitter.find('.h-feed').height();
+            console.log("Setting height "+twitterht);
+            $('#twitter-widget-0').height((twitterht+100)+'px');
+        }
+
+
+        var prevHeight = $twitter.find('.h-feed').height();
+        $twitter.find('.h-feed').attrchange({
+            callback: function (e) {
+                var curHeight = $(this).height();
+                if (prevHeight !== curHeight) {
+                    $('#logger').text('height changed from ' + prevHeight + ' to ' + curHeight);
+
+                    prevHeight = curHeight;
+                }
+            }
+        });
+
+
+        $(window).resize(function () {
+            autoSizeTimeline();
+        });
+
+        $twitter.find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
+        autoSizeTimeline();
+
+
+
     }
 
     function createTwitterWidget(commentId) {
 
-        var frameheight = $(window).height();
-        var headerheight = $('.twitter').outerHeight()
+      //  var frameheight = $(window).height();
 
-        var twheight = frameheight - headerheight - 45;
+
+        var twheight = 10000;
         $('#titteriframe').height("190px");
 
         var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>'
@@ -119,65 +151,70 @@ define(['react','showdown','jquery'], function(React) {
 
     var CreateTitter = React.createClass({
             loadTwittCommentsFromServer: function () {
-                var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
-                $.ajax({
+                //var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
+
+                if (is_airticlelist == false) {
+                    this.setState({data: ""});
+                } else {
+                    this.setState({data: data});
+                }
+
+                $("#titteriframe").on('load', function (event) {
+                    console.log("Iframe loaded");
+                    var CommendId = function () {
+                        var scripts = document.getElementsByTagName("script");
+                        var jsonData = new Object();
+                        var jsonArray = [];
+                        var has = false;
+                        for (var i = 0; i < scripts.length; i++) {
+                            if (scripts[i].type == 'application/ld+json') {
+                                has = true;
+                                jsonData = JSON.parse(scripts[i].innerHTML);
+                                jsonArray.push(jsonData);
+                            }
+                        }
+                        var completeJson = jsonArray;
+                        complete_script = completeJson;
+
+                        return getFinalJSON(completeJson);
+                    };
+                    var getFinalJSON = function (json, hasPart) {
+                        for (var j = 0; j < json.length; j++) {
+                            comment = json[j];
+
+                            var commentid = comment['comment'];
+                            if (commentid) {
+                                return commentid;
+                            }
+                        }
+                        ;
+                        return null;
+                    };
+                    var w = this.contentWindow;
+                    var data = {
+                        url: window.location.href
+                    };
+                    var id = CommendId();
+                    if (id == null) id = '570802230606176256'; //default id, used if no value specified in LD+JSON
+                    createTwitterWidget(id);
+                    if (id) {
+                        data['commentid'] = id;
+                    }
+                   // w.postMessage(JSON.stringify(data), "*");
+                });
+
+ /*               $.ajax({
                     url: url,
                     dataType: 'html',
                     success: function (data) {
-                        if (is_airticlelist == false) {
-                            this.setState({data: ""});
-                        } else {
-                            this.setState({data: data});
-                        }
+
                         //this.setState({data: data});
 
-                        $("#titteriframe").on('load', function (event) {
-                            console.log("Iframe loaded");
-                            var CommendId = function () {
-                                var scripts = document.getElementsByTagName("script");
-                                var jsonData = new Object();
-                                var jsonArray = [];
-                                var has = false;
-                                for (var i = 0; i < scripts.length; i++) {
-                                    if (scripts[i].type == 'application/ld+json') {
-                                        has = true;
-                                        jsonData = JSON.parse(scripts[i].innerHTML);
-                                        jsonArray.push(jsonData);
-                                    }
-                                }
-                                var completeJson = jsonArray;
-                                complete_script = completeJson;
-
-                                return getFinalJSON(completeJson);
-                            };
-                            var getFinalJSON = function (json, hasPart) {
-                                for (var j = 0; j < json.length; j++) {
-                                    comment = json[j];
-
-                                    var commentid = comment['comment'];
-                                    if (commentid) {
-                                        return commentid;
-                                    }
-                                }
-                                ;
-                                return null;
-                            };
-                            var w = this.contentWindow;
-                            var data = {
-                                url: window.location.href
-                            };
-                            var id = CommendId();
-                            createTwitterWidget(id);
-                            if (id) {
-                                data['commentid'] = id;
-                            }
-                            w.postMessage(JSON.stringify(data), "*");
-                        });
                     }.bind(this),
                     error: function (xhr, status, err) {
                         console.error(url, status, err.toString());
                     }.bind(this)
-                });
+                });*/
             },
             getInitialState: function () {
                 return {data: []};
