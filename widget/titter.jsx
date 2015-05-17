@@ -62,7 +62,6 @@ define(['react','showdown','jquery'], function(React) {
             }
             // for list
 
-
             var articlebody = comment['articleBody'];
             if(comment['articleBody']==undefined){
                 articlebody = '';
@@ -125,16 +124,11 @@ define(['react','showdown','jquery'], function(React) {
 
         $twitter.find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
         setTimeout(autoSizeTimeline,1000);
-
-
-
-
     }
 
     function createTwitterWidget(commentId) {
 
       //  var frameheight = $(window).height();
-
 
         var twheight = 10000;
         $('#titteriframe').height("190px");
@@ -147,8 +141,6 @@ define(['react','showdown','jquery'], function(React) {
                 js.src=p+"://platform.twitter.com/widgets.js";
                 js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");
                 fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
-
-
     }
 
     var CreateTitter = React.createClass({
@@ -206,7 +198,6 @@ define(['react','showdown','jquery'], function(React) {
                             data['commentid'] = id;
                         }
                     }
-
 
                    // w.postMessage(JSON.stringify(data), "*");
                 });
