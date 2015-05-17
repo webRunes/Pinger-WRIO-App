@@ -86,7 +86,7 @@ app.get('/callback',function(request,response) {
 
 app.post('/sendComment', function (request, response) {
 
-		var imageFileData = request.body.fileData;
+		var text = request.body.text;
 		var message = request.body.comment;
 		//var ssid = request.body.ssid;
 		var ssid = request.sessionID;
@@ -101,7 +101,7 @@ app.post('/sendComment', function (request, response) {
 				return;
 			} else {
 				console.log("got keys",cred);
-				titterPicture.drawComment(imageFileData, function (error, data) {
+				titterPicture.drawComment(text, function (error, data) {
 					var imagePath = "./images/temp.png";
 					titterSender.comment(cred, message+' Donate 0 WRG', imagePath,function done(err,res) {
 						if (err) {
