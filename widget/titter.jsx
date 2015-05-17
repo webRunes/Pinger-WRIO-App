@@ -235,7 +235,7 @@ define(['react','showdown','jquery'], function(React) {
                 if (this.state.nocomments) {
                     return (
                         <section id="titter_frame_container">
-                            Comments not configured
+                            Comments are disabled
                             </section>
                     )
                 }
