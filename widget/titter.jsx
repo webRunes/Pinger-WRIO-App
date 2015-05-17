@@ -106,6 +106,7 @@ define(['react','showdown','jquery'], function(React) {
 
 
         var prevHeight = $twitter.find('.h-feed').height();
+/*
         $twitter.find('.h-feed').attrchange({
             callback: function (e) {
                 var curHeight = $(this).height();
@@ -117,13 +118,14 @@ define(['react','showdown','jquery'], function(React) {
             }
         });
 
-
+*/
         $(window).resize(function () {
             autoSizeTimeline();
         });
 
         $twitter.find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
-        autoSizeTimeline();
+        setTimeout(autoSizeTimeline,1000);
+        
 
 
 
