@@ -199,7 +199,7 @@ define(['react','showdown','jquery'], function(React) {
                     var id = CommendId();
                     if (id == null) {
                         that.setState({nocomments: "true"});
-                        console.log("WARNING No comment id found in LD+JSON code, please fix!!!!")
+
                     } else {
                         createTwitterWidget(id);
                         if (id) {
