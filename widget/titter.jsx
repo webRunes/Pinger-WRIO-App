@@ -3,7 +3,7 @@
  */
 
 
-define(['react','showdown','jquery','attrchange'], function(React) {
+define(['react','showdown','jquery'], function(React) {
 
     var importUrl = 'http://wrio.s3-website-us-east-1.amazonaws.com/';
     var converter = new Showdown.converter();
