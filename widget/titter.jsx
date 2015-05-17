@@ -125,7 +125,7 @@ define(['react','showdown','jquery'], function(React) {
 
         $twitter.find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
         setTimeout(autoSizeTimeline,1000);
-        
+
 
 
 
@@ -154,7 +154,7 @@ define(['react','showdown','jquery'], function(React) {
     var CreateTitter = React.createClass({
             loadTwittCommentsFromServer: function () {
                 //var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
-
+                var that = this;
                 if (is_airticlelist == false) {
                     this.setState({data: ""});
                 } else {
@@ -197,11 +197,17 @@ define(['react','showdown','jquery'], function(React) {
                         url: window.location.href
                     };
                     var id = CommendId();
-                    if (id == null) id = '570802230606176256'; //default id, used if no value specified in LD+JSON
-                    createTwitterWidget(id);
-                    if (id) {
-                        data['commentid'] = id;
+                    if (id == null) {
+                        that.setState({nocomments: "true"});
+                        console.log("WARNING No comment id found in LD+JSON code, please fix!!!!")
+                    } else {
+                        createTwitterWidget(id);
+                        if (id) {
+                            data['commentid'] = id;
+                        }
                     }
+
+
                    // w.postMessage(JSON.stringify(data), "*");
                 });
 
@@ -226,6 +232,13 @@ define(['react','showdown','jquery'], function(React) {
 
             },
             render: function () {
+                if (this.state.nocomments) {
+                    return (
+                        <section id="titter_frame_container">
+                            Comments not configured
+                            </section>
+                    )
+                }
                 if (this.state.data) {
                     return (
                         <section id="titter_frame_container">
