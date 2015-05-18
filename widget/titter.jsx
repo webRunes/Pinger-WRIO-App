@@ -10,6 +10,7 @@ define(['react','showdown','jquery'], function(React) {
     var finalListJsonArray = [];
     var finalJson;
     var finalJsonArray = [];
+    var is_airticlelist=false;
 
     var getScripts = function(){
         var scripts = document.getElementsByTagName("script");
