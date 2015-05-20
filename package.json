@@ -15,7 +15,8 @@
     "mysql":"*",
     "cookie-parser":"*",
     "express-session":"*",
-    "express-mysql-session":"*"
+    "express-mysql-session":"*",
+    "canvas":"*"
   },
   "devDependencies": {},
   "scripts": {
