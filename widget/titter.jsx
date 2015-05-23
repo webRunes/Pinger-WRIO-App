@@ -226,9 +226,7 @@ define(['react','showdown','jquery'], function(React) {
             render: function () {
                 if (this.state.nocomments) {
                     return (
-                        <section id="titter_frame_container">
-                        Comments are disabled
-                            </section>
+                        <div className="alert alert-warning">Comments disabled. <a href="#">Enable</a></div>
                     )
                 }
                 if (this.state.data) {
