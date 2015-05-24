@@ -3,81 +3,7 @@
  */
 
 
-define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts) {
-
-    var importUrl = 'http://wrio.s3-website-us-east-1.amazonaws.com/';
-    var converter = new Showdown.converter();
-    var finalListJsonArray = [];
-    var finalJson;
-    var finalJsonArray = [];
-    var is_airticlelist=false;
-
-    var getFinalJSON = function(json,hasPart){
-        if(hasPart==undefined){
-            hasPart = false;
-        }
-        $.each(json,function(i,item){
-            comment = this;
-            var is_article = false;
-            if(comment['@type']=='Article'){
-                is_article = true;
-                is_airticlelist=true;
-            }
-
-            // for list
-            if(comment['itemListElement']!=undefined){
-                is_list = true;
-                for(var i=0;i < comment['itemListElement'].length;i++){
-                    name= comment['itemListElement'][i].name;
-                    author= comment['itemListElement'][i].author;
-                    about= comment['itemListElement'][i].about;
-                    url= comment['itemListElement'][i].url;
-                    image= comment['itemListElement'][i].image;
-                    rowList = {
-                        "name": name,
-                        "author": comment['name'],
-                        "about": about,
-                        "url": url,
-                        "image": image
-                    }
-                    finalListJsonArray.push(rowList);
-                }
-            }
-            // for list
-
-            var articlebody = comment['articleBody'];
-            if(comment['articleBody']==undefined){
-                articlebody = '';
-            }
-            var newArticle='';
-            for(var i=0;i < articlebody.length;i++){
-                if(i>0){
-                }
-                newArticle +=  '<p>' + articlebody[i]  + '</p>';
-            }
-
-            row = {
-                "is_article": is_article,
-                "articlename": comment['name'],
-                "articleBody": newArticle,
-                "url": '',//comment['url']
-                "hasPart": hasPart
-            }
-            finalJsonArray.push(row);
-            //console.log((finalJsonArray).length);
-            if(comment.hasPart!=undefined){
-                if((comment.hasPart).length > 0){
-                    hasParts = comment.hasPart;
-                    getFinalJSON(hasParts,true);
-                }
-            }
-        });
-        return finalJsonArray;
-    }
-
-    finalJson = getFinalJSON(
-        getScripts()
-    );
+define(['react', 'showdown', 'jquery'], function(React) {
 
     window.onTimelineLoad = function () {
         console.log("Processing triggers when timeline loaded");
@@ -90,19 +16,6 @@ define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts
 
 
         var prevHeight = $twitter.find('.h-feed').height();
-/*
-        $twitter.find('.h-feed').attrchange({
-            callback: function (e) {
-                var curHeight = $(this).height();
-                if (prevHeight !== curHeight) {
-                    $('#logger').text('height changed from ' + prevHeight + ' to ' + curHeight);
-
-                    prevHeight = curHeight;
-                }
-            }
-        });
-
-*/
         $(window).resize(function () {
             autoSizeTimeline();
         });
@@ -129,105 +42,79 @@ define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts
     }
 
     var CreateTitter = React.createClass({displayName: "CreateTitter",
-            loadTwittCommentsFromServer: function () {
-                //var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
-                var that = this;
-                if (is_airticlelist == false) {
-                    this.setState({data: ""});
-                } else {
-                    this.setState({data: data});
+        isArticle: function(json) {
+            var i;
+            for (i = 0; i < json.length; i += 1) {
+                comment = json[i];
+                if(comment['@type'] === 'Article') {
+                    return true;
                 }
+                var hasPart = comment.hasPart;
+                if ((typeof hasPart === 'object') && (hasPart.length > 0)) {
+                    return isArticle(hasPart);
+                }
+            }
+        },
+        loadTwittCommentsFromServer: function () {
+            var that = this;
+            if (this.isArticle(this.props.scripts)) {
+                this.setState({data: data});
+            }
 
-                $("#titteriframe").on('load', function (event) {
-                    console.log("Iframe loaded");
-                    var CommendId = function () {
-                        return getFinalJSON(that.props.scripts);
-                    };
-                    var getFinalJSON = function (json, hasPart) {
-                        for (var j = 0; j < json.length; j++) {
-                            comment = json[j];
-
-                            var commentid = comment['comment'];
-                            if (commentid) {
-                                return commentid;
-                            }
-                        }
-                        ;
-                        return null;
-                    };
-                    var w = this.contentWindow;
-                    var data = {
-                        url: window.location.href
-                    };
-                    var id = CommendId();
-                    if (id == null) {
-                        that.setState({nocomments: "true"});
-
-                    } else {
-                        createTwitterWidget(id);
-                        if (id) {
-                            data['commentid'] = id;
+            $("#titteriframe").on('load', function (event) {
+                console.log("Iframe loaded");
+                var CommendId = function () {
+                    return getFinalJSON(that.props.scripts);
+                };
+                var getFinalJSON = function (json, hasPart) {
+                    for (var j = 0; j < json.length; j++) {
+                        comment = json[j];
+                        var commentid = comment['comment'];
+                        if (commentid) {
+                            return commentid;
                         }
                     }
-
-                   // w.postMessage(JSON.stringify(data), "*");
-                });
-
- /*               $.ajax({
-                    url: url,
-                    dataType: 'html',
-                    success: function (data) {
-
-                        //this.setState({data: data});
-
-                    }.bind(this),
-                    error: function (xhr, status, err) {
-                        console.error(url, status, err.toString());
-                    }.bind(this)
-                });*/
-            },
-            getInitialState: function () {
-                return {data: []};
-            },
-            componentDidMount: function () {
-                this.loadTwittCommentsFromServer();
-
-            },
-            render: function () {
-                if (this.state.nocomments) {
-                    return (
-                        React.createElement("div", {className: "alert alert-warning"}, "Comments disabled. ", React.createElement("a", {href: "#"}, "Enable"))
-                    )
-                }
-                if (this.state.data) {
-                    return (
-                        React.createElement("section", {id: "titter_frame_container"}, 
-                            React.createElement("iframe", {id: "titteriframe", src: "http://titter.webrunes.com", id: "titteriframe", frameBorder: "no", scrolling: "no"})
-                        )
-                    );
+                    ;
+                    return null;
+                };
+                var w = this.contentWindow;
+                var data = {
+                    url: window.location.href
+                };
+                var id = CommendId();
+                if (id == null) {
+                    that.setState({nocomments: "true"});
                 } else {
-                    return false;
+                    createTwitterWidget(id);
+                    if (id) {
+                        data['commentid'] = id;
+                    }
                 }
-
-            }
-});
-
-    /*                return (
-     < CreateOneTitter data = {this.state.data} />
-     );*/
-/*
-var CreateOneTitter = React.createClass({
+            });
+        },
+        getInitialState: function() {
+            return {};
+        },
+        componentDidMount: function () {
+            this.loadTwittCommentsFromServer();
+        },
         render: function () {
-            var rawMarkup = converter.makeHtml(this.props.data.toString());
-            if (rawMarkup == "") return false;
-            return (<iframe id="titteriframe" src="http://titter.webrunes.com" width="100%" height="2000" frameBorder="no" scrolling="no"></iframe>);
-            return (
-                <section
-                dangerouslySetInnerHTML = {
-                {
-                    __html: rawMarkup
-                }
-        } > </section >);
-    }});*/
+            if (this.state.nocomments) {
+                return (
+                    React.createElement("div", {className: "alert alert-warning"}, "Comments disabled. ", React.createElement("a", {href: "#"}, "Enable"))
+                )
+            }
+            if (this.state.data) {
+                return (
+                    React.createElement("section", {id: "titter_frame_container"}, 
+                        React.createElement("iframe", {id: "titteriframe", src: "http://titter.webrunes.com", id: "titteriframe", frameBorder: "no", scrolling: "no"})
+                    )
+                );
+            } else {
+                return false;
+            }
+        }
+    });
+
     return CreateTitter;
 });
