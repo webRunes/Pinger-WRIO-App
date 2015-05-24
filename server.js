@@ -101,9 +101,8 @@ app.post('/sendComment', function (request, response) {
 				return;
 			} else {
 				console.log("got keys",cred);
-				titterPicture.drawComment(text, function (error, data) {
-					var imagePath = "./images/temp.png";
-					titterSender.comment(cred, message+' Donate 0 WRG', imagePath,function done(err,res) {
+				titterPicture.drawComment(text, function (error, filename) {
+					titterSender.comment(cred, message+' Donate 0 WRG', filename, function done(err,res) {
 						if (err) {
 							response.status(400);
 							response.send(err);
