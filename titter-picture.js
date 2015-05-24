@@ -43,7 +43,7 @@ function createImage(text,done) {
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.font = "13px Tahoma";
+	ctx.font = "12px Tahoma";
 	ctx.fillStyle = '#292f33';
 	wrapText(ctx,text, 10,20,canvas.width-10,lineHeight);
 
