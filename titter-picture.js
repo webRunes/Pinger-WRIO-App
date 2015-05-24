@@ -43,9 +43,8 @@ function createImage(text,done) {
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.font = "13px Arial";
+	ctx.font = "12px Arial";
 	ctx.fillStyle = '#292f33';
-	//ctx.fillStyle = "#666666";
 	wrapText(ctx,text, 10,20,canvas.width-10,lineHeight);
 
 	ctx.fillStyle = "#aaa";
