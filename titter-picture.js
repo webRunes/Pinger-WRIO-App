@@ -43,7 +43,7 @@ function createImage(text,done) {
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.font = "12px Arial";
+	ctx.font = "13px Tahoma";
 	ctx.fillStyle = '#292f33';
 	wrapText(ctx,text, 10,20,canvas.width-10,lineHeight);
 
@@ -64,7 +64,6 @@ function createImage(text,done) {
 				done(null);
 				return;
 			}
-			//fs.write(file.fd, buf);
 			fs.write(file.fd, buf, 0, buf.length, null, function(err, written, buffer) {
 				if (err) {
 					console.log("Error closing file");
