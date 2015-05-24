@@ -128,7 +128,7 @@ define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts
                 fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
     }
 
-    var CreateTitter = React.createClass({
+    var CreateTitter = React.createClass({displayName: "CreateTitter",
             loadTwittCommentsFromServer: function () {
                 //var url = importUrl + 'Titter-WRIO-App/widget/titter.htm';  // Titter Path
                 var that = this;
@@ -196,14 +196,14 @@ define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts
             render: function () {
                 if (this.state.nocomments) {
                     return (
-                        <div className="alert alert-warning">Comments disabled. <a href="#">Enable</a></div>
+                        React.createElement("div", {className: "alert alert-warning"}, "Comments disabled. ", React.createElement("a", {href: "#"}, "Enable"))
                     )
                 }
                 if (this.state.data) {
                     return (
-                        <section id="titter_frame_container">
-                            <iframe id="titteriframe" src="http://titter.webrunes.com" id="titteriframe" frameBorder="no" scrolling="no"></iframe>
-                        </section>
+                        React.createElement("section", {id: "titter_frame_container"}, 
+                            React.createElement("iframe", {id: "titteriframe", src: "http://titter.webrunes.com", id: "titteriframe", frameBorder: "no", scrolling: "no"})
+                        )
                     );
                 } else {
                     return false;
