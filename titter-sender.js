@@ -8,7 +8,7 @@ titterSender.comment = function (cred, message, imagePath, done) {
 		nconf.get('api:twitterLogin:consumerSecret'),
 		cred.token,
 		cred.tokenSecret
-	)
+	);
 
 	twitterClient.statusesUpdateWithMedia(
 		{

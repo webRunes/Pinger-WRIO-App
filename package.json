@@ -16,7 +16,8 @@
     "cookie-parser": "*",
     "express-session": "*",
     "express-mysql-session": "*",
-    "canvas": "*"
+    "canvas": "*",
+    "temp":"*"
   },
   "devDependencies": {
     "react-tools": "^0.13.3"
