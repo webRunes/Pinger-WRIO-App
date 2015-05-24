@@ -196,7 +196,7 @@ define(['react', 'getScripts', 'showdown', 'jquery'], function(React, getScripts
             render: function () {
                 if (this.state.nocomments) {
                     return (
-                        React.createElement("div", {className: "alert alert-warning"}, "Comments disabled. ", React.createElement("a", {href: "#"}, "Enable"))
+                        React.createElement("div", {className: "alert alert-warning"}, "Comments are disabled. ", React.createElement("a", {href: "#"}, "Enable"))
                     )
                 }
                 if (this.state.data) {
