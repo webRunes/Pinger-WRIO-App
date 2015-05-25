@@ -56,8 +56,6 @@ app.use(session(
 
 
 app.get('/', function (request, response) {
-
-
 	console.log(request.sessionID);
 	wrioLogin.loginWithSessionId(request.sessionID,function(err,res) {
 		if (err) {
