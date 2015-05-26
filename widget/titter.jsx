@@ -94,7 +94,7 @@ define(['react', 'showdown', 'jquery'], function (React) {
                 <div className="form-group col-xs-12 col-md-4 col-lg-7 has-error">
                     <div className="input-group input-group-sm">
                         <span className="input-group-addon twitter-limit">{this.state.limit}</span>
-                        <input id="IDtweet_title" name="tweet_title" className="form-control" maxlength={this.state.limit} placeholder={this.state.placeholder} type="text" />
+                        <input id="IDtweet_title" name="tweet_title" className="form-control" maxLength={this.state.limit} placeholder={this.state.placeholder} type="text" />
                     </div>
                     <div className="help-block">{this.state.help}</div>
                 </div>
@@ -281,12 +281,12 @@ define(['react', 'showdown', 'jquery'], function (React) {
             var parts = [];
             if (this.state.nocomments) {
                 parts.push(
-                    <div className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
+                    <div key='a' className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
                 );
             }
             if (this.state.data) {
                 parts.push(
-                    <section id="titter_frame_container">
+                    <section key='b' id="titter_frame_container">
                         <iframe id="titteriframe" src="http://titter.webrunes.com" frameBorder="no" scrolling="no" />
                     </section>
                 );

@@ -94,7 +94,7 @@ define(['react', 'showdown', 'jquery'], function (React) {
                 React.createElement("div", {className: "form-group col-xs-12 col-md-4 col-lg-7 has-error"}, 
                     React.createElement("div", {className: "input-group input-group-sm"}, 
                         React.createElement("span", {className: "input-group-addon twitter-limit"}, this.state.limit), 
-                        React.createElement("input", {id: "IDtweet_title", name: "tweet_title", className: "form-control", maxlength: this.state.limit, placeholder: this.state.placeholder, type: "text"})
+                        React.createElement("input", {id: "IDtweet_title", name: "tweet_title", className: "form-control", maxLength: this.state.limit, placeholder: this.state.placeholder, type: "text"})
                     ), 
                     React.createElement("div", {className: "help-block"}, this.state.help)
                 )
@@ -281,12 +281,12 @@ define(['react', 'showdown', 'jquery'], function (React) {
             var parts = [];
             if (this.state.nocomments) {
                 parts.push(
-                    React.createElement("div", {className: "alert alert-warning"}, "Comments are disabled. ", React.createElement("a", {href: "#"}, "Enable"))
+                    React.createElement("div", {key: "a", className: "alert alert-warning"}, "Comments are disabled. ", React.createElement("a", {href: "#"}, "Enable"))
                 );
             }
             if (this.state.data) {
                 parts.push(
-                    React.createElement("section", {id: "titter_frame_container"}, 
+                    React.createElement("section", {key: "b", id: "titter_frame_container"}, 
                         React.createElement("iframe", {id: "titteriframe", src: "http://titter.webrunes.com", frameBorder: "no", scrolling: "no"})
                     )
                 );
