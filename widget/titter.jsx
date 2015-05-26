@@ -111,13 +111,13 @@ define(['react', 'showdown', 'jquery'], function (React) {
             };
         },
         render: function() {
-            return null;
-            return (
-                <div className="form-group col-xs-12 has-error">
-                    <textarea rows="3" className="form-control" placeholder={this.state.placeholder} />
-                    <div className="help-block">{this.state.help}</div>
-                </div>
-            );
+            return null;//TODO remove iframe auth
+            //return (
+            //    <div className="form-group col-xs-12 has-error">
+            //        <textarea rows="3" className="form-control" placeholder={this.state.placeholder} />
+            //        <div className="help-block">{this.state.help}</div>
+            //    </div>
+            //);
         }
     });
 
@@ -129,11 +129,11 @@ define(['react', 'showdown', 'jquery'], function (React) {
         },
         render: function() {
             return null;
-            return (
-                <div className="btn-group tooltip-demo">
-                    <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-camera"></span>{this.state.text}</button>
-                </div>
-            );
+            //return (
+            //    <div className="btn-group tooltip-demo">
+            //        <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-camera"></span>{this.state.text}</button>
+            //    </div>
+            //);
         }
     });
     
@@ -145,15 +145,15 @@ define(['react', 'showdown', 'jquery'], function (React) {
             };
         },
         render: function() {
-            return null;
-            return (
-                <div className="pull-right">
-                    <div className="pull-right">
-                        <label className="comment-limit">{this.state.label}</label>
-                        <button type="button" className="btn btn-primary"><span className="glyphicon glyphicon-ok"></span>{this.state.text}</button>
-                    </div>
-                </div>
-            );
+            return null;//TODO remove iframe auth
+            //return (
+            //    <div className="pull-right">
+            //        <div className="pull-right">
+            //            <label className="comment-limit">{this.state.label}</label>
+            //            <button type="button" className="btn btn-primary"><span className="glyphicon glyphicon-ok"></span>{this.state.text}</button>
+            //        </div>
+            //    </div>
+            //);
         }
     });
 
@@ -272,7 +272,9 @@ define(['react', 'showdown', 'jquery'], function (React) {
             });
         },
         getInitialState: function() {
-            return {};
+            return {
+                addComment: 'Add comment'
+            };
         },
         componentDidMount: function () {
             this.loadTwittCommentsFromServer();
@@ -294,7 +296,7 @@ define(['react', 'showdown', 'jquery'], function (React) {
             return (
                 <div>
                     <ul className="breadcrumb">
-                        <li className="active">Add comment</li>
+                        <li className="active">{this.state.addComment}</li>
                     </ul>
                     <Donatate />
                     {parts}
