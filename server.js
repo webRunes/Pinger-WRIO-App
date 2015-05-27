@@ -1,7 +1,7 @@
 var nconf = require("./wrio_nconf.js").init();
 var express = require('express');
 var app = require("./wrio_app.js").init(express);
-var server = require('http').createServer(app).listen(nconf.get("server:port"));
+var server = require('http').createServer(app).listen(process.env.PORT || nconf.get("server:port"));
 var fs = require('fs');
 
 
@@ -117,4 +117,7 @@ app.post('/sendComment', function (request, response) {
 
 
 });
+
+app.use('/api', require('./api/api-search.js'));
+
 console.log("Application Started!");
