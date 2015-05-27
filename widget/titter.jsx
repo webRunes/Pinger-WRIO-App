@@ -1,10 +1,5 @@
-/**
- * titter related stuff
- */
-
-
-define(['react', 'showdown', 'jquery'], function (React) {
-
+    var React = require('react');
+    var $ = require('jquery');
     var Alert = React.createClass({
         getInitialState: function() {
             return {
@@ -172,7 +167,7 @@ define(['react', 'showdown', 'jquery'], function (React) {
                     </div>
                     <div className="form-horizontal">
                         <div className="form-group col-xs-12 col-md-4 col-lg-2">
-                            <label className="col-sm-2 control-label" for="inputAmount">{this.state.title}</label>
+                            <label className="col-sm-2 control-label" htmlFor="inputAmount">{this.state.title}</label>
                         </div>
                         <InputNumber />
                         <TweetTitle />
@@ -236,15 +231,21 @@ define(['react', 'showdown', 'jquery'], function (React) {
                 }
             }
         },
-        loadTwittCommentsFromServer: function () {
-            var that = this;
-            if (this.isArticle(this.props.scripts)) {
-                this.setState({data: data});
+        getInitialState: function() {
+            return {
+                addComment: 'Add comment'
+            };
+        },
+        componentDidMount: function () {
+            var that = this,
+                scripts = this.props.scripts;
+            if (this.isArticle(scripts)) {
+                this.setState({article: true});
             }
 
             $("#titteriframe").on('load', function (event) {
                 var CommendId = function () {
-                    return getFinalJSON(that.props.scripts);
+                    return getFinalJSON(scripts);
                 };
                 var getFinalJSON = function (json, hasPart) {
                     for (var j = 0; j < json.length; j++) {
@@ -256,28 +257,13 @@ define(['react', 'showdown', 'jquery'], function (React) {
                     }
                     return null;
                 };
-                var w = this.contentWindow;
-                var data = {
-                    url: window.location.href
-                };
                 var id = CommendId();
                 if (id === null) {
                     that.setState({nocomments: true});
                 } else {
                     that.createTwitterWidget(id);
-                    if (id) {
-                        data.commentid = id;
-                    }
                 }
             });
-        },
-        getInitialState: function() {
-            return {
-                addComment: 'Add comment'
-            };
-        },
-        componentDidMount: function () {
-            this.loadTwittCommentsFromServer();
         },
         render: function () {
             var parts = [];
@@ -286,7 +272,7 @@ define(['react', 'showdown', 'jquery'], function (React) {
                     <div key='a' className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
                 );
             }
-            if (this.state.data) {
+            if (this.state.article) {
                 parts.push(
                     <section key='b' id="titter_frame_container">
                         <iframe id="titteriframe" src="http://titter.webrunes.com" frameBorder="no" scrolling="no" />
@@ -305,5 +291,4 @@ define(['react', 'showdown', 'jquery'], function (React) {
         }
     });
 
-    return CreateTitter;
-});
+module.exports = CreateTitter;
