@@ -233,19 +233,15 @@
         },
         getInitialState: function() {
             return {
-                addComment: 'Add comment'
+                addComment: 'Add comment',
+                article: this.isArticle(this.props.scripts)
             };
         },
         componentDidMount: function () {
-            var that = this,
-                scripts = this.props.scripts;
-            if (this.isArticle(scripts)) {
-                this.setState({article: true});
-            }
-
+            var that = this;
             $("#titteriframe").on('load', function (event) {
                 var CommendId = function () {
-                    return getFinalJSON(scripts);
+                    return getFinalJSON(that.props.scripts);
                 };
                 var getFinalJSON = function (json, hasPart) {
                     for (var j = 0; j < json.length; j++) {
