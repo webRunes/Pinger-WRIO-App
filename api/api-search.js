@@ -1,11 +1,13 @@
 var router = require('express').Router();
-var Twit = require('twit');
+var TwitterClient = require("./twitter-client");
 
 router.post('/search', function(request, response) {
-    var T = new Twit(request.body.twitterCreds);
-    T.get('search/tweets', request.body.query, function(err, data) {
+    
+    var twitterSearchClient = TwitterClient.SearchClient(request.body.twitterCreds);
+    
+    twitterSearchClient.search(request.body.query, function(err, data) {
         if (err) {
-            return response.status(402).send(err.message);
+            return response.status(err.status).send(err.message);
         }
         
     	console.log('Found ' + data.statuses.length + ' statuses');

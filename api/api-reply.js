@@ -3,17 +3,11 @@ var Twit = require('twit');
 var titterPicture = require('../titter-picture');
 var titterSender = require('../titter-sender');
 var fs = require("fs");
-var Twitter = require('node-twitter');
+var TwitterClient = require("./twitter-client");
 
 
 router.post('/replyAll', function(request, response){
-    var creds = request.body.twitterCreds
-    var twitterRestClient = new Twitter.RestClient(
-        creds.consumer_key,
-        creds.consumer_secret,
-        creds.access_token,
-        creds.access_token_secret
-    );
+    var twitterRestClient = new TwitterClient.RestClient(request.body.twitterCreds);
     var statuses = request.body.statuses;
     
     statuses.forEach(function(status) {
@@ -32,13 +26,12 @@ router.post('/replyAll', function(request, response){
             }
             
             twitterRestClient.statusesUpdateWithMedia(query, function(err, result) {
-                    if (err) {
-                        return response.status(err.code).send(err.message);
-                    }
-            
-                    response.status(200).end();
+                if (err) {
+                    return response.status(err.code).send(err.message);
                 }
-            );
+            
+                response.status(200).end();
+            });
 		});
     });
 });
