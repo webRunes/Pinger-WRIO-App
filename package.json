@@ -4,20 +4,21 @@
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "main": "gm-test.js",
   "dependencies": {
+    "aws-sdk-apis": "*",
     "body-parser": "^1.9.2",
+    "canvas": "*",
+    "cookie-parser": "*",
     "ejs": "^1.0.0",
     "express": "^4.10.1",
-    "node-twitter": "*",
-    "nconf": "*",
-    "aws-sdk-apis": "*",
-    "supervisor": "*",
+    "express-mysql-session": "*",
+    "express-session": "*",
     "gm": "^1.17.0",
     "mysql": "*",
-    "cookie-parser": "*",
-    "express-session": "*",
-    "express-mysql-session": "*",
-    "canvas": "*",
-    "temp":"*"
+    "nconf": "*",
+    "node-twitter": "*",
+    "supervisor": "*",
+    "temp": "*",
+    "twit": "^1.1.20"
   },
   "devDependencies": {
     "react-tools": "^0.13.3"
