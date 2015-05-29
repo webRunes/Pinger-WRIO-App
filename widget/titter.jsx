@@ -1,10 +1,5 @@
-/**
- * titter related stuff
- */
-
-
-define(['react', 'showdown', 'jquery'], function(React) {
-
+    var React = require('react');
+    var $ = require('jquery');
     var Alert = React.createClass({
         getInitialState: function() {
             return {
@@ -94,7 +89,7 @@ define(['react', 'showdown', 'jquery'], function(React) {
                 <div className="form-group col-xs-12 col-md-4 col-lg-7 has-error">
                     <div className="input-group input-group-sm">
                         <span className="input-group-addon twitter-limit">{this.state.limit}</span>
-                        <input id="IDtweet_title" name="tweet_title" className="form-control" maxlength={this.state.limit} placeholder={this.state.placeholder} type="text" />
+                        <input id="IDtweet_title" name="tweet_title" className="form-control" maxLength={this.state.limit} placeholder={this.state.placeholder} type="text" />
                     </div>
                     <div className="help-block">{this.state.help}</div>
                 </div>
@@ -111,13 +106,13 @@ define(['react', 'showdown', 'jquery'], function(React) {
             };
         },
         render: function() {
-            return null
-            return (
-                <div className="form-group col-xs-12 has-error">
-                    <textarea rows="3" className="form-control" placeholder={this.state.placeholder} />
-                    <div className="help-block">{this.state.help}</div>
-                </div>
-            );
+            return null;//TODO remove iframe auth
+            //return (
+            //    <div className="form-group col-xs-12 has-error">
+            //        <textarea rows="3" className="form-control" placeholder={this.state.placeholder} />
+            //        <div className="help-block">{this.state.help}</div>
+            //    </div>
+            //);
         }
     });
 
@@ -129,11 +124,11 @@ define(['react', 'showdown', 'jquery'], function(React) {
         },
         render: function() {
             return null;
-            return (
-                <div className="btn-group tooltip-demo">
-                    <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-camera"></span>{this.state.text}</button>
-                </div>
-            );
+            //return (
+            //    <div className="btn-group tooltip-demo">
+            //        <button type="button" className="btn btn-default"><span className="glyphicon glyphicon-camera"></span>{this.state.text}</button>
+            //    </div>
+            //);
         }
     });
     
@@ -145,15 +140,15 @@ define(['react', 'showdown', 'jquery'], function(React) {
             };
         },
         render: function() {
-            return null;
-            return (
-                <div className="pull-right">
-                    <div className="pull-right">
-                        <label className="comment-limit">{this.state.label}</label>
-                        <button type="button" className="btn btn-primary"><span className="glyphicon glyphicon-ok"></span>{this.state.text}</button>
-                    </div>
-                </div>
-            );
+            return null;//TODO remove iframe auth
+            //return (
+            //    <div className="pull-right">
+            //        <div className="pull-right">
+            //            <label className="comment-limit">{this.state.label}</label>
+            //            <button type="button" className="btn btn-primary"><span className="glyphicon glyphicon-ok"></span>{this.state.text}</button>
+            //        </div>
+            //    </div>
+            //);
         }
     });
 
@@ -172,7 +167,7 @@ define(['react', 'showdown', 'jquery'], function(React) {
                     </div>
                     <div className="form-horizontal">
                         <div className="form-group col-xs-12 col-md-4 col-lg-2">
-                            <label className="col-sm-2 control-label" for="inputAmount">{this.state.title}</label>
+                            <label className="col-sm-2 control-label" htmlFor="inputAmount">{this.state.title}</label>
                         </div>
                         <InputNumber />
                         <TweetTitle />
@@ -190,11 +185,9 @@ define(['react', 'showdown', 'jquery'], function(React) {
     var CreateTitter = React.createClass({
         createTwitterWidget: function (commentId) {
             window.onTimelineLoad = function () {
-                console.log("Processing triggers when timeline loaded");
                 $twitter = $('#twitter-widget-0').contents();
                 function autoSizeTimeline() {
                     var twitterht = $twitter.find('.h-feed').height();
-                    console.log("Setting height "+twitterht);
                     $('#twitter-widget-0').height((twitterht+100)+'px');
                 }
 
@@ -207,17 +200,23 @@ define(['react', 'showdown', 'jquery'], function(React) {
                 $twitter.find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
                 setTimeout(autoSizeTimeline,1000);
             };
+
             var twheight = 10000;
             $('#titteriframe').height("190px");
 
-            var twitter_template = '<a className="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>'
+            var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
             $('#titter_frame_container').append(twitter_template);
 
-            !function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
-            if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
-            js.src=p+"://platform.twitter.com/widgets.js";
-            js.setAttribute('onload', "twttr.events.bind('rendered',onTimelineLoad;");
-            fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+            var js,
+                fjs = document.getElementsByTagName('script')[0],
+                p = /^http:/.test(document.location) ? 'http':'https';
+            if (!document.getElementById('twitter-wjs')) {
+                js = document.createElement('script');
+                js.id = 'twitter-wjs';
+                js.src = p + '://platform.twitter.com/widgets.js';
+                js.setAttribute('onload', "twttr.events.bind('rendered',window.onTimelineLoad);");
+                fjs.parentNode.insertBefore(js, fjs);
+            }
         },
         isArticle: function(json) {
             var i;
@@ -232,67 +231,54 @@ define(['react', 'showdown', 'jquery'], function(React) {
                 }
             }
         },
-        loadTwittCommentsFromServer: function () {
+        getInitialState: function() {
+            return {
+                addComment: 'Add comment',
+                article: this.isArticle(this.props.scripts)
+            };
+        },
+        componentDidMount: function () {
             var that = this;
-            if (this.isArticle(this.props.scripts)) {
-                this.setState({data: data});
-            }
-
             $("#titteriframe").on('load', function (event) {
-                console.log("Iframe loaded");
                 var CommendId = function () {
                     return getFinalJSON(that.props.scripts);
                 };
                 var getFinalJSON = function (json, hasPart) {
                     for (var j = 0; j < json.length; j++) {
                         comment = json[j];
-                        var commentid = comment['comment'];
+                        var commentid = comment.comment;
                         if (commentid) {
                             return commentid;
                         }
                     }
-                    ;
                     return null;
                 };
-                var w = this.contentWindow;
-                var data = {
-                    url: window.location.href
-                };
                 var id = CommendId();
-                if (id == null) {
+                if (id === null) {
                     that.setState({nocomments: true});
                 } else {
                     that.createTwitterWidget(id);
-                    if (id) {
-                        data['commentid'] = id;
-                    }
                 }
             });
-        },
-        getInitialState: function() {
-            return {};
-        },
-        componentDidMount: function () {
-            this.loadTwittCommentsFromServer();
         },
         render: function () {
             var parts = [];
             if (this.state.nocomments) {
                 parts.push(
-                    <div className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
+                    <div key='a' className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
                 );
             }
-            if (this.state.data) {
+            if (this.state.article) {
                 parts.push(
-                    <section id="titter_frame_container">
-                        <iframe id="titteriframe" src="http://titter.webrunes.com" id="titteriframe" frameBorder="no" scrolling="no" />
+                    <section key='b' id="titter_frame_container">
+                        <iframe id="titteriframe" src="http://titter.webrunes.com" frameBorder="no" scrolling="no" />
                     </section>
                 );
             }
             return (
                 <div>
                     <ul className="breadcrumb">
-                        <li className="active">Add comment</li>
+                        <li className="active">{this.state.addComment}</li>
                     </ul>
                     <Donatate />
                     {parts}
@@ -301,5 +287,4 @@ define(['react', 'showdown', 'jquery'], function(React) {
         }
     });
 
-    return CreateTitter;
-});
+module.exports = CreateTitter;

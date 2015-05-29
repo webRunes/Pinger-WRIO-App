@@ -1,7 +1,9 @@
 var nconf = require("./wrio_nconf.js").init();
 var express = require('express');
 var app = require("./wrio_app.js").init(express);
-var server = require('http').createServer(app).listen(process.env.PORT || nconf.get("server:port"));
+var server = require('http').createServer(app).listen(nconf.get("server:port") , function(req , res){
+    console.log('app listening on port ' + nconf.get('server:port') + '...');
+});
 var fs = require('fs');
 
 
@@ -87,6 +89,7 @@ app.get('/callback',function(request,response) {
 app.post('/sendComment', function (request, response) {
 
 		var text = request.body.text;
+		var title = request.body.title;
 		var message = request.body.comment;
 		//var ssid = request.body.ssid;
 		var ssid = request.sessionID;
@@ -102,7 +105,7 @@ app.post('/sendComment', function (request, response) {
 			} else {
 				console.log("got keys",cred);
 				titterPicture.drawComment(text, function (error, filename) {
-					titterSender.comment(cred, message+' Donate 0 WRG', filename, function done(err,res) {
+					titterSender.comment(cred,title+'\n'+ message+' Donate 0 WRG', filename, function done(err,res) {
 						if (err) {
 							response.status(400);
 							response.send(err);

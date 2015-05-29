@@ -34,7 +34,7 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 
 function createImage(text,done) {
 	var lineHeight = 14;
-	var canvas = new Canvas(525, 650);
+	var canvas = new Canvas(500, 650);
 	var ctx = canvas.getContext('2d');
 
 	var ms_height = wrapText(ctx,text,10,20,canvas.width-10,lineHeight,true) + lineHeight*2;
