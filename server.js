@@ -56,6 +56,8 @@ app.use(session(
 	}
 ));
 
+app.use(express.static(__dirname + '/widget'));
+app.use(express.static(__dirname + '/test'));
 
 app.get('/', function (request, response) {
 
