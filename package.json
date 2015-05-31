@@ -17,7 +17,8 @@
     "express-session": "*",
     "express-mysql-session": "*",
     "canvas": "*",
-    "temp":"*"
+    "minimist": "^1.1.1",
+    "temp": "*"
   },
   "devDependencies": {
     "react-tools": "^0.13.3"
