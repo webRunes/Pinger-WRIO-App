@@ -56,8 +56,15 @@ app.use(session(
 	}
 ));
 
-app.use(express.static(__dirname + '/widget'));
-app.use(express.static(__dirname + '/test'));
+var argv = require('minimist')(process.argv.slice(2));
+console.log(argv);
+if (argv.testjsx == "true") {
+	console.log("\nEntering jsx widget test mode, use /test.html to check widget operation\n");
+	app.use(express.static(__dirname + '/widget'));
+	app.use(express.static(__dirname + '/test'));
+
+}
+
 
 app.get('/', function (request, response) {
 
