@@ -56,6 +56,9 @@ app.use(session(
 	}
 ));
 
+var p3p = require('p3p');
+app.use(p3p(p3p.recommended));
+
 var argv = require('minimist')(process.argv.slice(2));
 console.log(argv);
 if (argv.testjsx == "true") {
