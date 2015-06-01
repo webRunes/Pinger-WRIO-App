@@ -48,7 +48,7 @@ app.use(session(
 		cookie: {
 			secure:false,
 			domain:DOMAIN,
-			maxAge: 1000 * 60 * 24 * 30
+			maxAge: 1000 * 60 * 60 * 24 * 30
 		},
 		key: 'sid'
 	}
