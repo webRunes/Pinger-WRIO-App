@@ -1,5 +1,5 @@
     var React = require('react');
-    var $ = require('jquery');
+    var $ = require('min-jquery');
     var Alert = React.createClass({
         getInitialState: function() {
             return {
@@ -74,7 +74,7 @@
             );
         }
     });
-    
+
     var TweetTitle = React.createClass({
         getInitialState: function() {
             var limit = 72;
@@ -119,7 +119,7 @@
     var Photo = React.createClass({
         getInitialState: function() {
             return {
-                text: 'Photo',
+                text: 'Photo'
             };
         },
         render: function() {
@@ -131,7 +131,7 @@
             //);
         }
     });
-    
+
     var Submit = React.createClass({
         getInitialState: function() {
             return {
@@ -183,6 +183,9 @@
     });
 
     var CreateTitter = React.createClass({
+        propTypes: {
+            scripts: React.PropTypes.array.isRequired
+        },
         createTwitterWidget: function (commentId) {
             window.onTimelineLoad = function () {
                 $twitter = $('#twitter-widget-0').contents();
@@ -202,24 +205,25 @@
             };
 
             var twheight = 10000;
-            $('#titteriframe').height("190px");
+            $('#titteriframe').height('190px');
 
-            var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
-            $('#titter_frame_container').append(twitter_template);
+            var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
+            $('#titter_frame_container').append(twitterTemplate);
 
             var js,
                 fjs = document.getElementsByTagName('script')[0],
-                p = /^http:/.test(document.location) ? 'http':'https';
+                p = /^http:/.test(document.location) ? 'http' : 'https';
             if (!document.getElementById('twitter-wjs')) {
                 js = document.createElement('script');
                 js.id = 'twitter-wjs';
                 js.src = p + '://platform.twitter.com/widgets.js';
-                js.setAttribute('onload', "twttr.events.bind('rendered',window.onTimelineLoad);");
+                js.setAttribute('onload', 'twttr.events.bind("rendered",window.onTimelineLoad);');
                 fjs.parentNode.insertBefore(js, fjs);
             }
         },
         isArticle: function(json) {
-            var i;
+            var i,
+                comment;
             for (i = 0; i < json.length; i += 1) {
                 comment = json[i];
                 if(comment['@type'] === 'Article') {
@@ -227,7 +231,7 @@
                 }
                 var hasPart = comment.hasPart;
                 if ((typeof hasPart === 'object') && (hasPart.length > 0)) {
-                    return isArticle(hasPart);
+                    return this.isArticle(hasPart);
                 }
             }
         },
@@ -239,21 +243,19 @@
         },
         componentDidMount: function () {
             var that = this;
-            $("#titteriframe").on('load', function (event) {
-                var CommendId = function () {
-                    return getFinalJSON(that.props.scripts);
-                };
-                var getFinalJSON = function (json, hasPart) {
-                    for (var j = 0; j < json.length; j++) {
-                        comment = json[j];
-                        var commentid = comment.comment;
-                        if (commentid) {
-                            return commentid;
+            $('#titteriframe').on('load', function () {
+                var comment,
+                    getFinalJSON = function (json) {
+                        for (var j = 0; j < json.length; j++) {
+                            comment = json[j];
+                            var commentid = comment.comment;
+                            if (commentid) {
+                                return commentid;
+                            }
                         }
-                    }
-                    return null;
-                };
-                var id = CommendId();
+                        return null;
+                    };
+                var id = getFinalJSON(that.props.scripts);
                 if (id === null) {
                     that.setState({nocomments: true});
                 } else {
@@ -265,12 +267,12 @@
             var parts = [];
             if (this.state.nocomments) {
                 parts.push(
-                    <div key='a' className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
+                    <div key="a" className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
                 );
             }
             if (this.state.article) {
                 parts.push(
-                    <section key='b' id="titter_frame_container">
+                    <section key="b" id="titter_frame_container">
                         <iframe id="titteriframe" src="http://titter.webrunes.com" frameBorder="no" scrolling="no" />
                     </section>
                 );
