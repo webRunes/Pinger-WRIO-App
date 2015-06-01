@@ -50,7 +50,7 @@ app.use(session(
 		cookie: {
 			secure:false,
 			domain:DOMAIN,
-			maxAge: 1000 * 60 * 24 * 30
+			maxAge: 1000 * 60 * 60 * 24 * 30
 		},
 		key: 'sid'
 	}
@@ -67,8 +67,6 @@ if (argv.testjsx == "true") {
 
 
 app.get('/', function (request, response) {
-
-
 	console.log(request.sessionID);
 	wrioLogin.loginWithSessionId(request.sessionID,function(err,res) {
 		if (err) {
