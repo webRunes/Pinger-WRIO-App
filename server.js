@@ -1,7 +1,9 @@
 var nconf = require("./wrio_nconf.js").init();
 var express = require('express');
 var app = require("./wrio_app.js").init(express);
-var server = require('http').createServer(app).listen(nconf.get("server:port"));
+var server = require('http').createServer(app).listen(nconf.get("server:port") , function(req , res){
+    console.log('app listening on port ' + nconf.get('server:port') + '...');
+});
 var fs = require('fs');
 
 
@@ -54,6 +56,15 @@ app.use(session(
 	}
 ));
 
+var argv = require('minimist')(process.argv.slice(2));
+console.log(argv);
+if (argv.testjsx == "true") {
+	console.log("\nEntering jsx widget test mode, use /test.html to check widget operation\n");
+	app.use(express.static(__dirname + '/widget'));
+	app.use(express.static(__dirname + '/test'));
+
+}
+
 
 app.get('/', function (request, response) {
 	console.log(request.sessionID);
@@ -85,6 +96,7 @@ app.get('/callback',function(request,response) {
 app.post('/sendComment', function (request, response) {
 
 		var text = request.body.text;
+		var title = request.body.title;
 		var message = request.body.comment;
 		//var ssid = request.body.ssid;
 		var ssid = request.sessionID;
@@ -99,9 +111,8 @@ app.post('/sendComment', function (request, response) {
 				return;
 			} else {
 				console.log("got keys",cred);
-				titterPicture.drawComment(text, function (error, data) {
-					var imagePath = "./images/temp.png";
-					titterSender.comment(cred, message+' Donate 0 WRG', imagePath,function done(err,res) {
+				titterPicture.drawComment(text, function (error, filename) {
+					titterSender.comment(cred,title+'\n'+ message+' Donate 0 WRG', filename, function done(err,res) {
 						if (err) {
 							response.status(400);
 							response.send(err);

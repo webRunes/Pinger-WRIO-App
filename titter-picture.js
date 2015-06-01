@@ -2,6 +2,10 @@ var fs = require('fs');
 var Canvas = require('canvas');
 var titterPicture = {}
 
+var temp = require('temp');
+
+temp.track();
+
 function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 	console.log(maxWidth);
 	var words = text.split(' ');
@@ -28,44 +32,72 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 
 }
 
-function createImage(text) {
+function createImage(text,done) {
 	var lineHeight = 14;
-	var canvas = new Canvas(400, 650);
+	var canvas = new Canvas(500, 650);
 	var ctx = canvas.getContext('2d');
 
-	var ms_height = wrapText(ctx,text,5,20,canvas.width,lineHeight,true) + lineHeight*2;
+	var ms_height = wrapText(ctx,text,10,20,canvas.width-10,lineHeight,true) + lineHeight*2;
 	canvas.height = ms_height+5;
 	console.log(ms_height,canvas.height);
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
-	ctx.font = "13px Arial";
+	ctx.font = "12px sans-serif";
 	ctx.fillStyle = '#292f33';
-	//ctx.fillStyle = "#666666";
-	wrapText(ctx,text, 5,20,canvas.width,lineHeight);
+	wrapText(ctx,text, 10,20,canvas.width-10,lineHeight);
 
 	ctx.fillStyle = "#aaa";
-	ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 2, ms_height);
+	ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 10, ms_height);
 
-	var out = fs.createWriteStream(__dirname + '/images/temp.png')
-		, stream = canvas.createPNGStream();
 
-	stream.on('data', function(chunk){
-		out.write(chunk);
+	canvas.toBuffer(function(err,buf) {
+		if (err) {
+			console.log("Tobuffer error");
+			done(null)
+			return;
+		}
+
+		temp.open({suffix: '.png'},function (err,file) {
+			if (err) {
+				console.log("Can't create temporary file");
+				done(null);
+				return;
+			}
+			fs.write(file.fd, buf, 0, buf.length, null, function(err, written, buffer) {
+				if (err) {
+					console.log("Error closing file");
+					done(null);
+					return;
+				}
+				fs.close(file.fd, function () {
+					console.log("Image written to tmp file ",file.path);
+					done(file.path);
+				});
+
+			});
+			fs.close(file.fd, function (err) {
+
+
+			});
+
+		});
+
+
+
 	});
+
 
 
 }
 
 
 titterPicture.drawComment = function (imageText, callback) {
-	createImage(imageText);
-//	var fileName = "temp";
-//	var buff = new Buffer(imageFileData.replace(/^data:image\/(png|gif|jpeg);base64,/, ''), 'base64');
-//	fs.writeFile('./images/' + fileName + '.png', buff, function (err) {
-//		console.log('Uploading done !');
-//	});
-	callback(null, null)
+	createImage(imageText,function (filename) {
+		console.log("Create image callback finished");
+		if (filename) callback(null, filename); else callback(null);
+	});
+
 }
 
 module.exports = titterPicture;
