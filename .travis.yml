@@ -8,6 +8,12 @@ before_install: sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev 
 install : npm install
 script  : npm start
 
+after_success:
+  - npm version patch
+  - git add package.json
+  - git commit -m 'ver'
+  - git push origin master
+
 deploy:
   - provider: opsworks
     access_key_id:
