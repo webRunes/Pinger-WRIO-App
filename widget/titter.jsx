@@ -273,7 +273,7 @@
             if (this.state.article) {
                 parts.push(
                     <section key="b" id="titter_frame_container">
-                        <iframe id="titteriframe" src="http://titter.webrunes.com" frameBorder="no" scrolling="no" />
+                        <iframe id="titteriframe" src="http://titter.wrioos.com" frameBorder="no" scrolling="no" />
                     </section>
                 );
             }
