@@ -9,6 +9,7 @@ install : npm install
 script  : npm start
 
 after_success:
+  - node -e 'p=process;p.exit(p.argv[1]==="Alexey Anshakov"?0:1)' `git log -1 --format='%an'`
   - npm version patch
   - git add package.json
   - git commit -m 'ver'
