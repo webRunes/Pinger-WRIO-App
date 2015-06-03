@@ -6,4 +6,4 @@
 ##Official Hub
 [titter.wrioos.com](http://titter.wrioos.com)
 
-Powered by [Open Copyright](http://opencopyright.webrunes.org)
+Powered by [Open Copyright](http://opencopyright.webrunes.com)
