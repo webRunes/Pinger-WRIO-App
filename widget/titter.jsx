@@ -242,6 +242,9 @@
             };
         },
         componentDidMount: function () {
+            if (!this.state.article) {
+                return;
+            }
             var that = this;
             document.getElementById('titteriframe').addEventListener('load', function () {
                 var comment,
