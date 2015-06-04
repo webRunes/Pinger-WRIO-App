@@ -29,7 +29,7 @@ deploy:
       secure: mR+kXkYTSLM50ICSs7Fm29iFpJo8jCsyYKiyF8ZlBhzmSP8GoHpcsSWd6J/HFnW1WQqa6vAmv/Sxd1Lr23AnxtKyGm+ROej2QQWrp2EouHLEFxuOwy2whLDqAvQcyZyi4eRqeWicAFhM/qrkK4EdvgbsgBqXIY9RXEH1y6Hgxi4=
     secret_access_key:
       secure: G3QfqVMapeaGxersv8Oumdc9QWSnCNmq70hJNmD8OrFgOhKj7F48+uv9WLoBAJxw31WIBBWqMSY9l7CO3ur9plPwL+Gfda7yGUE8HDBMJ/pukL2DAzwd1pu/iPlt/+HMO4YYIDJZsDpSWN5PvxAf+MtsG7hXJUlJSy/nwpvpZ3M=
-    bucket: wrio
+    bucket: wrioos.com
     upload-dir: Titter-WRIO-App
     acl: public_read
 
