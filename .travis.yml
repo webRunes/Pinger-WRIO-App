@@ -15,7 +15,7 @@ after_success:
   - npm version patch
   - chmod 600 deploy_key
   - ssh-add deploy_key
-  - git remote add deploy_repo https://github.com/webRunes/Titter-WRIO-App.git
+  - git remote add deploy_repo git@github.com/webRunes/Titter-WRIO-App.git
   - git add package.json
   - git commit -m 'ver'
   - git push deploy_repo
