@@ -15,10 +15,10 @@ after_success:
   - npm version patch
   - chmod 600 deploy_key
   - ssh-add deploy_key
-  - git branch master
+  - git remote add deploy_repo https://github.com/webRunes/Titter-WRIO-App.git
   - git add package.json
   - git commit -m 'ver'
-  - git push origin master
+  - git push deploy_repo
 
 deploy:
   - provider: opsworks
