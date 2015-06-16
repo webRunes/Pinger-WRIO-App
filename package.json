@@ -10,7 +10,6 @@
   "dependencies": {
     "aws-sdk-apis": "*",
     "body-parser": "^1.9.2",
-    "canvas": "*",
     "cookie-parser": "*",
     "ejs": "^1.0.0",
     "express": "^4.10.1",
@@ -26,6 +25,7 @@
     "temp": "*"
   },
   "devDependencies": {
+    "canvas": "*",
     "react-tools": "^0.13.3"
   },
   "scripts": {
