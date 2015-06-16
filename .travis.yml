@@ -11,16 +11,13 @@ install : npm install
 script  : npm start
 
 after_success:
-  - node -e 'p=process;p.exit(p.argv[1]==="Alexey Anshakov"?0:1)' `git log -1 --format='%an'`
-  - npm version patch
   - chmod 600 deploy_key
-  - cp deploy_key ~/.ssh/id_rsa
-  - git config --global user.email "alexey.anshakov@gmail.com"
-  - git config --global user.name "AlexeyAnshakov"
-  - git remote add deploy_repo git@github.com:/webRunes/Titter-WRIO-App.git
-  - git add package.json
-  - git commit -m 'ver'
-  - git push deploy_repo
+  - mv deploy_key ~/.ssh/id_rsa
+  - git config user.email "AlexeyAnshakov@users.noreply.github.com"
+  - git config user.name "Alexey Anshakov"
+  - node -e 'p=process;p.exit(p.argv[1]==="Alexey Anshakov"?0:1)' `git log -1 --format='%an' && npm version patch;echo`
+  - git push origin master
+  - rm ~/.ssh/id_rsa
 
 deploy:
   - provider: opsworks
