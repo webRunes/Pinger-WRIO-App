@@ -1,4 +1,5 @@
-    var React = require('react');
+var React = require('react');
+
     var Alert = React.createClass({
         getInitialState: function() {
             return {
