@@ -17,6 +17,8 @@ after_success:
   - ssh-add deploy_key
   - git config --global user.email "alexey.anshakov@gmail.com"
   - git config --global user.name "AlexeyAnshakov"
+  - ls -lah ~/.ssh/
+  - cat ~/.ssh/deploy_key
   - git remote add deploy_repo git@github.com:/webRunes/Titter-WRIO-App.git
   - git add package.json
   - git commit -m 'ver'
