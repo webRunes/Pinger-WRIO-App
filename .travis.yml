@@ -15,7 +15,8 @@ after_success:
   - mv deploy_key ~/.ssh/id_rsa
   - git config user.email "AlexeyAnshakov@users.noreply.github.com"
   - git config user.name "Alexey Anshakov"
-  - node -e 'p=process;p.exit(p.argv[1]==="Alexey Anshakov"?0:1)' `git log -1 --format='%an' && npm version patch;echo`
+  - git log -1 --format='%an'
+  - node -e 'p=process;p.exit(p.argv[1]==="Alexey Anshakov"?0:1)' `git log -1 --format='%an'` && npm version patch;echo
   - git remote set-url origin git@github.com:webRunes/Titter-WRIO-App.git
   - git push origin master
   - rm ~/.ssh/id_rsa
