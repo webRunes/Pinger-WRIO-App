@@ -31,7 +31,7 @@ var React = require('react');
                 value2: 76.54,
                 link: {
                     text: 'Add funds',
-                    url: 'webgold-add_funds.htm'
+                    url: 'http://webgold.wrioos.com/add_funds'
                 }
             };
         },
@@ -40,7 +40,15 @@ var React = require('react');
                 <ul className="leaders">
                     <li>
                         <span>{this.state.text}</span>
-                        <span>{this.state.value1}<small className="currency">{this.state.cur1}</small><sup className="currency">{this.state.value2}<span className="currency">{this.state.cur2}</span>{'\u00b7'}<a href={this.state.link.url}>{this.state.link.text}</a></sup></span>
+                        <span>
+                            {this.state.value1}<small className="currency">{this.state.cur1}</small>
+                            <sup className="currency">
+                                {this.state.value2}
+                                <span className="currency">{this.state.cur2}</span>
+                                {'\u00b7'}
+                                <a href={this.state.link.url} target="_blank">{this.state.link.text}</a>
+                            </sup>
+                        </span>
                     </li>
                 </ul>
             );
@@ -57,7 +65,7 @@ var React = require('react');
                 text: 'Insufficient funds. ',
                 link: {
                     text: 'Add funds',
-                    url: 'webgold-add_funds.htm'
+                    url: 'http://webgold.wrioos.com/add_funds'
                 }
             };
         },
@@ -69,7 +77,12 @@ var React = require('react');
                         <input type="number" className="form-control" id="inputAmount" value={this.state.value} min="0" />
                         <span className="input-group-addon" data-toggle="tooltip" data-placement="top" title={this.state.hint}>{this.state.per}</span>
                     </div>
-                    <div className="help-block">{this.state.text}<a href={this.state.link.url}>{this.state.link.text}</a></div>
+                    <div className="help-block">
+                        {this.state.text}
+                        <a href={this.state.link.url} target="_blank">
+                            {this.state.link.text}
+                        </a>
+                    </div>
                 </div>
             );
         }
