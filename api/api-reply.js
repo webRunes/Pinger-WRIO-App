@@ -1,5 +1,4 @@
 var router = require('express').Router();
-var Twit = require('twit');
 var titterPicture = require('../titter-picture');
 var titterSender = require('../titter-sender');
 var fs = require("fs");
