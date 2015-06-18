@@ -130,4 +130,8 @@ app.post('/sendComment', function (request, response) {
 
 
 });
+
+app.use('/api', require('./api/api-search'));
+app.use('/api', require('./api/api-reply'));
+
 console.log("Application Started!");
