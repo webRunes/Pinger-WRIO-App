@@ -249,10 +249,26 @@ var React = require('react');
                 }
             }
         },
+        switchToAddCommentMode: function() {
+            this.setState({
+                addFundsMode: false
+            });
+        },
+        switchToAddFundsMode: function() {
+            this.setState({
+                addFundsMode: true
+            });
+        },
+        editIframeStyles: {
+            width: '100%',
+            height: '650px',
+            border: 'none'
+        },
         getInitialState: function() {
             return {
                 addComment: 'Add comment',
-                article: this.isArticle(this.props.scripts)
+                article: this.isArticle(this.props.scripts),
+                addFundsMode: false
             };
         },
         componentDidMount: function () {
@@ -294,12 +310,29 @@ var React = require('react');
                     </section>
                 );
             }
-            return (
-                <div>
+            
+            var addCommentFundsMode;
+            if (!this.state.addFundsMode) {
+                addCommentFundsMode = (
                     <ul className="breadcrumb">
                         <li className="active">{this.state.addComment}</li>
+                        <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
                     </ul>
-                    <Donatate />
+                );
+            } else {
+                addCommentFundsMode = (
+                    <ul className="breadcrumb">
+                        <li><a onClick={ this.switchToAddCommentMode }>{this.state.addComment}</a></li>
+                        <li className="active">Add funds</li>
+                    </ul>
+                );
+            }
+            
+            return (
+                <div>
+                    { addCommentFundsMode }
+                    { this.state.addFundsMode ? <iframe src="http://webgold.wrioos.com/add_funds" style={ this.editIframeStyles } />
+                        : <Donatate /> }
                     {parts}
                 </div>
             );
