@@ -204,7 +204,7 @@ var React = require('react');
                 var $twitter = document.getElementById('twitter-widget-0');
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
-                        $twitter.getElementsByClassName('h-feed')[0]
+                        $twitter.contentDocument.getElementsByClassName('h-feed')[0]
                     ).height.replace('px', ''));
                     $twitter.style.height = twitterht + 100 + 'px';
                 }
@@ -214,7 +214,7 @@ var React = require('react');
                 //    autoSizeTimeline();
                 //});
 
-                $twitter.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}';
+                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}';
                 setTimeout(autoSizeTimeline, 1000);
             };
 
