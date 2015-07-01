@@ -219,7 +219,7 @@ var React = require('react');
             };
 
             var twheight = 10000;
-            document.getElementById('titteriframe').height('190px');
+//            document.getElementById('titteriframe').height('190px');
 
             var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + window.innerWidth + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
             document.getElementById('titter_frame_container').innerHTML += twitterTemplate;
