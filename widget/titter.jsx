@@ -204,7 +204,7 @@ var React = require('react');
                 var $twitter = document.getElementById('twitter-widget-0');
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
-                        $twitter.getElementsByClassName('h-feed')[0]
+                        $twitter.contentDocument.getElementsByClassName('h-feed')[0]
                     ).height.replace('px', ''));
                     $twitter.style.height = twitterht + 100 + 'px';
                 }
@@ -214,12 +214,12 @@ var React = require('react');
                 //    autoSizeTimeline();
                 //});
 
-                $twitter.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}';
+                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}';
                 setTimeout(autoSizeTimeline, 1000);
             };
 
             var twheight = 10000;
-//            document.getElementById('titteriframe').height('190px');
+            document.getElementById('titteriframe').style.height = '290px';
 
             var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + window.innerWidth + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
             document.getElementById('titter_frame_container').innerHTML += twitterTemplate;
