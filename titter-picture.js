@@ -11,7 +11,7 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 	var words = text.split(' ');
 	var line = '';
 
-	for(var n = 0; n < words.length; n++) {
+	for (var n = 0; n < words.length; n++) {
 		var testLine = line + words[n] + ' ';
 		var metrics = context.measureText(testLine);
 		var testWidth = metrics.width;
@@ -19,46 +19,47 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 			context.fillText(line, x, y);
 			line = words[n] + ' ';
 			y += lineHeight;
-		}
-		else {
+		} else {
 			line = testLine;
 		}
 	}
 	if (!simulate) {
 		context.fillText(line, x, y);
 	}
-	return y + 3*lineHeight;
+	return y + 3 * lineHeight;
 
 
 }
 
-function createImage(text,done) {
+function createImage(text, done) {
 	var lineHeight = 14;
 	var canvas = new Canvas(500, 650);
 	var ctx = canvas.getContext('2d');
 
-	var ms_height = wrapText(ctx,text,10,20,canvas.width-10,lineHeight,true) + lineHeight*2;
-	canvas.height = ms_height+5;
-	console.log(ms_height,canvas.height);
+	var ms_height = wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight, true) + lineHeight * 2;
+	canvas.height = ms_height + 5;
+	console.log(ms_height, canvas.height);
 
 	ctx.fillStyle = "#ffffff";
 	ctx.fillRect(0, 0, canvas.width, canvas.height);
 	ctx.font = "12px sans-serif";
 	ctx.fillStyle = '#292f33';
-	wrapText(ctx,text, 10,20,canvas.width-10,lineHeight);
+	wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight);
 
 	ctx.fillStyle = "#aaa";
 	ctx.fillText('Posted via Titter - Advanced tweets http://titter.webrunes.com', 10, ms_height);
 
 
-	canvas.toBuffer(function(err,buf) {
+	canvas.toBuffer(function(err, buf) {
 		if (err) {
 			console.log("Tobuffer error");
 			done(null)
 			return;
 		}
 
-		temp.open({suffix: '.png'},function (err,file) {
+		temp.open({
+			suffix: '.png'
+		}, function(err, file) {
 			if (err) {
 				console.log("Can't create temporary file");
 				done(null);
@@ -70,13 +71,13 @@ function createImage(text,done) {
 					done(null);
 					return;
 				}
-				fs.close(file.fd, function () {
-					console.log("Image written to tmp file ",file.path);
+				fs.close(file.fd, function() {
+					console.log("Image written to tmp file ", file.path);
 					done(file.path);
 				});
 
 			});
-			fs.close(file.fd, function (err) {
+			fs.close(file.fd, function(err) {
 
 
 			});
@@ -92,10 +93,11 @@ function createImage(text,done) {
 }
 
 
-titterPicture.drawComment = function (imageText, callback) {
-	createImage(imageText,function (filename) {
+titterPicture.drawComment = function(imageText, callback) {
+	createImage(imageText, function(filename) {
 		console.log("Create image callback finished");
-		if (filename) callback(null, filename); else callback(null);
+		if (filename) callback(null, filename);
+		else callback(null);
 	});
 
 }
