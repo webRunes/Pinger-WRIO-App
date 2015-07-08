@@ -275,12 +275,12 @@ var React = require('react');
             return {
                 addComment: 'Add comment',
                 article: this.isArticle(this.props.scripts),
-                addFundsMode: false
+                addFundsMode: false,
+                titterFrameUrl: 'http://titter.'+domain+'/',
+                webgoldIframeUrl: "http://webgold." + domain +"/add_funds"
             };
         },
         componentDidMount: function () {
-            this.state.titterFrameUrl = 'http://titter.'+domain+'/';
-            this.state.webgoldIframeUrl = "http://webgold" + domain +"/add_funds";
             if (!this.state.article) {
                 return;
             }
@@ -315,7 +315,7 @@ var React = require('react');
             if (this.state.article) {
                 parts.push(
                     <section key="b" id="titter_frame_container">
-                        <iframe id="titteriframe" src={ this.titterFrameUrl } frameBorder="no" scrolling="no" />
+                        <iframe id="titteriframe" src={this.state.titterFrameUrl} frameBorder="no" scrolling="no" />
                     </section>
                 );
             }
@@ -340,7 +340,7 @@ var React = require('react');
             return (
                 <div>
                     { addCommentFundsMode }
-                    { this.state.addFundsMode ? <iframe src= { this.webgoldIframeUrl } style={ this.editIframeStyles } />
+                    { this.state.addFundsMode ? <iframe src={this.state.webgoldIframeUrl } style={ this.editIframeStyles } />
                         : <Donatate /> }
                     {parts}
                 </div>
