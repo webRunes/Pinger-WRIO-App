@@ -1,5 +1,12 @@
 var React = require('react');
 
+    domain = '';
+    if (process.env.DOMAIN == undefined) {
+        domain = 'wrioos.com';
+    } else {
+        domain = process.env.DOMAIN;
+    }
+
     var Alert = React.createClass({
         getInitialState: function() {
             return {
@@ -31,7 +38,7 @@ var React = require('react');
                 value2: 76.54,
                 link: {
                     text: 'Add funds',
-                    url: 'http://webgold.wrioos.com/add_funds'
+                    url: 'http://webgold.'+domain+'.com/add_funds'
                 }
             };
         },
@@ -65,7 +72,7 @@ var React = require('react');
                 text: 'Insufficient funds. ',
                 link: {
                     text: 'Add funds',
-                    url: 'http://webgold.wrioos.com/add_funds'
+                    url: 'http://webgold.'+domain+'/add_funds'
                 }
             };
         },
@@ -268,7 +275,9 @@ var React = require('react');
             return {
                 addComment: 'Add comment',
                 article: this.isArticle(this.props.scripts),
-                addFundsMode: false
+                addFundsMode: false,
+                titterFrameUrl: 'http://titter.'+domain+'/',
+                webgoldIframeUrl: "http://webgold." + domain +"/add_funds"
             };
         },
         componentDidMount: function () {
@@ -306,7 +315,7 @@ var React = require('react');
             if (this.state.article) {
                 parts.push(
                     <section key="b" id="titter_frame_container">
-                        <iframe id="titteriframe" src="http://titter.wrioos.com" frameBorder="no" scrolling="no" />
+                        <iframe id="titteriframe" src={this.state.titterFrameUrl} frameBorder="no" scrolling="no" />
                     </section>
                 );
             }
@@ -331,7 +340,7 @@ var React = require('react');
             return (
                 <div>
                     { addCommentFundsMode }
-                    { this.state.addFundsMode ? <iframe src="http://webgold.wrioos.com/add_funds" style={ this.editIframeStyles } />
+                    { this.state.addFundsMode ? <iframe src={this.state.webgoldIframeUrl } style={ this.editIframeStyles } />
                         : <Donatate /> }
                     {parts}
                 </div>
