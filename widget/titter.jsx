@@ -1,5 +1,12 @@
 var React = require('react');
 
+    domain = '';
+    if (process.env.DOMAIN == undefined) {
+        domain = 'wrioos.com';
+    } else {
+        domain = process.env.DOMAIN;
+    }
+
     var Alert = React.createClass({
         getInitialState: function() {
             return {
@@ -31,7 +38,7 @@ var React = require('react');
                 value2: 76.54,
                 link: {
                     text: 'Add funds',
-                    url: 'http://webgold.wrioos.com/add_funds'
+                    url: 'http://webgold.'+domain+'.com/add_funds'
                 }
             };
         },
@@ -65,7 +72,7 @@ var React = require('react');
                 text: 'Insufficient funds. ',
                 link: {
                     text: 'Add funds',
-                    url: 'http://webgold.wrioos.com/add_funds'
+                    url: 'http://webgold.'+domain+'/add_funds'
                 }
             };
         },
