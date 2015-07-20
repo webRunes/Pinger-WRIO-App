@@ -1,8 +1,8 @@
 {
   "api": {
     "twitterLogin": {
-      "consumerKey": "",
-      "consumerSecret": ""
+      "consumerKey": "YOR_TWITTER_CONSUMER KEY, you can find it at api.twitter.com",
+      "consumerSecret": "YOUR_TWITTER_CONSUMER_SECRET, you can find it at api.twitter.com"
     }
   },
  "db": {
