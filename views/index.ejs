@@ -119,14 +119,14 @@
 
 		function onTimelineLoad() {
 
-			$('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html()+"img.autosized-media {width:auto;height:auto;}")
+			$('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html()+"img.autosized-media {width:auto;height:auto;}");
 
 		};
 
 		function createTwitterWidget() {
 
 			var frameheight = $(window).height();
-			var headerheight = $('.twitter').outerHeight()
+			var headerheight = $('.twitter').outerHeight();
 
 			var twheight = frameheight - headerheight - 45;
 

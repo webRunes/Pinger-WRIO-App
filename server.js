@@ -37,17 +37,32 @@ var titterSender = require('./titter-sender');
 app.set('views', __dirname + '/views');
 app.set('view engine', 'ejs');
 
+var SessionStore = require('express-mysql-session');
 var cookie_secret = nconf.get("server:cookiesecret");
 app.use(cookieParser(cookie_secret));
-app.use(session({
-	cookie: {
-		maxAge: 36000000,
-		httpOnly: false
-	},
-	secret: cookie_secret,
-	saveUninitialized: true,
-	resave: false
-}));
+var session_options = {
+		host: MYSQL_HOST,
+		port: 3306,
+		user: MYSQL_USER,
+		password: MYSQL_PASSWORD,
+		database: MYSQL_DB
+}
+var sessionStore = new SessionStore(session_options);
+app.use(session(
+	{
+
+		secret: cookie_secret,
+		saveUninitialized: true,
+		store: sessionStore,
+		resave: true,
+		cookie: {
+			secure:false,
+			domain:DOMAIN,
+			maxAge: 1000 * 60 * 60 * 24 * 30
+		},
+		key: 'sid'
+	}
+));
 
 var p3p = require('p3p');
 app.use(p3p(p3p.recommended));
@@ -64,7 +79,7 @@ app.get('/', function(request, response) {
 	console.log(request.sessionID);
 	wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 		if (err) {
-			console.log("User not found")
+			console.log("User not found:",err);
 			response.render('index.ejs', {
 				"error": "Not logged in",
 				"user": undefined
