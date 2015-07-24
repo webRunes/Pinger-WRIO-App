@@ -7,7 +7,8 @@
       "reactify"
     ]
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "aws-sdk-apis": "*",
     "body-parser": "^1.9.2",
     "canvas": "*",
@@ -24,11 +25,9 @@
     "node-twitter": "*",
     "node-twitter-api": "*",
     "p3p": "0.0.2",
+    "react-tools": "^0.13.3",
     "supervisor": "*",
     "temp": "*"
-  },
-  "devDependencies": {
-    "react-tools": "^0.13.3"
   },
   "scripts": {
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
