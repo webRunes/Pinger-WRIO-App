@@ -30,9 +30,15 @@
     "temp": "*"
   },
   "scripts": {
+    "preinstall": "NODE_ENV=development",
+    "postinstall": "NODE_ENV=production",
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "npm run jsx",
-    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js"
+    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
+    "canBumpVersion": "node -e 'p=process;p.exit(p.argv[1]+p.argv[2]===\"AlexeyAnshakov\"?0:1)' `git log -1 --format='%an'` && npm run bumpVersion;echo",
+    "bumpVersion": "npm run version && npm run bundle",
+    "version": "sh version.sh",
+    "bundle": "sh bundle.sh"
   },
   "repository": {
     "type": "git",
