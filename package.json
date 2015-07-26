@@ -1,15 +1,17 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.133",
+  "version": "1.0.142",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
       "reactify"
     ]
   },
-  "dependencies": {
+  "dependencies": {},
+  "devDependencies": {
     "aws-sdk-apis": "*",
     "body-parser": "^1.9.2",
+    "canvas": "1.2.3",
     "cookie-parser": "*",
     "ejs": "^1.0.0",
     "express": "^4.10.1",
@@ -17,21 +19,26 @@
     "express-session": "*",
     "gm": "^1.17.0",
     "minimist": "^1.1.1",
+    "mongodb": "~2.0",
     "mysql": "*",
     "nconf": "*",
     "node-twitter": "*",
+    "node-twitter-api": "*",
     "p3p": "0.0.2",
+    "react-tools": "^0.13.3",
     "supervisor": "*",
     "temp": "*"
   },
-  "devDependencies": {
-    "canvas": "*",
-    "react-tools": "^0.13.3"
-  },
   "scripts": {
+    "preinstall": "NODE_ENV=development",
+    "postinstall": "NODE_ENV=production",
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "npm run jsx",
-    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js"
+    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
+    "canBumpVersion": "node -e 'p=process;p.exit(p.argv[1]+p.argv[2]===\"AlexeyAnshakov\"?0:1)' `git log -1 --format='%an'` && npm run bumpVersion;echo",
+    "bumpVersion": "npm run version && npm run bundle",
+    "version": "sh version.sh",
+    "bundle": "sh bundle.sh"
   },
   "repository": {
     "type": "git",
