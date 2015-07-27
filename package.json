@@ -30,8 +30,6 @@
     "temp": "*"
   },
   "scripts": {
-    "preinstall": "NODE_ENV=development",
-    "postinstall": "NODE_ENV=production",
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "npm run jsx",
     "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
