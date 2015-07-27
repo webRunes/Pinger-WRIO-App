@@ -5,8 +5,11 @@ node_js:
 
 before_install:
   - sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+  - NODE_ENV=development
 
 install: npm install
+
+before_script: NODE_ENV=production
 
 script: npm start
 
