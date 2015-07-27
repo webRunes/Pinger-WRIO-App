@@ -32,6 +32,8 @@ var $ = (function() {
 					cb(err, {
 						ok: !1
 					});
+					console.log("Error in search"+err);
+					return;
 				}
 				console.log('Found ' + data.statuses.length + ' statuses');
 				if (data.statuses.length > 0) {
