@@ -35,7 +35,6 @@
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "npm run jsx",
     "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
-    "canBumpVersion": "if [ $(git rev-parse --abbrev-ref HEAD) == \"master\" ] && [ $(git log -1 --format='%an') == \"Alexey Anshakov\" ]; then npm run bumpVersion; fi",
     "bumpVersion": "npm run version && npm run bundle",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh"
