@@ -22,7 +22,12 @@ var $ = function(args, cb) {
 		app: app
 	}, function(err, data) {});
 
+	function debugRequest(req) {
+		console.log("Got request from", req);
+	}
+
 	app.post('/api/search', function(req, res) {
+		debugRequest(req);
 		if (!req.body || JSON.stringify(req.body) === '{}') {
 			res.status(400)
 				.send('bad request');
@@ -45,6 +50,7 @@ var $ = function(args, cb) {
 	});
 
 	app.post('/api/game/start', function(req, res) {
+		debugRequest(req);
 		if (!req.body || JSON.stringify(req.body) === '{}') {
 			res.status(400)
 				.send('bad request');
@@ -69,6 +75,7 @@ var $ = function(args, cb) {
 	});
 
 	app.get('/api/access_callback', function(req, res) {
+		debugRequest(req);
 		if (!req.body || JSON.stringify(req.body) === '{}') {
 			res.status(400)
 				.send('bad request');
@@ -94,6 +101,7 @@ var $ = function(args, cb) {
 	});
 
 	app.get('/api/game/invite', function(req, res) {
+		debugRequest(req);
 		if (!req.body || JSON.stringify(req.body) === '{}') {
 			res.status(400)
 				.send('bad request');
