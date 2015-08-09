@@ -15,6 +15,7 @@
 		"ejs": "^1.0.0",
 		"express": "^4.10.1",
 		"express-mysql-session": "*",
+		"es6-promise": "^2.1.1",
 		"express-session": "*",
 		"gm": "^1.17.0",
 		"minimist": "^1.1.1",

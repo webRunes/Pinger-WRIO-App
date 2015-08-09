@@ -1,104 +1,114 @@
 "use strict";
 
-var TwitterClient = require("./twitter-client");
+var express = require('express');
+var TwitterClient = require("../utils/twitter-client");
 var titterPicture = require('../titter-picture');
 var titterSender = require('../titter-sender');
 var chessController = new(require('./controller.js'))();
 var fs = require("fs");
-var _session = {
-	titterUrl: '',
-	creds: {}
-};
 
 var $ = function(args, cb) {
 
 	var $ = this,
 		args = args || {},
-		app = args.app || {},
-		db = app.custom.db || {},
-		cb = cb || function() {};
+		db = args.db || {},
+		cb = cb || function() {},
+		router = express.Router();
 
 	chessController.init({
-		app: app
-	}, function(err, data) {});
+		db: db
+	});
 
-	app.post('/api/search', function(req, res) {
-		_session.creds = req.body.twitterCreds;
-		_session.titter = req.body.titterUrl;
+	router.post('/search', function(req, res) {
+		var creds = req.body.twitterCreds || {},
+			titter = req.body.titterUrl || {};
 		chessController.search({
-			creds: _session.creds,
-			query: req.body.query
-		}, function(err, data) {
-			if (err) {
-				res.status(err.status)
-					.send(err.text);
-			} else {
+				creds: creds,
+				titter: titter,
+				query: req.body.query
+			})
+			.then(function(data) {
 				res.status(200)
 					.json(data);
-			}
-		});
+			})
+			.catch(function(err) {
+				res.status(err.status || err.statusCode || 500)
+					.json(err.text || err);
+			});
 	});
 
-	app.post('/api/game/start', function(req, res) {
-		var status = req.body.status,
-			opponent = req.body.opponent;
+	router.post('/game/start', function(req, res) {
+		var status = req.body.status || {},
+			opponent = req.body.opponent || '';
 		chessController.startGame({
-			status: status,
-			opponent: opponent,
-			creds: _session.creds,
-			titter: _session.titter
-		}, function(err, data) {
-			if (err) {
-				res.status(err.status)
-					.send(err.text);
-			} else {
+				status: status,
+				opponent: opponent,
+			})
+			.then(function(data) {
+				console.log(data)
 				res.status(200)
-					.json(data);
-			}
-		});
+					.json({
+						message: data
+					});
+			})
+			.catch(function(err) {
+				res.status(err.status || err.statusCode || 500)
+					.json(err.text || err || 'Internal Server Error');
+			});
 	});
 
-	app.get('/api/access_callback', function(req, res) {
-		var oauthToken = req.query.oauth_token,
-			oauthVerifier = req.query.oauth_verifier;
-		chessController.access({
-			oauthToken: oauthToken,
-			oauthVerifier: oauthVerifier,
-			titter: _session.titter,
-			creds: _session.creds
-		}, function(err, data) {
-			if (err) {
-				console.log(err)
-				res.status(err.status)
-					.send(err.text);
-			} else {
+	router.get('/access_callback', function(req, res) {
+		var oauthToken = req.query.oauth_token || '',
+			oauthVerifier = req.query.oauth_verifier || '';
+		chessController.userAccessRequestCallback({
+				oauthToken: oauthToken,
+				oauthVerifier: oauthVerifier,
+			})
+			.then(function() {
 				res.status(200)
 					.send('<script>window.close()</script>');
-			}
-		});
+			})
+			.catch(function(err) {
+				res.status(err.status)
+					.send(err.text);
+			});
 	});
 
-	app.get('/api/game/invite', function(req, res) {
-		chessController.acceptInvite({
-			invite: req.query.inv,
-			creds: _session.creds
-		}, function(err, data) {
-			if (err) {
+	router.get('/game/invite', function(req, res) {
+		chessController.startGameRequestCallback({
+				invite: req.query.inv
+			})
+			.then(function(data) {
+				console.log(data);
+				res.status(200)
+					.send('<script>window.close()</script>');
+			})
+			.catch(function(err) {
 				res.status(err.statusCode)
 					.send(err.message);
-			} else {
-				if (data.url) {
-					res.status(200)
-						.send('<script>location.href=' + data.url + '</script>');
-				} else {
-					res.status(200)
-						.send('<script>window.close()</script>');
-				}
-			}
-		});
+			});
 	});
 
-	return $;
+	router.get('/game/invite/access_callback', function(req, res) {
+		var oauthToken = req.query.oauth_token,
+			oauthVerifier = req.query.oauth_verifier;
+		chessController.opponentAccessRequestCallback({
+				oauthToken: oauthToken,
+				oauthVerifier: oauthVerifier,
+			})
+			.then(function(data) {
+				console.log(data)
+				res.status(200)
+					.send('<script>window.close()</script>');
+			})
+			.catch(function(err) {
+				console.log(err)
+				res.status(err.statusCode)
+					.send(err.message);
+			});
+	});
+
+	return router;
 }
 
 module.exports = $;

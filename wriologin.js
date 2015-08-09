@@ -1,4 +1,4 @@
-/**
+/*
  * Created by mich.bil on 16.04.15.
  */
 

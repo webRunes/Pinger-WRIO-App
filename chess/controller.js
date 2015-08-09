@@ -1,6 +1,9 @@
 "use strict";
 
-var TwitterClient = require("./twitter-client");
+var TwitterClient = require("../utils/twitter-client");
+var Promise = require('es6-promise')
+	.Promise;
+var access = require('../utils/access.js');
 
 var $ = (function() {
 
@@ -8,42 +11,381 @@ var $ = (function() {
 
 	$.prototype = {
 		db: {},
-		init: function(args, cb) {
+		titter: '',
+		creds: {},
+		init: function(args) {
+			var $ = this,
+				args = args || {};
+			return new Promise(function(resolve, reject) {
+				$.db = args.db;
+				if ($.db) {
+					resolve();
+				} else {
+					reject();
+				};
+			});
+		},
+		search: function(args) {
 			var $ = this,
 				args = args || {},
-				cb = cb || function() {};
-			$.db = args.app.custom.db;
-			if ($.app) {
-				cb(null, !0)
-			} else {
-				cb(!1, null);
-			};
-			return $;
+				query = args.query || '';
+			$.creds = args.creds || {};
+			$.titter = args.titter || '';
+			return new Promise(function(resolve, reject) {
+				var twitter = TwitterClient.Client($.creds);
+				twitter.search(query, $.creds.access_token, $.creds.access_secret, function(err, data) {
+					if (err) {
+						reject(err);
+					} else if (data.statuses.length > 0) {
+						console.log('Found ' + data.statuses.length + ' statuses');
+						resolve({
+							statuses: data.statuses
+						});
+					} else {
+						reject({
+							status: 404,
+							text: 'Nothing found'
+						});
+					}
+				});
+			});
 		},
-		search: function(args, cb) {
+		startGame: function(args) {
+			var $ = this,
+				args = args || {},
+				status = args.status || {},
+				opponent = args.opponent || '';
+			return new Promise(function(resolve, reject) {
+				access.auth({
+						status: status,
+						opponent: opponent,
+						creds: $.creds,
+						db: $.db
+					})
+					.then(function(res) {
+						$.startGameRequest(res)
+							.then(function(args) {
+								resolve(args.message);
+							})
+							.catch(function(err) {
+								reject(err);
+							});
+					})
+					.catch(function(err) {
+						if (err) {
+							reject(err);
+						} else {
+							resolve('New user. Access request to @' + status.user.screen_name);
+						}
+					});
+			});
+		},
+		startGameRequest: function(args) {
+			var $ = this,
+				args = args || {},
+				name = args.name || '',
+				opponent = args.last_opponent || '',
+				accessToken = args.accessToken || '',
+				accessTokenSecret = args.accessTokenSecret || '';
+			return new Promise(function(resolve, reject) {
+				var twitter = TwitterClient.Client($.creds),
+					chess = $.db.collection('chess'),
+					inv = new Date()
+					.getTime()
+					.toString(32) + Math.random()
+					.toString(32);
+				chess.find({
+						name: name,
+						opponent: opponent
+					})
+					.toArray(function(err, data) {
+						if (err) {
+							reject(err);
+						} else if (data.length === 0) {
+							chess.insert([{
+								invite: inv,
+								name: name,
+								opponent: opponent,
+								status: 0
+							}], function(err, res) {
+								if (err) {
+									reject(err);
+								} else {
+									var params = {
+										status: '@' + opponent + " Join to game " + $.titter + "/api/game/invite?inv=" + inv,
+										screen_name: opponent
+									};
+									twitter.statuses('update', params, accessToken, accessTokenSecret, function(err, data, res) {
+										if (err) {
+											reject(err);
+										} else {
+											resolve({
+												message: 'Start game request from @' + name + ' to @' + opponent
+											});
+										}
+									});
+								}
+							});
+						} else {
+							chess.update({
+								name: name,
+								opponent: opponent
+							}, {
+								$set: {
+									invite: inv,
+									status: 0
+								}
+							}, function(err, data) {
+								if (err) {
+									reject(err);
+								} else {
+									var params = {
+										status: '@' + opponent + " Join to game " + $.titter + "/api/game/invite?inv=" + inv,
+										screen_name: opponent
+									};
+									twitter.statuses('update', params, accessToken, accessTokenSecret, function(err, data, res) {
+										if (err) {
+											reject(err);
+										} else {
+											resolve({
+												message: 'Start game request from @' + name + ' to @' + opponent
+											});
+										}
+									});
+								}
+							});
+						}
+					});
+			});
+		},
+		userAccessRequestCallback: function(args) {
+			var $ = this,
+				args = args || {};
+			return new Promise(function(resolve, reject) {
+				args.db = $.db;
+				args.creds = $.creds;
+				access.setAccessToken(args)
+					.then(function(args) {
+						$.startGameRequest(args)
+							.then(function(res) {
+								resolve(res.message);
+							})
+							.catch(function(err) {
+								reject(err);
+							});
+					})
+					.catch(function(err) {
+						reject(err);
+					});
+			});
+		},
+		opponentAccessRequestCallback: function(args) {
+			var $ = this,
+				args = args || {};
+			return new Promise(function(resolve, reject) {
+				args.db = $.db;
+				args.creds = $.creds;
+				access.setAccessToken(args)
+					.then(function(args) {
+						$.startGameRequestAccept(args)
+							.then(function(data) {
+								resolve(data.message);
+							})
+							.catch(function(err) {
+								reject(err);
+							});
+					})
+					.catch(function(err) {
+						reject(err);
+					});
+			});
+		},
+		startGameRequestCallback: function(args) {
+			var $ = this,
+				args = args || {},
+				invite = args.invite,
+				chess = $.db.collection('chess');
+			return new Promise(function(resolve, reject) {
+				chess.find({
+						invite: invite
+					})
+					.toArray(function(err, data) {
+						if (err || !data[0]) {
+							reject(err || 'Invalid or expired invite token');
+						} else {
+							access.auth({
+									status: {
+										user: {
+											screen_name: data[0].opponent
+										},
+										id_str: null
+									},
+									opponent: data[0].name,
+									creds: $.creds,
+									db: $.db,
+									is_callback: !0
+								})
+								.then(function(res) {
+									$.startGameRequestAccept(res)
+										.then(function(res) {
+											resolve(res.message);
+										})
+										.catch(function(err) {
+											reject(err);
+										});
+								})
+								.catch(function(err) {
+									if (err) {
+										console.log(err)
+										reject(err);
+									} else {
+										resolve('New user. Access request to @' + data[0].opponent);
+									}
+								});
+						}
+					});
+			});
+		},
+		startGameRequestAccept: function(args) {
+			var $ = this,
+				args = args || {},
+				name = args.last_opponent || '',
+				opponent = args.name || '',
+				accessToken = args.accessToken || '',
+				accessTokenSecret = args.accessTokenSecret || '';
+			return new Promise(function(resolve, reject) {
+				var twitter = TwitterClient.Client($.creds),
+					chess = $.db.collection('chess');
+				chess.update({
+					name: name,
+					opponent: opponent
+				}, {
+					$set: {
+						status: 1
+					}
+				}, function(err, res) {
+					if (err) {
+						reject(err);
+					} else {
+						var params = {
+							status: '@' + name + " Game started!",
+							screen_name: name
+						};
+						twitter.statuses('update', params, accessToken, accessTokenSecret, function(err, data, res) {
+							if (err) {
+								reject(err);
+							} else {
+								resolve({
+									message: '@' + opponent + ' accept game request from @' + name
+								});
+							}
+						});
+					}
+				});
+			});
+		}
+	}
+
+	return $;
+
+})();
+
+module.exports = $;
+
+
+/*		updateUser: function(args, cb) {
 			var $ = this,
 				args = args || {},
 				cb = cb || function() {},
+				name = args.name || '',
+				set = args.set || {},
+				users = $.db.collection('users');
+			users.update({
+					name: name
+				}, {
+					$set: set
+				},
+				function(err, res) {
+					if (err) {
+						cb(err, {
+							ok: !1
+						});
+					} else {
+						cb(!1, {
+							ok: !0
+						});
+						console.log("Access request to @" + status.user.screen_name + " was sent");
+					}
+				});
+			return $;
+		},
+		newUser: function(args, cb) {
+			var $ = this,
+				args = args || {},
+				cb = cb || function() {},
+				users = $.db.collection('users'),
 				creds = args.creds || {},
-				query = args.query || '',
-				twitter = TwitterClient.Client(creds);
-			twitter.search(query, creds.access_token, creds.access_secret, function(err, data) {
+				titter = args.titter || '',
+				twitter = TwitterClient.Client(creds),
+				chess = $.db.collection('chess');
+			twitter.getRequestToken(function(err, requestToken, requestTokenSecret, results) {
 				if (err) {
-					cb(err, {
-						ok: !1
-					});
-				}
-				console.log('Found ' + data.statuses.length + ' statuses');
-				if (data.statuses.length > 0) {
-					cb(!1, {
-						statuses: data.statuses
-					});
+					cb(err, !1);
+					console.log("Error getting OAuth request token : " + err);
 				} else {
-					cb({
-						status: 404,
-						text: 'Nothing found'
-					}, {
-						ok: !1
+					var params = {
+						status: '@' + status.user.screen_name + ' ' + twitter.getAuthUrl(requestToken),
+						in_reply_to_status_id: status.id_str,
+						screen_name: status.user.screen_name
+					};
+					twitter.statuses('update', params, creds.access_token, creds.access_secret, function(err, _data, res) {
+						if (err) {
+							cb(err, {
+								ok: !1
+							});
+						} else {
+							if (data[0]) {
+								$.updateUser({
+									name: status.user.screen_name,
+									set: {
+										invite: invite,
+										opponent: opponent,
+										requestToken: requestToken,
+										requestTokenSecret: requestTokenSecret,
+									}
+								}, function(err, res) {
+
+								});
+							} else {
+								users.insert([{
+									name: status.user.screen_name,
+									requestToken: requestToken,
+									requestTokenSecret: requestTokenSecret,
+									accessToken: '',
+									accessTokenSecret: '',
+									opponent: opponent,
+									invite: invite
+								}], function(err, res) {
+									if (err) {
+										cb(err, {
+											ok: !1
+										});
+									} else {
+										cb(!1, {
+											ok: !0
+										});
+										chess.insert([{
+											checked: !1,
+											invite: invite,
+											name: status.user.screen_name,
+											opponent: opponent,
+											fen: ''
+										}]);
+										console.log("Access request to @" + status.user.screen_name + " was sent");
+									}
+								});
+							}
+						}
 					});
 				}
 			});
@@ -53,12 +395,11 @@ var $ = (function() {
 			var $ = this,
 				args = args || {},
 				cb = cb || function() {},
-				status = args.status || '',
+				status = args.status || {},
 				opponent = args.opponent || '',
+				users = $.db.collection('users'),
 				creds = args.creds || {},
 				titter = args.titter || '',
-				users = $.db.collection('users'),
-				chess = $.db.collection('chess'),
 				twitter = TwitterClient.Client(creds);
 			users.find({
 					name: status.user.screen_name
@@ -69,77 +410,8 @@ var $ = (function() {
 						.toString(32) + (Math.random() * 1000000)
 						.toString(32);
 					if (err || data.length === 0 || (data[0] && data[0].accessToken === '')) {
-						twitter.getRequestToken(function(err, requestToken, requestTokenSecret, results) {
-							if (err) {
-								cb(err, !1);
-								console.log("Error getting OAuth request token : " + err);
-							} else {
-								var params = {
-									status: '@' + status.user.screen_name + ' ' + twitter.getAuthUrl(requestToken),
-									in_reply_to_status_id: status.id_str,
-									screen_name: status.user.screen_name
-								};
-								twitter.statuses('update', params, creds.access_token, creds.access_secret, function(err, _data, res) {
-									if (err) {
-										cb(err, {
-											ok: !1
-										});
-									} else {
-										if (data[0]) {
-											users.update({
-													name: status.user.screen_name
-												}, {
-													$set: {
-														invite: invite,
-														opponent: opponent,
-														requestToken: requestToken,
-														requestTokenSecret: requestTokenSecret,
-													}
-												},
-												function(err, res) {
-													if (err) {
-														cb(err, {
-															ok: !1
-														});
-													} else {
-														cb(!1, {
-															ok: !0
-														});
-														console.log("Access request to @" + status.user.screen_name + " was sent");
-													}
-												});
-										} else {
-											users.insert([{
-												name: status.user.screen_name,
-												requestToken: requestToken,
-												requestTokenSecret: requestTokenSecret,
-												accessToken: '',
-												accessTokenSecret: '',
-												opponent: opponent,
-												invite: invite
-											}], function(err, res) {
-												if (err) {
-													cb(err, {
-														ok: !1
-													});
-												} else {
-													cb(!1, {
-														ok: !0
-													});
-													chess.insert([{
-														checked: !1,
-														invite: invite,
-														name: status.user.screen_name,
-														opponent: opponent,
-														fen: ''
-													}]);
-													console.log("Access request to @" + status.user.screen_name + " was sent");
-												}
-											});
-										}
-									}
-								});
-							}
+						$.newUser({}, function(err, res) {
+
 						});
 					} else {
 						var params = {
@@ -393,11 +665,5 @@ var $ = (function() {
 							});
 					}
 				});
-		}
-	}
-
-	return $;
-
-})();
-
-module.exports = $;
+		},
+*/
