@@ -16,10 +16,10 @@ var server = require('http')
 				console.log("Error coonect to database: " + err);
 			} else {
 				app.custom.db = db;
-				(require('./chess/route.js'))({
-					app: app
-				});
-				console.log("Connected correctly to server");
+				//(require('./chess/route.js'))({
+				//	app: app
+				//});
+				console.log("Connected correctly to db server");
 			}
 		});
 	});
