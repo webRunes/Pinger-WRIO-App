@@ -25,8 +25,7 @@ deploy:
     app-id: 4539a5ac-9d5f-4ce1-bbac-e3456b3b4c22
     on:
       repo: webRunes/Titter-WRIO-App
-      tags: true
-      all_branches: true
+      branch: production
   - provider: s3
     access_key_id:
       secure: mR+kXkYTSLM50ICSs7Fm29iFpJo8jCsyYKiyF8ZlBhzmSP8GoHpcsSWd6J/HFnW1WQqa6vAmv/Sxd1Lr23AnxtKyGm+ROej2QQWrp2EouHLEFxuOwy2whLDqAvQcyZyi4eRqeWicAFhM/qrkK4EdvgbsgBqXIY9RXEH1y6Hgxi4=
@@ -35,4 +34,6 @@ deploy:
     bucket: wrioos.com
     upload-dir: Titter-WRIO-App
     acl: public_read
+    on:
+      branch: production
 
