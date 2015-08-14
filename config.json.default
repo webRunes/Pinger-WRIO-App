@@ -1,0 +1,20 @@
+{
+  "api": {
+    "twitterLogin": {
+      "consumerKey": "YOR_TWITTER_CONSUMER KEY, you can find it at api.twitter.com",
+      "consumerSecret": "YOUR_TWITTER_CONSUMER_SECRET, you can find it at api.twitter.com"
+    }
+  },
+ "db": {
+ 	"host": "YOUR_HOST_IP",
+ 	"dbname": "YOUR_DB_NAME",
+ 	"user": "YOUR_DB_USER",
+ 	"password": "YOUR_DB_PASS",
+ 	"workdomain": ".wrioos.com"  // replace .wrioos.com domain with your domain
+   },
+  "server": {
+    "cookiesecret":"YOUR_COOKIE_SECRET",
+    "port":5001
+  }
+
+}
