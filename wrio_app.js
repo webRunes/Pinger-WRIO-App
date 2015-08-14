@@ -1,10 +1,10 @@
 var exports = module.exports = {};
 
-exports.init = function(express) {
+exports.init = function (express) {
 	var app = express();
 	var bodyParser = require('body-parser');
 	// Add headers
-	app.use(function(request, response, next) {
+	app.use(function (request, response, next) {
 		//console.log(request);
 		response.setHeader('Access-Control-Allow-Origin', 'http://wrioos.com');
 		response.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
@@ -13,8 +13,6 @@ exports.init = function(express) {
 		next();
 	});
 	app.use(bodyParser.json());
-	app.use(bodyParser.urlencoded({
-		extended: true
-	}));
+	app.use(bodyParser.urlencoded({extended: true}));
 	return app;
 };
