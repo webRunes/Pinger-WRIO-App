@@ -1,50 +1,49 @@
 {
-  "name": "titter-wrio-app",
-  "version": "1.0.149",
-  "description": "https://github.com/webRunes/Titter-WRIO-App/",
-  "browserify": {
-    "transform": [
-      "reactify"
-    ]
-  },
-  "dependencies": {},
-  "devDependencies": {
-    "aws-sdk-apis": "*",
-    "body-parser": "^1.9.2",
-    "canvas": "1.2.3",
-    "cookie-parser": "*",
-    "ejs": "^1.0.0",
-    "express": "^4.10.1",
-    "express-mysql-session": "*",
-    "express-session": "*",
-    "gm": "^1.17.0",
-    "minimist": "^1.1.1",
-    "mongodb": "~2.0",
-    "mysql": "*",
-    "nconf": "*",
-    "node-twitter": "*",
-    "node-twitter-api": "*",
-    "p3p": "0.0.2",
-    "react-tools": "^0.13.3",
-    "supervisor": "*",
-    "temp": "*"
-  },
-  "scripts": {
-    "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
-    "start": "npm run jsx",
-    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
-    "bumpVersion": "npm run version && npm run bundle",
-    "version": "sh version.sh",
-    "bundle": "sh bundle.sh"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/webRunes/Titter-WRIO-App.git"
-  },
-  "author": "webRunes",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/webRunes/Titter-WRIO-App/issues"
-  },
-  "homepage": "https://github.com/webRunes/Titter-WRIO-App"
+	"name": "titter-wrio-app",
+	"version": "1.0.136",
+	"description": "https://github.com/webRunes/Titter-WRIO-App/",
+	"browserify": {
+		"transform": [
+			"reactify"
+		]
+	},
+	"dependencies": {
+		"aws-sdk-apis": "*",
+		"body-parser": "^1.9.2",
+		"canvas": "*",
+		"cookie-parser": "*",
+		"ejs": "^1.0.0",
+		"express": "^4.10.1",
+		"express-mysql-session": "*",
+		"es6-promise": "^2.1.1",
+		"express-session": "*",
+		"gm": "^1.17.0",
+		"minimist": "^1.1.1",
+		"mongodb": "~2.0",
+		"mysql": "*",
+		"nconf": "*",
+		"node-twitter": "*",
+		"node-twitter-api": "*",
+		"p3p": "0.0.2",
+		"supervisor": "*",
+		"temp": "*"
+	},
+	"devDependencies": {
+		"react-tools": "^0.13.3"
+	},
+	"scripts": {
+		"jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
+		"start": "npm run jsx",
+		"watch": "jsx --no-cache-dir -w -x jsx ./widget ./js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/webRunes/Titter-WRIO-App.git"
+	},
+	"author": "webRunes",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/webRunes/Titter-WRIO-App/issues"
+	},
+	"homepage": "https://github.com/webRunes/Titter-WRIO-App"
 }
