@@ -221,7 +221,7 @@ var React = require('react');
                 //    autoSizeTimeline();
                 //});
 
-                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}';
+                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}';
                 setTimeout(autoSizeTimeline, 1000);
             };
 
