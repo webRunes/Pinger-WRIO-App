@@ -211,8 +211,16 @@ var React = require('react');
                 var $twitter = document.getElementById('twitter-widget-0');
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
-                        $twitter.contentDocument.getElementsByClassName('h-feed')[0]
+                        $twitter.contentDocument.getElementsByClassName("h-feed")[0]
                     ).height.replace('px', ''));
+
+                    var add_ht = Number(window.getComputedStyle(
+                        $twitter.contentDocument.getElementsByClassName("no-more-pane")[0]
+                    ).height.replace('px', ''));
+                    if (add_ht > 0) {
+                        twitterht += add_ht;
+                    }
+
                     $twitter.style.height = twitterht + 100 + 'px';
                 }
 
@@ -222,7 +230,7 @@ var React = require('react');
                 //});
 
                 $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}';
-                setTimeout(autoSizeTimeline, 1000);
+                setInterval(autoSizeTimeline, 1000);
             };
 
             var twheight = 10000;
