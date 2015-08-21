@@ -208,7 +208,7 @@ var React = require('react');
         },
         createTwitterWidget: function (commentId) {
             window.onTimelineLoad = function () {
-                var $twitter = document.getElementById('twitter-widget-0');
+                var $twitter = document.getElementsByClassName('twitter-timeline-rendered')[0];
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
                         $twitter.contentDocument.getElementsByClassName("h-feed")[0]
