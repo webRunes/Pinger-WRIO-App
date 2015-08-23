@@ -12,6 +12,7 @@
     "aws-sdk-apis": "*",
     "body-parser": "^1.9.2",
     "canvas": "1.2.3",
+    "connect-mongo": "^0.8.2",
     "cookie-parser": "*",
     "ejs": "^1.0.0",
     "express": "^4.10.1",
