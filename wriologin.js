@@ -2,7 +2,7 @@
 /**
  * Created by mich.bil on 16.04.15.
  */
-
+var ObjectID = require('mongodb').ObjectID;
 var nconf = require("./wrio_nconf.js")
 	.init();
 
@@ -12,8 +12,8 @@ var $ = function (db) {
 	// used to deserialize the user
 	function deserialize(id, done) {
 		console.log("Deserializing user by id=" + id);
-		webrunesUsers.findOne({userID:id},function (err,user) {
-			if (err) {
+		webrunesUsers.findOne(ObjectID(id),function (err,user) {
+			if (err || !user) {
 				console.log("User not found", err);
 				done(err);
 				return;
@@ -30,24 +30,21 @@ var $ = function (db) {
 			done("Error");
 			return
 		}
-		var q = "select * from sessions where session_id =\"" + ssid + "\"";
-		sessions.findOne({_id: ssid},function(err, session) {
-			if (err) {
+		console.log("Trying deserialize session",ssid);
+		sessions.findOne({"_id": ssid}, function(err, session) {
+			if (err || !session) {
 				console.log("User not found", err);
 				done(err);
 				return;
 			}
 
 			console.log("Session deserialized " + ssid, session);
-			var data = session.session;
-
+			var data = JSON.parse(session.session);
 			if (data.passport) {
 				var user = data.passport.user;
 			} else {
 				user = undefined;
 			}
-
-
 
 			if (user != undefined) {
 				deserialize(user, done);
@@ -62,7 +59,7 @@ var $ = function (db) {
 	function getTwitterCredentials(sessionId, done) {
 
 		loginWithSessionId(sessionId, function callback(err, res) {
-			if (err) {
+			if (err || !res) {
 				console.log("Error executing request");
 				done(err);
 			} else {
