@@ -13,27 +13,31 @@ var DOMAIN = nconf.get('db:workdomain');
 var express = require('express');
 var app = require("./wrio_app.js")
 	.init(express);
-var MongoClient = require('mongodb')
+/*var MongoClient = require('mongodb')
 	.MongoClient;
+*/
+var db = require('./utils/db.js');
 app.custom = {};
-var server = require('http')
-	.createServer(app)
-	.listen(nconf.get("server:port"), function(req, res) {
-		console.log('app listening on port ' + nconf.get('server:port') + '...');
-		var url = 'mongodb://' + nconf.get('mongo:user') + ':' + nconf.get('mongo:password') + '@' + nconf.get('mongo:host') + '/' + nconf.get('mongo:dbname');
-		MongoClient.connect(url, function(err, db) {
-			if (err) {
-				console.log("Error conecting to mongo database: " + err);
-			} else {
-				app.custom.db = db;
-				//(require('./chess/route.js'))({
-				//	app: app
-				//});
-				console.log("Connected correctly to mongodb server");
-				wrioLogin= require('./wriologin')(db);
-				server_setup();
-			}
-		});
+
+var mongoUrl = 'mongodb://' + nconf.get('mongo:user') + ':' + nconf.get('mongo:password') + '@' + nconf.get('mongo:host') + '/' + nconf.get('mongo:dbname');
+
+db.mongo({
+		url: mongoUrl
+	})
+	.then(function(res) {
+		console.log("Connected correctly to database");
+		var db = res.db || {};
+		var server = require('http')
+			.createServer(app)
+			.listen(nconf.get("server:port"), function(req, res) {
+				console.log('app listening on port ' + nconf.get('server:port') + '...');
+				app.use('/api/', (require('./api/api-search.js')));
+				app.use('/api/', (require('./api/api-reply.js')));
+				console.log("Application Started!");
+			});
+	})
+	.catch(function(err) {
+		console.log('Error connect to database:' + err.code + ': ' + err.message);
 	});
 
 
@@ -41,26 +45,26 @@ function server_setup() {
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 
-//var SessionStore = require('express-mysql-session');
+	//var SessionStore = require('express-mysql-session');
 	var SessionStore = require('connect-mongo')(session);
 	var cookie_secret = nconf.get("server:cookiesecret");
 	app.use(cookieParser(cookie_secret));
-	var sessionStore = new SessionStore({db: app.custom.db});
-	app.use(session(
-		{
+	var sessionStore = new SessionStore({
+		db: app.custom.db
+	});
+	app.use(session({
 
-			secret: cookie_secret,
-			saveUninitialized: true,
-			store: sessionStore,
-			resave: true,
-			cookie: {
-				secure: false,
-				domain: DOMAIN,
-				maxAge: 1000 * 60 * 60 * 24 * 30
-			},
-			key: 'sid'
-		}
-	));
+		secret: cookie_secret,
+		saveUninitialized: true,
+		store: sessionStore,
+		resave: true,
+		cookie: {
+			secure: false,
+			domain: DOMAIN,
+			maxAge: 1000 * 60 * 60 * 24 * 30
+		},
+		key: 'sid'
+	}));
 
 	var p3p = require('p3p');
 	app.use(p3p(p3p.recommended));
@@ -73,9 +77,9 @@ function server_setup() {
 
 	}
 
-	app.get('/', function (request, response) {
+	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		wrioLogin.loginWithSessionId(request.sessionID, function (err, res) {
+		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 			if (err) {
 				console.log("User not found:", err);
 				response.render('index.ejs', {
@@ -92,7 +96,7 @@ function server_setup() {
 	});
 
 
-	app.get('/logoff', function (request, response) {
+	app.get('/logoff', function(request, response) {
 		console.log("Logoff called");
 		response.clearCookie('sid', {
 			'path': '/',
@@ -103,12 +107,12 @@ function server_setup() {
 	});
 
 
-	app.get('/callback', function (request, response) {
+	app.get('/callback', function(request, response) {
 		console.log("Our callback called");
 		response.render('callback', {});
 	});
 
-	app.post('/sendComment', function (request, response) {
+	app.post('/sendComment', function(request, response) {
 
 		var text = request.body.text;
 		var title = request.body.title;
@@ -117,7 +121,7 @@ function server_setup() {
 		var ssid = request.sessionID;
 		console.log("Sending comment " + message + " with ssid " + ssid);
 
-		wrioLogin.getTwitterCredentials(ssid, function (err, cred) {
+		wrioLogin.getTwitterCredentials(ssid, function(err, cred) {
 			if (err) {
 				console.log("Twitter auth failed");
 				//response.send('Failed');
@@ -126,7 +130,7 @@ function server_setup() {
 				return;
 			} else {
 				console.log("got keys", cred);
-				titterPicture.drawComment(text, function (error, filename) {
+				titterPicture.drawComment(text, function(error, filename) {
 					titterSender.comment(cred, title + '\n' + message + ' Donate 0 WRG', filename, function done(err, res) {
 						if (err) {
 							response.status(400);
