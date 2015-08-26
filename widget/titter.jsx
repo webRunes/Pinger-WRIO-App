@@ -229,7 +229,7 @@ var React = require('react');
                 //    autoSizeTimeline();
                 //});
 
-                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}';
+                $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}\n.timeline .stream {overflow-y: hidden !important;}';
                 setInterval(autoSizeTimeline, 1000);
             };
 
