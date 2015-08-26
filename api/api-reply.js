@@ -18,8 +18,9 @@ router.post('/reply', function(request, response) {
 		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
-			return response.status(err.code)
-				.send(err.message);
+			console.log(err);
+			return response.status(400)
+				.send(err);
 		} else {
 			response.status(200)
 				.end();
@@ -31,11 +32,17 @@ router.post('/replyAll', function(request, response) {
 	var twitterRestClient = new TwitterClient.Client(request.body.twitterCreds);
 	var statuses = request.body.statuses;
 
+	if ((!statuses)) {
+		response.status(400).send({error:"Missing parameters"});
+		return;
+	}
+
 	statuses.forEach(function(status) {
 		var replyText = '@' + status.user.screen_name + ' ' + request.body.message;
 
 		titterPicture.drawComment(replyText, function(err, filename) {
 			if (err) {
+				console.log(err);
 				return console.log('Draw comment error:', err.message);
 			}
 
@@ -48,8 +55,9 @@ router.post('/replyAll', function(request, response) {
 
 			twitterRestClient.statusesUpdateWithMedia(query, function(err, result) {
 				if (err) {
-					return response.status(err.code)
-						.send(err.message);
+					console.log(err);
+					return response.status(400)
+						.send(err);
 				}
 
 				response.status(200)

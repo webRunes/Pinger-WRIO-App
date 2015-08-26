@@ -7,10 +7,18 @@ router.post('/search', function(request, response) {
 	var creds = request.body.twitterCreds;
 	var twitterSearchClient = TwitterClient.Client(creds);
 
+	console.log("Got /api/search");
+
+	if ((!creds) || (!request.body.query)) {
+		response.status(400).send({error:"Missing parameters"});
+		return;
+	}
+
 	twitterSearchClient.search(request.body.query, creds.access_token, creds.access_secret, function(err, data) {
 		if (err) {
-			return response.status(err.status)
-				.send(err.message);
+			console.log(err);
+			return response.status(400)
+				.send(err);
 		}
 
 		console.log('Found ' + data.statuses.length + ' statuses');
