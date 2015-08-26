@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.154",
+  "version": "1.0.156",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -27,7 +27,10 @@
     "p3p": "0.0.2",
     "react-tools": "^0.13.3",
     "supervisor": "*",
-    "temp": "*"
+    "temp": "*",
+    "mocha": "^2.2.5",
+    "should": "^6.0.3",
+    "supertest": "^1.0.1"
   },
   "scripts": {
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",

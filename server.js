@@ -17,9 +17,10 @@ var app = require("./wrio_app.js")
 	.MongoClient;
 */
 var db = require('./utils/db.js');
-app.custom = {};
 
 var mongoUrl = 'mongodb://' + nconf.get('mongo:user') + ':' + nconf.get('mongo:password') + '@' + nconf.get('mongo:host') + '/' + nconf.get('mongo:dbname');
+
+app.ready = function() {};
 
 db.mongo({
 		url: mongoUrl
@@ -33,7 +34,9 @@ db.mongo({
 				console.log('app listening on port ' + nconf.get('server:port') + '...');
 				app.use('/api/', (require('./api/api-search.js')));
 				app.use('/api/', (require('./api/api-reply.js')));
+				server_setup(db);
 				console.log("Application Started!");
+				app.ready();
 			});
 	})
 	.catch(function(err) {
@@ -41,7 +44,10 @@ db.mongo({
 	});
 
 
-function server_setup() {
+function server_setup(db) {
+
+	wrioLogin= require('./wriologin')(db);
+
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
 
@@ -50,7 +56,7 @@ function server_setup() {
 	var cookie_secret = nconf.get("server:cookiesecret");
 	app.use(cookieParser(cookie_secret));
 	var sessionStore = new SessionStore({
-		db: app.custom.db
+		db:db
 	});
 	app.use(session({
 
@@ -148,3 +154,5 @@ function server_setup() {
 
 	console.log("Titter server config finished");
 };
+
+module.exports = app; // For unit testing purposes
