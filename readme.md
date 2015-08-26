@@ -6,4 +6,10 @@
 ##Official Hub
 [titter.wrioos.com](http://titter.wrioos.com)
 
+Added mocha unit tests, can be run with
+'''
+mocha --timeout 20000
+'''
+It's mandatory to pass all tests before making pull request
+
 Powered by [Open Copyright](http://opencopyright.webrunes.com)
