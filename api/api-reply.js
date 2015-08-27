@@ -10,19 +10,54 @@ router.post('/reply', function(request, response) {
 		creds = request.body.creds || {},
 		message = request.body.message || '',
 		access = request.body.access || {},
+		media_ids = request.body.media_ids,
 		_ = request.body._ || !1,
+		params;
+	if (media_ids) {
+		params = {
+			status: message,
+			screen_name: user,
+			media_ids: media_ids
+		}
+	} else {
 		params = {
 			status: message,
 			screen_name: user
-		},
-		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+		}
+	}
+	twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
+			console.log(err)
 			return response.status(err.code)
 				.send(err.message);
 		} else {
 			response.status(200)
 				.end();
+		}
+	});
+});
+
+router.post('/uploadMedia', function(request, response) {
+	var user = request.body.user || '',
+		creds = request.body.creds || {},
+		message = request.body.message || '',
+		access = request.body.access || {},
+		filename = request.body.filename || '',
+		_ = request.body._ || !1,
+		params = {
+			media: '../images/' + filename
+		},
+		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
+		if (err) {
+			return response.status(err.code)
+				.send(err.message);
+		} else {
+			response.status(200)
+				.json({
+					data: data
+				});
 		}
 	});
 });
