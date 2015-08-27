@@ -28,10 +28,6 @@ router.post('/reply', function(request, response) {
 	twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
-			console.log(err)
-			return response.status(err.code)
-				.send(err.message);
-			console.log(err);
 			return response.status(400)
 				.send(err);
 		} else {
@@ -55,8 +51,8 @@ router.post('/uploadMedia', function(request, response) {
 		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
-			return response.status(err.code)
-				.send(err.message);
+			return response.status(400)
+				.send(err);
 		} else {
 			response.status(200)
 				.json({
