@@ -45,8 +45,9 @@ router.post('/uploadMedia', function(request, response) {
 		access = request.body.access || {},
 		filename = request.body.filename || '',
 		_ = request.body._ || !1,
+		path = request.body.path || '',
 		params = {
-			media: '../images/' + filename
+			media: path + filename
 		},
 		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
