@@ -10,15 +10,24 @@ router.post('/reply', function(request, response) {
 		creds = request.body.creds || {},
 		message = request.body.message || '',
 		access = request.body.access || {},
+		media_ids = request.body.media_ids,
 		_ = request.body._ || !1,
+		params;
+	if (media_ids) {
+		params = {
+			status: message,
+			screen_name: user,
+			media_ids: media_ids
+		}
+	} else {
 		params = {
 			status: message,
 			screen_name: user
-		},
-		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+		}
+	}
+	twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
-			console.log(err);
 			return response.status(400)
 				.send(err);
 		} else {
@@ -28,12 +37,40 @@ router.post('/reply', function(request, response) {
 	});
 });
 
+router.post('/uploadMedia', function(request, response) {
+	var user = request.body.user || '',
+		creds = request.body.creds || {},
+		message = request.body.message || '',
+		access = request.body.access || {},
+		filename = request.body.filename || '',
+		_ = request.body._ || !1,
+		path = request.body.path || '',
+		params = {
+			media: path + filename
+		},
+		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
+		if (err) {
+			return response.status(400)
+				.send(err);
+		} else {
+			response.status(200)
+				.json({
+					data: data
+				});
+		}
+	});
+});
+
 router.post('/replyAll', function(request, response) {
 	var twitterRestClient = new TwitterClient.Client(request.body.twitterCreds);
 	var statuses = request.body.statuses;
 
 	if ((!statuses)) {
-		response.status(400).send({error:"Missing parameters"});
+		response.status(400)
+			.send({
+				error: "Missing parameters"
+			});
 		return;
 	}
 
