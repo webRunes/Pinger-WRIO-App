@@ -209,6 +209,8 @@ var React = require('react');
         createTwitterWidget: function (commentId) {
             window.onTimelineLoad = function () {
                 var $twitter = document.getElementsByClassName('twitter-timeline-rendered')[0];
+
+                //NOTE: autoSizeTimeline call multiple times after re-render CreateTitter component
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
                         $twitter.contentDocument.getElementsByClassName("h-feed")[0]
@@ -230,7 +232,7 @@ var React = require('react');
                 //});
 
                 $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}\n.timeline .stream {overflow-y: hidden !important;}';
-                setInterval(autoSizeTimeline, 1000);
+                setTimeout(autoSizeTimeline, 1000);
             };
 
             var twheight = 10000;
@@ -242,13 +244,13 @@ var React = require('react');
             var js,
                 fjs = document.getElementsByTagName('script')[0],
                 p = /^http:/.test(document.location) ? 'http' : 'https';
-            if (!document.getElementById('twitter-wjs')) {
-                js = document.createElement('script');
-                js.id = 'twitter-wjs';
-                js.src = p + '://platform.twitter.com/widgets.js';
-                js.setAttribute('onload', 'twttr.events.bind("rendered",window.onTimelineLoad);');
-                fjs.parentNode.insertBefore(js, fjs);
-            }
+
+            js = document.createElement('script');
+            js.id = 'twitter-wjs';
+            js.src = p + '://platform.twitter.com/widgets.js';
+            js.setAttribute('onload', 'twttr.events.bind("rendered",window.onTimelineLoad);');
+            fjs.parentNode.insertBefore(js, fjs);
+
         },
         isArticle: function(json) {
             var i,
@@ -327,7 +329,8 @@ var React = require('react');
                     </section>
                 );
             }
-            
+
+
             var addCommentFundsMode;
             if (!this.state.addFundsMode) {
                 addCommentFundsMode = (
@@ -344,7 +347,7 @@ var React = require('react');
                     </ul>
                 );
             }
-            
+
             return (
                 <div>
                     { addCommentFundsMode }
