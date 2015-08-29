@@ -210,7 +210,7 @@ var React = require('react');
             window.onTimelineLoad = function () {
                 var $twitter = document.getElementsByClassName('twitter-timeline-rendered')[0];
 
-                //NOTE: autoSizeTimeline call multiple times after re-render CreateTitter component
+                //NOTE: autoSizeTimeline call multiple times after each re-render CreateTitter component
                 function autoSizeTimeline() {
                     var twitterht = Number(window.getComputedStyle(
                         $twitter.contentDocument.getElementsByClassName("h-feed")[0]
