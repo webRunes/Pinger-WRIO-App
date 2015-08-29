@@ -11,13 +11,15 @@ router.post('/reply', function(request, response) {
 		message = request.body.message || '',
 		access = request.body.access || {},
 		media_ids = request.body.media_ids,
+		in_reply_to_status_id = request.body.in_reply_to_status_id,
 		_ = request.body._ || !1,
 		params;
 	if (media_ids) {
 		params = {
 			status: message,
 			screen_name: user,
-			media_ids: media_ids
+			media_ids: media_ids,
+			in_reply_to_status_id: in_reply_to_status_id
 		}
 	} else {
 		params = {
