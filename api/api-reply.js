@@ -1,3 +1,4 @@
+var multer = (require('multer'))();
 var router = require('express')
 	.Router();
 var titterPicture = require('../titter-picture');
@@ -39,18 +40,15 @@ router.post('/reply', function(request, response) {
 	});
 });
 
-router.post('/uploadMedia', function(request, response) {
-	var user = request.body.user || '',
-		creds = request.body.creds || {},
-		message = request.body.message || '',
-		access = request.body.access || {},
-		filename = request.body.filename || '',
-		_ = request.body._ || !1,
-		path = request.body.path || '',
+router.post('/uploadMedia', multer.single('image'), function(request, response) {
+	var body = JSON.parse(request.body.params),
+		user = body.user || '',
+		creds = body.creds || {},
+		access = body.access || {},
 		params = {
-			media: path + filename
+			media: request.file.buffer
 		},
-		twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+		twitter = TwitterClient.Client(creds);
 	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
 			return response.status(400)
