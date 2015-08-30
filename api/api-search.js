@@ -3,7 +3,6 @@ var router = require('express')
 var TwitterClient = require("../utils/twitter-client");
 
 router.post('/search', function(request, response) {
-
 	var creds = request.body.twitterCreds;
 	var twitterSearchClient = TwitterClient.Client(creds);
 
