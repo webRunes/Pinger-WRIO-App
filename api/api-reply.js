@@ -42,7 +42,6 @@ router.post('/reply', function(request, response) {
 
 router.post('/uploadMedia', multer.single('image'), function(request, response) {
 	var body = JSON.parse(request.body.params),
-		user = body.user || '',
 		creds = body.creds || {},
 		access = body.access || {},
 		params = {
@@ -60,6 +59,35 @@ router.post('/uploadMedia', multer.single('image'), function(request, response) 
 				});
 		}
 	});
+});
+
+router.post('/drawComment', function(request, response) {
+	var creds = request.body.creds || {},
+		message = request.body.message || '',
+		access = request.body.access || {};
+	titterPicture.drawComment(message, function(err, filename) {
+		if (err) {
+			console.log(err);
+			return console.log('Draw comment error:', err.message);
+		}
+
+		var params = {
+				media: filename
+			},
+			twitter = TwitterClient.Client(creds);
+		twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
+			if (err) {
+				return response.status(400)
+					.send(err);
+			} else {
+				response.status(200)
+					.json({
+						data: data
+					});
+			}
+		});
+	});
+
 });
 
 router.post('/replyAll', function(request, response) {
