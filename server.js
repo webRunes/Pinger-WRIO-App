@@ -1,6 +1,7 @@
 'use strict';
 var nconf = require("./wrio_nconf.js")
 	.init();
+var multer = (require('multer'))();
 
 var fs = require('fs');
 var session = require('express-session');
@@ -46,7 +47,7 @@ db.mongo({
 
 function server_setup(db) {
 
-	wrioLogin= require('./wriologin')(db);
+	wrioLogin = require('./wriologin')(db);
 
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
@@ -56,7 +57,7 @@ function server_setup(db) {
 	var cookie_secret = nconf.get("server:cookiesecret");
 	app.use(cookieParser(cookie_secret));
 	var sessionStore = new SessionStore({
-		db:db
+		db: db
 	});
 	app.use(session({
 
@@ -118,13 +119,13 @@ function server_setup(db) {
 		response.render('callback', {});
 	});
 
-	app.post('/sendComment', function(request, response) {
-
+	app.post('/sendComment', multer.array('images[]'), function(request, response) {
 		var text = request.body.text;
-		var title = request.body.title;
-		var message = request.body.comment;
+		var title = request.body.title || '';
+		var message = request.body.comment || '';
 		//var ssid = request.body.ssid;
-		var ssid = request.sessionID;
+		var ssid = request.sessionID || '';
+		var images = [];
 		console.log("Sending comment " + message + " with ssid " + ssid);
 
 		wrioLogin.getTwitterCredentials(ssid, function(err, cred) {
@@ -136,17 +137,68 @@ function server_setup(db) {
 				return;
 			} else {
 				console.log("got keys", cred);
-				titterPicture.drawComment(text, function(error, filename) {
-					titterSender.comment(cred, title + '\n' + message + ' Donate 0 WRG', filename, function done(err, res) {
-						if (err) {
-							response.status(400);
-							response.send(err);
-						} else {
-							response.send('Done');
-						}
-					});
-
-				});
+				request.files.forEach(function(e, i) {
+					if (i < 2 && i < request.files.length - 1) {
+						console.log(i)
+						titterSender.upload(cred, e.buffer, function(err, data) {
+							if (err) {
+								response.status(400)
+									.send(err);
+							} else {
+								try {
+									data = JSON.parse(data);
+								} catch (e) {}
+								images.push(data.media_id_string);
+							}
+						});
+					} else if (i === 2 || i === request.files.length - 1) {
+						console.log(i)
+						titterSender.upload(cred, e.buffer, function(err, data) {
+							if (err) {
+								response.status(400)
+									.send(err);
+							} else {
+								try {
+									data = JSON.parse(data);
+								} catch (e) {}
+								images.push(data.media_id_string);
+								if (text) {
+									titterPicture.drawComment(text, function(error, filename) {
+										titterSender.upload(cred, filename, function(err, data) {
+											if (err) {
+												response.status(400)
+													.send(err);
+											} else {
+												try {
+													data = JSON.parse(data);
+												} catch (e) {}
+												images.push(images[0]);
+												images[0] = data.media_id_string;
+												titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+													if (err) {
+														response.status(400);
+														response.send(err);
+													} else {
+														response.send('Done');
+													}
+												})
+											}
+										});
+									});
+								} else {
+									titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+										if (err) {
+											response.status(400);
+											response.send(err);
+										} else {
+											response.send('Done');
+										}
+									})
+								}
+							}
+						});
+					}
+				})
 			}
 		});
 
