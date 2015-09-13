@@ -86,7 +86,6 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		console.log('create=', request.query.create, !!request.query.create)
 		var render = request.query.create === '' ? 'create.ejs' : 'index.ejs';
 		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 			if (err) {
