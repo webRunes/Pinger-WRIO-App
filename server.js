@@ -86,15 +86,17 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
+		console.log('create=', request.query.create, !!request.query.create)
+		var render = request.query.create === '' ? 'create.ejs' : 'index.ejs';
 		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 			if (err) {
 				console.log("User not found:", err);
-				response.render('index.ejs', {
+				response.render(render, {
 					"error": "Not logged in",
 					"user": undefined
 				});
 			} else {
-				response.render('index.ejs', {
+				response.render(render, {
 					"user": res
 				});
 				console.log("User found " + res);

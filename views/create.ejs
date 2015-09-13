@@ -1,0 +1,241 @@
+<html>
+<head>
+	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
+	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+	<link href="//wrio.s3-website-us-east-1.amazonaws.com/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
+	<script type="text/javascript">
+
+		var files = [];
+
+		var posturl = 'http://webrunes.com'; //default one, will be changed by incoming message
+
+		// Return cookie as "name". "undefined" is a default name
+		function getCookie(name) {
+			var matches = document.cookie.match(new RegExp(
+					"(?:^|; )" + name.replace(/([\.$?*|{}\(\)\[\]\\\/\+^])/g, '\\$1') + "=([^;]*)"
+			));
+			return matches ? decodeURIComponent(matches[1]) : undefined;
+		}
+
+		function getLoginUrl() {
+
+			var host = window.location.host;
+			host = host.replace('titter.','login.');
+			return "http://"+host;
+
+		}
+
+		function openAuthPopup() {
+			var loginUrl = getLoginUrl();
+			var callbackurl = window.location.href+'callback'
+			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=700");
+		}
+
+		function logoff() {
+			$.ajax(getLoginUrl()+'/logout');
+		}
+
+		function checkLoggedIn() {
+			console.log(document.cookie);
+			if (!getCookie('sid')) {
+				openAuthPopup();
+			} else {
+				console.log("Cookie exists, aborting");
+			}
+
+		}
+
+		function setWRIOAuthData() {
+			location.reload();
+		}
+
+		function loadDraft() {
+			if (window.localStorage['draft']) {
+				document.getElementById('IDtweet_title').value = window.localStorage['draft_title'];
+				document.getElementById('comment').value = window.localStorage['draft'];
+				window.localStorage.removeItem('draft_title');
+				window.localStorage.removeItem('draft');
+			}
+
+
+		}
+
+		function saveDraft() {
+			var text = document.getElementById('comment').value;
+                        var title = document.getElementById('IDtweet_title').value;
+                        console.log(title);
+			window.localStorage['draft'] = text;
+			window.localStorage['draft_title'] = title;
+		}
+
+		function keyPress() {
+
+			var comment = document.getElementById('comment').value;
+			var title = document.getElementById('IDtweet_title').value;
+
+			var t_limit = $('#IDtweet_title').attr('maxlength');
+                        var t_delta = t_limit - title.length;
+			console.log(title.length,t_delta);
+			$('label.title-limit').html(t_delta);
+			var limit = $('#comment').attr('maxlength');
+			var delta = limit - comment.length;
+			console.log(comment.length,delta);
+			$('label.comment-limit').html(delta);
+
+		}
+
+		function saveCanvas() {
+
+			var comment = document.getElementById('comment').value;
+			var title = document.getElementById('IDtweet_title').value;
+			var data = new FormData();
+			var _data = {
+				text: comment,
+				title: title,
+				comment : posturl,
+				ssid: getCookie('sid')
+			};
+
+			for (var i = 0; i < 3; i++) {
+				data.append('images[]', files[i]);
+			};
+
+			$.each(_data, function(key, value) {
+				data.append(key, value);
+			});
+
+			//dataType: 'json', removed because of ajax error
+			$.ajax({
+				url: '/sendComment',
+				type: 'post',
+				processData: false, // Не обрабатываем файлы (Don't process the files)
+				contentType: false,
+				dataType:'json',
+				data: data
+			}).done(function(data) {
+				document.getElementById('comment').value = '';
+				console.log("successfully sent");
+				$('#result').html("Successfully sent!").removeClass("redError");
+
+			}).fail(function(request,error) {
+				console.log("Request: " + JSON.stringify(request));
+				$('#result').html("Error while executing your request :(").addClass("redError");
+			});
+
+		}
+		$(document).ready(function() {
+			loadDraft();
+		});
+
+
+
+		function onTimelineLoad() {
+
+			$('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html()+"img.autosized-media {width:auto;height:auto;}");
+
+		};
+
+		function createTwitterWidget() {
+
+			var frameheight = $(window).height();
+			var headerheight = $('.twitter').outerHeight();
+
+			var twheight = frameheight - headerheight - 45;
+
+			var twitter_template = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + posturl + '" data-widget-id="' + commentId + '" width="' + $(window).width() + '" height="'+twheight+'" chrome="noscrollbar nofooter">Tweets about ' + posturl + '</a>'
+			$('#frame_container').append(twitter_template);
+
+			!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],p=/^http:/.test(d.location)?'http':'https';
+				if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+					js.src=p+"://platform.twitter.com/widgets.js";
+					js.setAttribute('onload', "twttr.events.bind('rendered',function(e) {onTimelineLoad()});");
+				fjs.parentNode.insertBefore(js,fjs);}}(document,"script","twitter-wjs");
+
+
+		}
+
+		$(document).ready(function () {
+			console.log("Iframe loaded");
+			$("#fileInput").change(function() {
+				$.each(this.files, function(key, value) {
+					files.push(value);
+				})
+			});
+		});
+
+		function chooseFile() {
+			$("#fileInput").click();
+		}
+
+	</script>
+</head>
+<body>
+
+<div id="frame_container">
+	<div id="titter-id">
+		<form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom" role="form">
+                   <div class="form-horizontal" data-reactid=".0.0.1.0.4.1.1">
+                        <div class="form-group donation col-xs-12 col-md-4 col-lg-2" data-reactid=".0.0.1.0.4.1.1.0" >
+                            <label class="col-sm-2 control-label" for="inputAmount" data-reactid=".0.0.1.0.4.1.1.0.0">Donation</label>
+                        </div>
+                        <div class="form-group wrg col-xs-12 col-md-4 col-lg-3 has-error" data-reactid=".0.0.1.0.4.1.1.1">
+                            <div class="input-group input-group-sm tooltip-demo" data-reactid=".0.0.1.0.4.1.1.1.0">
+                                <span class="input-group-addon" data-reactid=".0.0.1.0.4.1.1.1.0.0">WRG</span>
+                                <input type="number" class="form-control" id="inputAmount" value="0" min="0" data-reactid=".0.0.1.0.4.1.1.1.0.1">
+                                <span class="input-group-addon" data-toggle="tooltip" data-placement="top" title="The author will receive 82%, which amounts to 8.2 WRG or 0.19 USD. The bigger the donated amount, the bigger the received percentage up to 95%" data-reactid=".0.0.1.0.4.1.1.1.0.2">82%</span>
+                            </div>
+                            <div class="help-block" data-reactid=".0.0.1.0.4.1.1.1.1">
+                                <span data-reactid=".0.0.1.0.4.1.1.1.1.0">Insufficient funds. </span>
+                                <a href="webgold-add_funds.htm" data-reactid=".0.0.1.0.4.1.1.1.1.1">Add funds</a>
+                            </div>
+                        </div>
+                        <div class="form-group title col-xs-12 col-md-4 col-lg-7 has-error" data-reactid=".0.0.1.0.4.1.1.2">
+                            <div class="input-group input-group-sm" data-reactid=".0.0.1.0.4.1.1.2.0">
+                                <span class="input-group-addon twitter-limit" data-reactid=".0.0.1.0.4.1.1.2.0.0">72</span>
+                                <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72" placeholder="Title, hashtags or mentions. Max 72 characters" type="text" data-reactid=".0.0.1.0.4.1.1.2.0.1">
+                            </div>
+                            <div class="help-block" data-reactid=".0.0.1.0.4.1.1.2.1">Max 72 characters</div>
+                        </div>
+                    </div>
+                        <div class="form-group col-xs-12 has-error">
+				<textarea maxlength="1024" rows="3" class="form-control" placeholder="Let us know your thoughts! Max 1024 characters" name="comment" id="comment" onkeyup="keyPress();"></textarea>
+				<div class="help-block">Max 1024 characters</div>
+			</div>
+			<div class="form-group col-xs-12">
+				<% if (user) { %>
+				<h4>as <%= user.lastName %>.</h4>
+				<a href="/logoff">Logoff</a>
+				<% } %>
+				<div style="height:0px;overflow:hidden">
+					<input type="file" accept="image/*" multiple id="fileInput" name="fileInput" />
+				</div>
+				<div class="pull-left">
+					<button type="button" class="btn btn-default" onclick="chooseFile();">
+						<span class="glyphicon glyphicon-camera"></span>
+						Photo
+					</input>
+				</div>
+				<div class="pull-right">
+					<label class="comment-limit">4096</label>
+					<label class="title-limit">72</label>
+					<% if (user) { %>
+					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Submit</button>
+					<% } else { %>
+					<button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span>Login and submit</button>
+					<% } %>
+				</div>
+			</div>
+		</form>
+	</div>
+	<div style="display:none">
+		<h3 id="result" class="centertext"></h3>
+	</div>
+
+	<ul class="breadcrumb twitter">
+		<li class="active">Comments</li>
+		<li class="pull-right"><!--<a href="#" class="link"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
+	</ul>
+</div>
+<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+</body>
+</html>
