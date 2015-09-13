@@ -323,7 +323,18 @@ var React = require('react');
         render: function () {
             var parts = [];
 
+            var isComment = this.props.scripts
+                .map(function(item) {
+                    return item.comment;
+                })
+                .filter(function(item) {
+                    return typeof item !== 'undefined';
+                })
+                .length > 0;
 
+            if(!isComment) {
+                return null;
+            }
 
             if (this.state.nocomments) {
                 parts.push(
@@ -340,31 +351,24 @@ var React = require('react');
 
 
             var addCommentFundsMode;
-            var condition = this.props.scripts
-                .map(function(item) {
-                    return item.comment;
-                })
-                .filter(function(item) {
-                    return typeof item !== 'undefined';
-                });
 
-            if(condition.length > 0) {
-                if (!this.state.addFundsMode) {
-                    addCommentFundsMode = (
-                        <ul className="breadcrumb">
-                            <li className="active">{this.state.addComment}</li>
-                            <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
-                        </ul>
-                    );
-                } else {
-                    addCommentFundsMode = (
-                        <ul className="breadcrumb">
-                            <li><a onClick={ this.switchToAddCommentMode }>{this.state.addComment}</a></li>
-                            <li className="active">Add funds</li>
-                        </ul>
-                    );
-                }
+
+            if (!this.state.addFundsMode) {
+              addCommentFundsMode = (
+                <ul className="breadcrumb">
+                <li className="active">{this.state.addComment}</li>
+                <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
+                </ul>
+              );
+            } else {
+              addCommentFundsMode = (
+                <ul className="breadcrumb">
+                <li><a onClick={ this.switchToAddCommentMode }>{this.state.addComment}</a></li>
+                <li className="active">Add funds</li>
+                </ul>
+              );
             }
+
 
             return (
                 <div>
