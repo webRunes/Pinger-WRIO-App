@@ -130,6 +130,53 @@ function server_setup(db) {
 		var images = [];
 		console.log("Sending comment " + message + " with ssid " + ssid);
 
+		function lastFile(file) {
+			titterSender.upload(cred, file.buffer, function(err, data) {
+				if (err) {
+					response.status(400)
+						.send(err);
+				} else {
+					try {
+						data = JSON.parse(data);
+					} catch (e) {}
+					images.push(data.media_id_string);
+					if (text) {
+						titterPicture.drawComment(text, function(error, filename) {
+							titterSender.upload(cred, filename, function(err, data) {
+								if (err) {
+									response.status(400)
+										.send(err);
+								} else {
+									try {
+										data = JSON.parse(data);
+									} catch (e) {}
+									images.push(images[0]);
+									images[0] = data.media_id_string;
+									titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+										if (err) {
+											response.status(400);
+											response.send(err);
+										} else {
+											response.send('Done');
+										}
+									})
+								}
+							});
+						});
+					} else {
+						titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+							if (err) {
+								response.status(400);
+								response.send(err);
+							} else {
+								response.send('Done');
+							}
+						})
+					}
+				}
+			});
+		}
+
 		wrioLogin.getTwitterCredentials(ssid, function(err, cred) {
 			if (err) {
 				console.log("Twitter auth failed");
@@ -141,7 +188,6 @@ function server_setup(db) {
 				console.log("got keys", cred);
 				request.files.forEach(function(e, i) {
 					if (i < 2 && i < request.files.length - 1) {
-						console.log(i)
 						titterSender.upload(cred, e.buffer, function(err, data) {
 							if (err) {
 								response.status(400)
@@ -154,51 +200,7 @@ function server_setup(db) {
 							}
 						});
 					} else if (i === 2 || i === request.files.length - 1) {
-						console.log(i)
-						titterSender.upload(cred, e.buffer, function(err, data) {
-							if (err) {
-								response.status(400)
-									.send(err);
-							} else {
-								try {
-									data = JSON.parse(data);
-								} catch (e) {}
-								images.push(data.media_id_string);
-								if (text) {
-									titterPicture.drawComment(text, function(error, filename) {
-										titterSender.upload(cred, filename, function(err, data) {
-											if (err) {
-												response.status(400)
-													.send(err);
-											} else {
-												try {
-													data = JSON.parse(data);
-												} catch (e) {}
-												images.push(images[0]);
-												images[0] = data.media_id_string;
-												titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
-													if (err) {
-														response.status(400);
-														response.send(err);
-													} else {
-														response.send('Done');
-													}
-												})
-											}
-										});
-									});
-								} else {
-									titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
-										if (err) {
-											response.status(400);
-											response.send(err);
-										} else {
-											response.send('Done');
-										}
-									})
-								}
-							}
-						});
+						lastFile(e);
 					}
 				})
 			}
