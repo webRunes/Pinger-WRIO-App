@@ -129,7 +129,31 @@ function server_setup(db) {
 		var images = [];
 		console.log("Sending comment " + message + " with ssid " + ssid);
 
-		function lastFile(file) {
+		function lastFileDispatcher(files, cred, fileHandler, lastFileHandler) {
+			files.forEach(function(e, i) {
+				if (i < 2 && i < request.files.length - 1) {
+					fileHandler(e, cred);
+				} else if (i === 2 || i === request.files.length - 1) {
+					lastFileHandler(e, cred);
+				}
+			})
+		}
+
+		function fileHandler(file, cred) {
+			titterSender.upload(cred, file.buffer, function(err, data) {
+				if (err) {
+					response.status(400)
+						.send(err);
+				} else {
+					try {
+						data = JSON.parse(data);
+					} catch (e) {}
+					images.push(data.media_id_string);
+				}
+			});
+		}
+
+		function lastFileHandler(file, cred) {
 			titterSender.upload(cred, file.buffer, function(err, data) {
 				if (err) {
 					response.status(400)
@@ -185,23 +209,7 @@ function server_setup(db) {
 				return;
 			} else {
 				console.log("got keys", cred);
-				request.files.forEach(function(e, i) {
-					if (i < 2 && i < request.files.length - 1) {
-						titterSender.upload(cred, e.buffer, function(err, data) {
-							if (err) {
-								response.status(400)
-									.send(err);
-							} else {
-								try {
-									data = JSON.parse(data);
-								} catch (e) {}
-								images.push(data.media_id_string);
-							}
-						});
-					} else if (i === 2 || i === request.files.length - 1) {
-						lastFile(e);
-					}
-				})
+				lastFileDispatcher(request.files, cred, fileHandler, lastFileHandler);
 			}
 		});
 
