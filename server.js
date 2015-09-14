@@ -50,8 +50,11 @@ function server_setup(db) {
 	wrioLogin = require('./wriologin')(db);
 
 	app.set('views', __dirname + '/views');
-	app.set('view engine', 'ejs');
-
+	//	app.set('view engine', 'ejs');
+	//app.set('view engine', 'htm');
+	//	app.set('view engine', 'html');
+	app.engine('htm', require('ejs')
+		.renderFile);
 	//var SessionStore = require('express-mysql-session');
 	var SessionStore = require('connect-mongo')(session);
 	var cookie_secret = nconf.get("server:cookiesecret");
@@ -86,7 +89,7 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		var render = request.query.create === '' ? 'create.ejs' : 'index.ejs';
+		var render = request.query.create === '' ? 'create.ejs' : 'index.htm';
 		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 			if (err) {
 				console.log("User not found:", err);
