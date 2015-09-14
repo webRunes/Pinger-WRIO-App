@@ -89,7 +89,7 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		var render = request.query.create === '' ? 'create.ejs' : 'index.htm';
+		var render = request.query.create === '' ? 'create.ejs' : '../index.htm';
 		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 			if (err) {
 				console.log("User not found:", err);
