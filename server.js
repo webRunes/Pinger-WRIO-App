@@ -50,11 +50,7 @@ function server_setup(db) {
 	wrioLogin = require('./wriologin')(db);
 
 	app.set('views', __dirname + '/views');
-	//	app.set('view engine', 'ejs');
-	//app.set('view engine', 'htm');
-	//	app.set('view engine', 'html');
-	app.engine('htm', require('ejs')
-		.renderFile);
+	app.set('view engine', 'ejs');
 	//var SessionStore = require('express-mysql-session');
 	var SessionStore = require('connect-mongo')(session);
 	var cookie_secret = nconf.get("server:cookiesecret");
@@ -78,6 +74,7 @@ function server_setup(db) {
 
 	var p3p = require('p3p');
 	app.use(p3p(p3p.recommended));
+	app.use(express.static(__dirname + '/'));
 
 	var argv = require('minimist')(process.argv.slice(2));
 	if (argv.testjsx == "true") {
@@ -89,21 +86,36 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		var render = request.query.create === '' ? 'create.ejs' : '../index.htm';
-		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
-			if (err) {
-				console.log("User not found:", err);
-				response.render(render, {
-					"error": "Not logged in",
-					"user": undefined
-				});
-			} else {
-				response.render(render, {
-					"user": res
-				});
-				console.log("User found " + res);
+		var command = '';
+		for (var i in request.query) {
+			if (command === '') {
+				command = i;
 			}
-		})
+		}
+		switch (command) {
+			case 'create':
+				{
+					wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
+						if (err) {
+							console.log("User not found:", err);
+							response.render('create.ejs', {
+								"error": "Not logged in",
+								"user": undefined
+							});
+						} else {
+							response.render('create.ejs', {
+								"user": res
+							});
+							console.log("User found " + res);
+						}
+					});
+					break;
+				}
+			default:
+				{
+					response.sendFile(__dirname + '/index.htm');
+				}
+		}
 	});
 
 
