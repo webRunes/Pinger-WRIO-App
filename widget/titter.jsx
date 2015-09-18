@@ -291,8 +291,8 @@ var React = require('react');
                 addComment: 'Add comment',
                 article: this.isArticle(this.props.scripts),
                 addFundsMode: false,
-                titterFrameUrl: 'http://titter.'+domain+'/',
-                webgoldIframeUrl: "http://webgold." + domain +"/add_funds"
+                titterFrameUrl: '//titter.'+domain+'/?create',
+                webgoldIframeUrl: "//webgold." + domain +"/add_funds"
             };
         },
         componentDidMount: function () {

@@ -1,6 +1,7 @@
 'use strict';
 var nconf = require("./wrio_nconf.js")
 	.init();
+var multer = (require('multer'))();
 
 var fs = require('fs');
 var session = require('express-session');
@@ -46,17 +47,16 @@ db.mongo({
 
 function server_setup(db) {
 
-	wrioLogin= require('./wriologin')(db);
+	wrioLogin = require('./wriologin')(db);
 
 	app.set('views', __dirname + '/views');
 	app.set('view engine', 'ejs');
-
 	//var SessionStore = require('express-mysql-session');
 	var SessionStore = require('connect-mongo')(session);
 	var cookie_secret = nconf.get("server:cookiesecret");
 	app.use(cookieParser(cookie_secret));
 	var sessionStore = new SessionStore({
-		db:db
+		db: db
 	});
 	app.use(session({
 
@@ -74,6 +74,7 @@ function server_setup(db) {
 
 	var p3p = require('p3p');
 	app.use(p3p(p3p.recommended));
+	app.use(express.static(__dirname + '/'));
 
 	var argv = require('minimist')(process.argv.slice(2));
 	if (argv.testjsx == "true") {
@@ -85,20 +86,36 @@ function server_setup(db) {
 
 	app.get('/', function(request, response) {
 		console.log(request.sessionID);
-		wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
-			if (err) {
-				console.log("User not found:", err);
-				response.render('index.ejs', {
-					"error": "Not logged in",
-					"user": undefined
-				});
-			} else {
-				response.render('index.ejs', {
-					"user": res
-				});
-				console.log("User found " + res);
+		var command = '';
+		for (var i in request.query) {
+			if (command === '') {
+				command = i;
 			}
-		})
+		}
+		switch (command) {
+			case 'create':
+				{
+					wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
+						if (err) {
+							console.log("User not found:", err);
+							response.render('create.ejs', {
+								"error": "Not logged in",
+								"user": undefined
+							});
+						} else {
+							response.render('create.ejs', {
+								"user": res
+							});
+							console.log("User found " + res);
+						}
+					});
+					break;
+				}
+			default:
+				{
+					response.sendFile(__dirname + '/index.htm');
+				}
+		}
 	});
 
 
@@ -118,14 +135,85 @@ function server_setup(db) {
 		response.render('callback', {});
 	});
 
-	app.post('/sendComment', function(request, response) {
-
+	app.post('/sendComment', multer.array('images[]'), function(request, response) {
 		var text = request.body.text;
-		var title = request.body.title;
-		var message = request.body.comment;
+		var title = request.body.title || '';
+		var message = request.body.comment || '';
 		//var ssid = request.body.ssid;
-		var ssid = request.sessionID;
+		var ssid = request.sessionID || '';
+		var images = [];
 		console.log("Sending comment " + message + " with ssid " + ssid);
+
+		function lastFileDispatcher(files, cred, fileHandler, lastFileHandler) {
+			files.forEach(function(e, i) {
+				if (i < 2 && i < request.files.length - 1) {
+					fileHandler(e, cred);
+				} else if (i === 2 || i === request.files.length - 1) {
+					lastFileHandler(e, cred);
+				}
+			})
+		}
+
+		function fileHandler(file, cred) {
+			titterSender.upload(cred, file.buffer, function(err, data) {
+				if (err) {
+					response.status(400)
+						.send(err);
+				} else {
+					try {
+						data = JSON.parse(data);
+					} catch (e) {}
+					images.push(data.media_id_string);
+				}
+			});
+		}
+
+		function lastFileHandler(file, cred) {
+			titterSender.upload(cred, file.buffer, function(err, data) {
+				if (err) {
+					response.status(400)
+						.send(err);
+				} else {
+					try {
+						data = JSON.parse(data);
+					} catch (e) {}
+					images.push(data.media_id_string);
+					if (text) {
+						titterPicture.drawComment(text, function(error, filename) {
+							titterSender.upload(cred, filename, function(err, data) {
+								if (err) {
+									response.status(400)
+										.send(err);
+								} else {
+									try {
+										data = JSON.parse(data);
+									} catch (e) {}
+									images.push(images[0]);
+									images[0] = data.media_id_string;
+									titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+										if (err) {
+											response.status(400);
+											response.send(err);
+										} else {
+											response.send('Done');
+										}
+									})
+								}
+							});
+						});
+					} else {
+						titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+							if (err) {
+								response.status(400);
+								response.send(err);
+							} else {
+								response.send('Done');
+							}
+						})
+					}
+				}
+			});
+		}
 
 		wrioLogin.getTwitterCredentials(ssid, function(err, cred) {
 			if (err) {
@@ -136,17 +224,7 @@ function server_setup(db) {
 				return;
 			} else {
 				console.log("got keys", cred);
-				titterPicture.drawComment(text, function(error, filename) {
-					titterSender.comment(cred, title + '\n' + message + ' Donate 0 WRG', filename, function done(err, res) {
-						if (err) {
-							response.status(400);
-							response.send(err);
-						} else {
-							response.send('Done');
-						}
-					});
-
-				});
+				lastFileDispatcher(request.files, cred, fileHandler, lastFileHandler);
 			}
 		});
 

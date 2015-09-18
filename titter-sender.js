@@ -1,6 +1,7 @@
 var nconf = require("./wrio_nconf.js")
 	.init();
 var Twitter = require('node-twitter');
+var TwitterClient = require("./utils/twitter-client");
 
 var titterSender = {};
 titterSender.comment = function(cred, message, imagePath, done) {
@@ -26,6 +27,46 @@ titterSender.comment = function(cred, message, imagePath, done) {
 				done(null, result)
 			}
 		});
+}
+
+titterSender.upload = function(creds, file, cb) {
+	var twitter = TwitterClient.Client({
+			consumer_key: nconf.get('api:twitterLogin:consumerKey'),
+			consumer_secret: nconf.get('api:twitterLogin:consumerSecret')
+		}),
+		params = {
+			media: file
+		};
+	twitter.uploadMedia(params, creds.token, creds.tokenSecret, function(err, data, res) {
+		if (err) {
+			console.log('Upload error:', err)
+			cb(err);
+		} else {
+			console.log(data)
+			cb(!1, data);
+		}
+	});
+}
+
+titterSender.reply = function(creds, message, files, cb) {
+	var twitter = TwitterClient.Client({
+			consumer_key: nconf.get('api:twitterLogin:consumerKey'),
+			consumer_secret: nconf.get('api:twitterLogin:consumerSecret')
+		}),
+		params = {
+			status: message,
+			media_ids: files.length === 1 ? files[0] : files.join(',')
+		};
+	console.log(params)
+	twitter.statuses('update', params, creds.token, creds.tokenSecret, function(err, data, res) {
+		if (err) {
+			console.log('Reply error:', err)
+			cb(err);
+		} else {
+			cb(!1, !0);
+			console.log('Reply ok!')
+		}
+	});
 }
 
 module.exports = titterSender;
