@@ -1,6 +1,6 @@
 var React = require('react');
 
-    domain = '';
+    var domain = '';
     if (process.env.DOMAIN == undefined) {
         domain = 'wrioos.com';
     } else {
