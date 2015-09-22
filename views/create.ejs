@@ -2,10 +2,11 @@
 <head>
 	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
-	<link href="//wrio.s3-website-us-east-1.amazonaws.com/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
 	<script type="text/javascript">
 
-		var posturl = 'http://webrunes.com'; //default one, will be changed by incoming message
+		var files = [];
+
+		var posturl = ''; //default one, will be changed by incoming message
 
 		// Return cookie as "name". "undefined" is a default name
 		function getCookie(name) {
@@ -86,20 +87,30 @@
 
 			var comment = document.getElementById('comment').value;
 			var title = document.getElementById('IDtweet_title').value;
+			var data = new FormData();
+			var _data = {
+				text: comment,
+				title: title,
+				comment : posturl,
+				ssid: getCookie('sid')
+			};
+
+			for (var i = 0; i < 3; i++) {
+				data.append('images[]', files[i]);
+			};
+
+			$.each(_data, function(key, value) {
+				data.append(key, value);
+			});
 
 			//dataType: 'json', removed because of ajax error
 			$.ajax({
 				url: '/sendComment',
 				type: 'post',
-				'dataType':'json',
-				data: {
-					'text': comment,
-					'title': title,
-					'comment' : posturl,
-					'ssid': getCookie('sid')
-				}
-
-
+				processData: false, // Не обрабатываем файлы (Don't process the files)
+				contentType: false,
+				dataType:'json',
+				data: data
 			}).done(function(data) {
 				document.getElementById('comment').value = '';
 				console.log("successfully sent");
@@ -144,7 +155,16 @@
 
 		$(document).ready(function () {
 			console.log("Iframe loaded");
+			$("#fileInput").change(function() {
+				$.each(this.files, function(key, value) {
+					files.push(value);
+				})
+			});
 		});
+
+		function chooseFile() {
+			$("#fileInput").click();
+		}
 
 	</script>
 </head>
@@ -152,7 +172,7 @@
 
 <div id="frame_container">
 	<div id="titter-id">
-		<form method='POST' action="/sendComment" class="margin-bottom" role="form">
+		<form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom" role="form">
                    <div class="form-horizontal" data-reactid=".0.0.1.0.4.1.1">
                         <div class="form-group donation col-xs-12 col-md-4 col-lg-2" data-reactid=".0.0.1.0.4.1.1.0" >
                             <label class="col-sm-2 control-label" for="inputAmount" data-reactid=".0.0.1.0.4.1.1.0.0">Donation</label>
@@ -185,6 +205,15 @@
 				<h4>as <%= user.lastName %>.</h4>
 				<a href="/logoff">Logoff</a>
 				<% } %>
+				<div style="height:0px;overflow:hidden">
+					<input type="file" accept="image/*" multiple id="fileInput" name="fileInput" />
+				</div>
+				<div class="pull-left">
+					<button type="button" class="btn btn-default" onclick="chooseFile();">
+						<span class="glyphicon glyphicon-camera"></span>
+						Photo
+					</input>
+				</div>
 				<div class="pull-right">
 					<label class="comment-limit">4096</label>
 					<label class="title-limit">72</label>

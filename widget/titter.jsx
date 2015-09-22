@@ -209,19 +209,23 @@ var React = require('react');
         createTwitterWidget: function (commentId) {
             window.onTimelineLoad = function () {
                 var $twitter = document.getElementsByClassName('twitter-timeline-rendered')[0];
+
+                //NOTE: autoSizeTimeline call multiple times after each re-render CreateTitter component
                 function autoSizeTimeline() {
-                    var twitterht = Number(window.getComputedStyle(
-                        $twitter.contentDocument.getElementsByClassName("h-feed")[0]
-                    ).height.replace('px', ''));
+                    if($twitter.contentDocument) {
+                        var twitterht = Number(window.getComputedStyle(
+                            $twitter.contentDocument.getElementsByClassName("h-feed")[0]
+                        ).height.replace('px', ''));
 
-                    var add_ht = Number(window.getComputedStyle(
-                        $twitter.contentDocument.getElementsByClassName("no-more-pane")[0]
-                    ).height.replace('px', ''));
-                    if (add_ht > 0) {
-                        twitterht += add_ht;
+                        var add_ht = Number(window.getComputedStyle(
+                            $twitter.contentDocument.getElementsByClassName("no-more-pane")[0]
+                        ).height.replace('px', ''));
+                        if (add_ht > 0) {
+                            twitterht += add_ht;
+                        }
+
+                        $twitter.style.height = twitterht + 100 + 'px';
                     }
-
-                    $twitter.style.height = twitterht + 100 + 'px';
                 }
 
 
@@ -230,7 +234,7 @@ var React = require('react');
                 //});
 
                 $twitter.contentDocument.getElementsByTagName('style')[0].innerHTML += 'img.autosized-media {width:auto;height:auto;}\n.timeline {max-width:10000px !important;}\n.timeline .stream {overflow-y: hidden !important;}';
-                setInterval(autoSizeTimeline, 1000);
+                window.interval = setInterval(autoSizeTimeline, 1000);
             };
 
             var twheight = 10000;
@@ -242,13 +246,16 @@ var React = require('react');
             var js,
                 fjs = document.getElementsByTagName('script')[0],
                 p = /^http:/.test(document.location) ? 'http' : 'https';
-            if (!document.getElementById('twitter-wjs')) {
-                js = document.createElement('script');
-                js.id = 'twitter-wjs';
-                js.src = p + '://platform.twitter.com/widgets.js';
-                js.setAttribute('onload', 'twttr.events.bind("rendered",window.onTimelineLoad);');
-                fjs.parentNode.insertBefore(js, fjs);
-            }
+
+            js = document.createElement('script');
+            js.id = 'twitter-wjs';
+            js.src = p + '://platform.twitter.com/widgets.js';
+            js.setAttribute('onload', 'twttr.events.bind("rendered",window.onTimelineLoad);');
+            fjs.parentNode.insertBefore(js, fjs);
+
+        },
+        componentWillUnmount: function() {
+            clearInterval(window.interval);
         },
         isArticle: function(json) {
             var i,
@@ -284,8 +291,8 @@ var React = require('react');
                 addComment: 'Add comment',
                 article: this.isArticle(this.props.scripts),
                 addFundsMode: false,
-                titterFrameUrl: 'http://titter.'+domain+'/',
-                webgoldIframeUrl: "http://webgold." + domain +"/add_funds"
+                titterFrameUrl: '//titter.'+domain+'/?create',
+                webgoldIframeUrl: "//webgold." + domain +"/add_funds"
             };
         },
         componentDidMount: function () {
@@ -315,6 +322,20 @@ var React = require('react');
         },
         render: function () {
             var parts = [];
+
+            var isComment = this.props.scripts
+                .map(function(item) {
+                    return item.comment;
+                })
+                .filter(function(item) {
+                    return typeof item !== 'undefined';
+                })
+                .length > 0;
+
+            if(!isComment) {
+                return null;
+            }
+
             if (this.state.nocomments) {
                 parts.push(
                     <div key="a" className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
@@ -327,24 +348,28 @@ var React = require('react');
                     </section>
                 );
             }
-            
+
+
             var addCommentFundsMode;
+
+
             if (!this.state.addFundsMode) {
-                addCommentFundsMode = (
-                    <ul className="breadcrumb">
-                        <li className="active">{this.state.addComment}</li>
-                        <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
-                    </ul>
-                );
+              addCommentFundsMode = (
+                <ul className="breadcrumb">
+                <li className="active">{this.state.addComment}</li>
+                <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
+                </ul>
+              );
             } else {
-                addCommentFundsMode = (
-                    <ul className="breadcrumb">
-                        <li><a onClick={ this.switchToAddCommentMode }>{this.state.addComment}</a></li>
-                        <li className="active">Add funds</li>
-                    </ul>
-                );
+              addCommentFundsMode = (
+                <ul className="breadcrumb">
+                <li><a onClick={ this.switchToAddCommentMode }>{this.state.addComment}</a></li>
+                <li className="active">Add funds</li>
+                </ul>
+              );
             }
-            
+
+
             return (
                 <div>
                     { addCommentFundsMode }
