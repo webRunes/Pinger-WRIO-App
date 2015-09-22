@@ -27,19 +27,23 @@ titterSender.comment = function(cred, message, imagePath, done) {
 				done(null, result)
 			}
 		});
-}
+};
 
-titterSender.upload = function(creds, file, cb) {
-	var twitter = TwitterClient.Client({
-			consumer_key: nconf.get('api:twitterLogin:consumerKey'),
-			consumer_secret: nconf.get('api:twitterLogin:consumerSecret')
-		}),
+titterSender.upload = function(cred, file, cb) {
+	var twitterClient = new Twitter.RestClient(
+		nconf.get('api:twitterLogin:consumerKey'),
+		nconf.get('api:twitterLogin:consumerSecret'),
+		cred.token,
+		cred.tokenSecret
+	);
+
+	console.log("Upload media called!");
 		params = {
 			media: file
 		};
 	twitter.uploadMedia(params, creds.token, creds.tokenSecret, function(err, data, res) {
 		if (err) {
-			console.log('Upload error:', err)
+			console.log('Upload error:', err);
 			cb(err);
 		} else {
 			console.log(data)
@@ -57,10 +61,10 @@ titterSender.reply = function(creds, message, files, cb) {
 			status: message,
 			media_ids: files.length === 1 ? files[0] : files.join(',')
 		};
-	console.log(params)
+	console.log(params);
 	twitter.statuses('update', params, creds.token, creds.tokenSecret, function(err, data, res) {
 		if (err) {
-			console.log('Reply error:', err)
+			console.log('Reply error:', err);
 			cb(err);
 		} else {
 			cb(!1, !0);
