@@ -91,20 +91,27 @@ function server_setup(db) {
 			if (command === '') {
 				command = i;
 			}
+
 		}
 		switch (command) {
 			case 'create':
 				{
+
+					var origin = request.query.origin;
+					console.log('ORIGIN: ',origin);
+
 					wrioLogin.loginWithSessionId(request.sessionID, function(err, res) {
 						if (err) {
 							console.log("User not found:", err);
 							response.render('create.ejs', {
 								"error": "Not logged in",
-								"user": undefined
+								"user": undefined,
+								"host": decodeURIComponent(origin)
 							});
 						} else {
 							response.render('create.ejs', {
-								"user": res
+								"user": res,
+								"host": decodeURIComponent(origin)
 							});
 							console.log("User found " + res);
 						}
