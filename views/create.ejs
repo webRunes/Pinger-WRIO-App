@@ -37,7 +37,7 @@
 
 		function openAuthPopup() {
 			var loginUrl = getLoginUrl();
-			var callbackurl = window.location.href+'callback'
+			var callbackurl = "//"+window.location.host+'/callback'
 			var newWin = window.open(loginUrl+'/authapi?callback='+encodeURIComponent(callbackurl), "Login", "height=500,width=700");
 		}
 
