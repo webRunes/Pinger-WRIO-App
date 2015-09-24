@@ -17,7 +17,7 @@
 
 		var files = [];
 		var posturl = '<%= host %>'; //default one, will be changed by incoming message
-		
+
 
 		// Return cookie as "name". "undefined" is a default name
 		function getCookie(name) {
@@ -42,7 +42,9 @@
 		}
 
 		function logoff() {
-			$.ajax(getLoginUrl()+'/logout');
+			$.ajax('/logoff').success(function (res) {
+				location.reload();
+			});
 		}
 
 		function checkLoggedIn() {
@@ -216,7 +218,7 @@
 			<div class="form-group col-xs-12">
 				<% if (user) { %>
 				<h4>as <%= user.lastName %>.</h4>
-				<a href="/logoff">Logoff</a>
+				<a href="javascript:logoff();">Logoff</a>
 				<% } %>
 				<div style="height:0px;overflow:hidden">
 					<input type="file" accept="image/*" multiple id="fileInput" name="fileInput" />
