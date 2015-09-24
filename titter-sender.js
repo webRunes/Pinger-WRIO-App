@@ -29,14 +29,9 @@ titterSender.comment = function(cred, message, imagePath, done) {
 		});
 };
 
-titterSender.upload = function(cred, file, cb) {
-	var twitterClient = new Twitter.RestClient(
-		nconf.get('api:twitterLogin:consumerKey'),
-		nconf.get('api:twitterLogin:consumerSecret'),
-		cred.token,
-		cred.tokenSecret
-	);
+titterSender.upload = function(creds, file, cb) {
 
+	twitter = TwitterClient.AuthClient();
 	console.log("Upload media called!");
 		params = {
 			media: file
@@ -46,7 +41,7 @@ titterSender.upload = function(cred, file, cb) {
 			console.log('Upload error:', err);
 			cb(err);
 		} else {
-			console.log(data)
+			console.log(data);
 			cb(!1, data);
 		}
 	});

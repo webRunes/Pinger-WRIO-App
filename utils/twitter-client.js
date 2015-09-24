@@ -1,4 +1,5 @@
 var Twitter = require('node-twitter-api');
+var nconf = require("../wrio_nconf.js").init();
 
 module.exports.Client = function(creds) {
 	var creds = creds || {},
@@ -8,7 +9,17 @@ module.exports.Client = function(creds) {
 			callback: creds.callback
 		});
 	return twitter;
-}
+};
+
+module.exports.AuthClient = function() {
+	var creds = creds || {},
+		twitter = new Twitter({
+			consumerKey:nconf.get('api:twitterLogin:consumerKey'),
+			consumerSecret: nconf.get('api:twitterLogin:consumerSecret')
+		});
+	return twitter;
+};
+
 
 module.exports._Client = function(creds) {
 	var creds = creds || {},
@@ -18,4 +29,4 @@ module.exports._Client = function(creds) {
 			callback: creds._callback
 		});
 	return twitter;
-}
+};
