@@ -183,7 +183,7 @@ function server_setup(db) {
 						data = JSON.parse(data);
 					} catch (e) {}
 					images.push(data.media_id_string);
-
+					sendTitterComment(cred);
 				}
 
 			});
@@ -199,10 +199,15 @@ function server_setup(db) {
 								.send(err);
 						} else {
 							try {
+								console.log(data);
 								data = JSON.parse(data);
-							} catch (e) {}
-							images.push(images[0]);
-							images[0] = data.media_id_string;
+							} catch (e) {
+
+							}
+
+							images.unshift(data.media_id_string);
+
+							console.log("Sending images: ",images);
 							titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
 								if (err) {
 									response.status(400);
