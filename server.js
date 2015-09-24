@@ -145,6 +145,9 @@ function server_setup(db) {
 		console.log("Sending comment " + message + " with ssid " + ssid);
 
 		function lastFileDispatcher(files, cred, fileHandler, lastFileHandler) {
+			console.log('lastFileDispatcher',files);
+
+
 			files.forEach(function(e, i) {
 				if (i < 2 && i < request.files.length - 1) {
 					fileHandler(e, cred);
@@ -155,6 +158,7 @@ function server_setup(db) {
 		}
 
 		function fileHandler(file, cred) {
+			console.log('fileHandler');
 			titterSender.upload(cred, file.buffer, function(err, data) {
 				if (err) {
 					response.status(400)
@@ -169,6 +173,7 @@ function server_setup(db) {
 		}
 
 		function lastFileHandler(file, cred) {
+			console.log('lastFileHandler');
 			titterSender.upload(cred, file.buffer, function(err, data) {
 				if (err) {
 					response.status(400)
@@ -178,41 +183,48 @@ function server_setup(db) {
 						data = JSON.parse(data);
 					} catch (e) {}
 					images.push(data.media_id_string);
-					if (text) {
-						titterPicture.drawComment(text, function(error, filename) {
-							titterSender.upload(cred, filename, function(err, data) {
-								if (err) {
-									response.status(400)
-										.send(err);
-								} else {
-									try {
-										data = JSON.parse(data);
-									} catch (e) {}
-									images.push(images[0]);
-									images[0] = data.media_id_string;
-									titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
-										if (err) {
-											response.status(400);
-											response.send(err);
-										} else {
-											response.send('Done');
-										}
-									})
-								}
-							});
-						});
-					} else {
-						titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
-							if (err) {
-								response.status(400);
-								response.send(err);
-							} else {
-								response.send('Done');
-							}
-						})
-					}
+
 				}
+
 			});
+		}
+
+		function sendTitterComment(cred) {
+
+			if (text) {
+				titterPicture.drawComment(text, function(error, filename) {
+					titterSender.upload(cred, filename, function(err, data) {
+						if (err) {
+							response.status(400)
+								.send(err);
+						} else {
+							try {
+								data = JSON.parse(data);
+							} catch (e) {}
+							images.push(images[0]);
+							images[0] = data.media_id_string;
+							titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+								if (err) {
+									response.status(400);
+									response.send(err);
+								} else {
+									response.send('Done');
+								}
+							})
+						}
+					});
+				});
+			} else {
+				titterSender.reply(cred, title + '\n' + message + ' Donate 0 WRG', images, function(err, res) {
+					if (err) {
+						response.status(400);
+						response.send(err);
+					} else {
+						response.send('Done');
+					}
+				})
+			}
+
 		}
 
 		wrioLogin.getTwitterCredentials(ssid, function(err, cred) {
@@ -224,7 +236,17 @@ function server_setup(db) {
 				return;
 			} else {
 				console.log("got keys", cred);
-				lastFileDispatcher(request.files, cred, fileHandler, lastFileHandler);
+				if (request.files.length > 0) {
+					lastFileDispatcher(request.files, cred, fileHandler, lastFileHandler);
+					return;
+				}
+				if (text) {
+					sendTitterComment(cred);
+					return;
+				}
+				response.status(400).send("No arguments given");
+
+
 			}
 		});
 
