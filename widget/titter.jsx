@@ -185,18 +185,6 @@ var React = require('react');
                         <Alert />
                         <CurrentBalance />
                     </div>
-                    <div className="form-horizontal">
-                        <div className="form-group col-xs-12 col-md-4 col-lg-2">
-                            <label className="col-sm-2 control-label" htmlFor="inputAmount">{this.state.title}</label>
-                        </div>
-                        <InputNumber />
-                        <TweetTitle />
-                    </div>
-                    <LetUsKnow />
-                    <div className="form-group col-xs-12">
-                        <Photo />
-                        <Submit />
-                    </div>
                 </form>
             );
         }
@@ -238,7 +226,7 @@ var React = require('react');
             };
 
             var twheight = 10000;
-            document.getElementById('titteriframe').style.height = '290px';
+            document.getElementById('titteriframe').style.height = '411px';
 
             var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + window.innerWidth + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
             document.getElementById('titter_frame_container').innerHTML += twitterTemplate;
