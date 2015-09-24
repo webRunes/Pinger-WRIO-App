@@ -125,7 +125,7 @@ function server_setup(db) {
 			'path': '/',
 			'domain': DOMAIN
 		});
-		response.redirect('/');
+		response.redirect('/?create');
 
 	});
 
