@@ -102,11 +102,13 @@
 			var _data = {
 				text: comment,
 				title: title,
-				comment : posturl,
-				ssid: getCookie('sid')
+				comment : posturl
 			};
 
-			for (var i = 0; i < 3; i++) {
+			var len = files.length;
+			if (len > 3) len = 3
+
+			for (var i = 0; i < len; i++) {
 				data.append('images[]', files[i]);
 			};
 
