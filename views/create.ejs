@@ -3,16 +3,6 @@
 	<script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
 	<link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
 	<link href="http://webrunes.github.io/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
-	<style>
-		.form-send-comment-donation {
-			margin-top: 10px;
-		}
-
-		.form-send-comment-donation .form-group {
-			margin-right: 0px;
-			margin-left: 0px;
-		}
-	</style>
 	<script type="text/javascript">
 
 		var files = [];
@@ -183,16 +173,16 @@
 
 	</script>
 </head>
-<body>
+<body class="container-liquid">
 
 <div id="frame_container">
 	<div id="titter-id">
-		<form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom" role="form">
-                   <div class="form-horizontal form-send-comment-donation" data-reactid=".0.0.1.0.4.1.1">
-                        <div class="form-group donation col-xs-12 col-md-4 col-lg-2" data-reactid=".0.0.1.0.4.1.1.0" >
+		<form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
+                   <div data-reactid=".0.0.1.0.4.1.1">
+                        <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2" data-reactid=".0.0.1.0.4.1.1.0" >
                             <label class="col-sm-2 control-label" for="inputAmount" data-reactid=".0.0.1.0.4.1.1.0.0">Donation</label>
                         </div>
-                        <div class="form-group col-xs-12 col-md-4 col-lg-3 has-error" data-reactid=".0.0.1.0.4.1.1.1">
+                        <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-3 has-error" data-reactid=".0.0.1.0.4.1.1.1">
                             <div class="input-group input-group-sm tooltip-demo" data-reactid=".0.0.1.0.4.1.1.1.0">
                                 <span class="input-group-addon" data-reactid=".0.0.1.0.4.1.1.1.0.0">WRG</span>
                                 <input type="number" class="form-control" id="inputAmount" value="0" min="0" data-reactid=".0.0.1.0.4.1.1.1.0.1">
@@ -203,7 +193,7 @@
                                 <a href="webgold-add_funds.htm" data-reactid=".0.0.1.0.4.1.1.1.1.1">Add funds</a>
                             </div>
                         </div>
-                        <div class="form-group col-xs-12 col-md-4 col-lg-7 has-error" data-reactid=".0.0.1.0.4.1.1.2">
+                        <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7 has-error" data-reactid=".0.0.1.0.4.1.1.2">
                             <div class="input-group input-group-sm" data-reactid=".0.0.1.0.4.1.1.2.0">
                                 <span class="input-group-addon twitter-limit" data-reactid=".0.0.1.0.4.1.1.2.0.0">72</span>
                                 <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72" placeholder="Title, hashtags or mentions. Max 72 characters" type="text" data-reactid=".0.0.1.0.4.1.1.2.0.1">
@@ -211,11 +201,11 @@
                             <div class="help-block" data-reactid=".0.0.1.0.4.1.1.2.1">Max 72 characters</div>
                         </div>
                     </div>
-                        <div class="form-group col-xs-12 has-error">
+                        <div class="form-group send-comment-form col-xs-12 has-error">
 				<textarea maxlength="1024" rows="3" class="form-control" placeholder="Let us know your thoughts! Max 1024 characters" name="comment" id="comment" onkeyup="keyPress();"></textarea>
 				<div class="help-block">Max 1024 characters</div>
 			</div>
-			<div class="form-group col-xs-12">
+			<div class="form-group send-comment-form col-xs-12">
 				<% if (user) { %>
 				<h4>as <%= user.lastName %>.</h4>
 				<a href="javascript:logoff();">Logoff</a>
@@ -224,13 +214,13 @@
 					<input type="file" accept="image/*" multiple id="fileInput" name="fileInput" />
 				</div>
 				<div class="pull-left">
-					<input type="button" class="btn btn-default" onclick="chooseFile();">
+					<button type="button" class="btn btn-default" onclick="chooseFile();">
 						<span class="glyphicon glyphicon-camera"></span>
 						Photo
-					</input>
+					</button>
 				</div>
 				<div class="pull-right">
-					<label class="comment-limit">4096</label>
+					<label class="comment-limit">1024</label>
 					<label class="title-limit">72</label>
 					<% if (user) { %>
 					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Submit</button>
