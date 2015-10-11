@@ -1,7 +1,7 @@
-var app = require("../server.js");
-var request = require('supertest');
-var assert = require('assert');
-var should = require('should');
+import app from "../src/index.js";
+import request from 'supertest';
+import assert from 'assert';
+import should from 'should';
 
 var stdout_write = process.stdout._write,
     stderr_write = process.stderr._write;

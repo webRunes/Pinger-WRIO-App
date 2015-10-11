@@ -1,6 +1,8 @@
+import promisify from 'es6-promisify'
+
 var fs = require('fs');
 var Canvas = require('canvas');
-var titterPicture = {}
+var titterPicture = {};
 
 var temp = require('temp');
 
@@ -84,12 +86,7 @@ function createImage(text, done) {
 
 		});
 
-
-
 	});
-
-
-
 }
 
 
@@ -100,6 +97,8 @@ titterPicture.drawComment = function(imageText, callback) {
 		else callback(null);
 	});
 
-}
+};
+
+titterPicture.drawCommentP = promisify(titterPicture.drawComment); // promisified version
 
 module.exports = titterPicture;

@@ -21,7 +21,15 @@
 
 			var host = window.location.host;
 			host = host.replace('titter.','login.');
-			return "http://"+host;
+			return "//"+host;
+
+		}
+
+		function getWebgoldUrl() {
+
+			var host = window.location.host;
+			host = host.replace('titter.','webgold.');
+			return "//"+host;
 
 		}
 
@@ -86,8 +94,24 @@
 
 		}
 
-		function saveCanvas() {
+		function donateWrg(amount,to,cb) {
 
+			$.ajax(getWebgoldUrl()+"/api/webgold/donate?amount="+amount+"&to="+to).success(function(res) {
+				console.log(res);
+			}).fail(function (err) {
+				console.log(err);
+			})
+
+		}
+
+		function sendComment() {
+
+			var amount = document.getElementById('inputAmount').value;
+
+			sendTitterComment(0);
+
+		}
+		function sendTitterComment(amountdonated) {
 			var comment = document.getElementById('comment').value;
 			var title = document.getElementById('IDtweet_title').value;
 			var data = new FormData();
@@ -223,7 +247,7 @@
 					<label class="comment-limit">1024</label>
 					<label class="title-limit">72</label>
 					<% if (user) { %>
-					<button type="button" class="btn btn-primary" onclick="saveCanvas();"><span class="glyphicon glyphicon-ok"></span>Submit</button>
+					<button type="button" class="btn btn-primary" onclick="sendComment();"><span class="glyphicon glyphicon-ok"></span>Submit</button>
 					<% } else { %>
 					<button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary"><span class="glyphicon glyphicon-ok"></span>Login and submit</button>
 					<% } %>

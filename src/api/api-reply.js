@@ -28,7 +28,7 @@ router.post('/reply', function(request, response) {
 			screen_name: user
 		}
 	}
-	twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+	var twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
 			return response.status(400)
