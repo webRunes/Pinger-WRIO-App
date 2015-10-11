@@ -1,7 +1,7 @@
-var nconf = require("./wrio_nconf.js")
-	.init();
-var Twitter = require('node-twitter');
-var TwitterClient = require("./utils/twitter-client");
+import nconf from "./wrio_nconf.js"
+import Twitter from 'node-twitter'
+import TwitterClient from "./utils/twitter-client";
+import promisify from 'es6-promisify'
 
 var titterSender = {};
 titterSender.comment = function(cred, message, imagePath, done) {
@@ -31,17 +31,17 @@ titterSender.comment = function(cred, message, imagePath, done) {
 
 titterSender.upload = function(creds, file, cb) {
 
-	twitter = TwitterClient.AuthClient();
+	var twitter = TwitterClient.AuthClient();
 	console.log("Upload media called!");
-		params = {
+		var params = {
 			media: file
 		};
-	twitter.uploadMedia(params, creds.token, creds.tokenSecret, function(err, data, res) {
+	twitter.uploadMedia(params, creds.token, creds.tokenSecret, function(err, data) {
 		if (err) {
 			console.log('Upload error:', err);
 			cb(err);
 		} else {
-			console.log(data);
+			console.log("Upload result",data);
 			cb(!1, data);
 		}
 	});
@@ -66,6 +66,10 @@ titterSender.reply = function(creds, message, files, cb) {
 			console.log('Reply ok!')
 		}
 	});
-}
+};
+
+
+titterSender.uploadP = promisify(titterSender.upload);
+titterSender.replyP = promisify(titterSender.reply);
 
 module.exports = titterSender;
