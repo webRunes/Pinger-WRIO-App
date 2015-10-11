@@ -275,13 +275,30 @@ var React = require('react');
             border: 'none'
         },
         getInitialState: function() {
+            var id = "";
+            var author = this.getJsonLDProperty(this.props.scripts,'author');
+            if (author) { // add author reference
+                var reg = /\?wr\.io=([0-9]*)$/gm;
+                var wrioID = reg.exec(author)[1];
+                if (wrioID) id = "&id="+wrioID;
+            }
+
             return {
                 addComment: 'Add comment',
                 article: this.isArticle(this.props.scripts),
                 addFundsMode: false,
-                titterFrameUrl: '//titter.'+domain+'/?create&origin='+encodeURIComponent(window.location.href),
+                titterFrameUrl: '//titter.'+domain+'/?create&origin='+encodeURIComponent(window.location.href)+id,
                 webgoldIframeUrl: "//webgold." + domain +"/add_funds"
             };
+        },
+        getJsonLDProperty: function (json,field) {
+            for (var j = 0; j < json.length; j++) {
+                var section = json[j];
+                var data = section[field];
+                if (data) return data;
+
+            }
+            return null;
         },
         componentDidMount: function () {
             if (!this.state.article) {
@@ -289,18 +306,8 @@ var React = require('react');
             }
             var that = this;
             document.getElementById('titteriframe').addEventListener('load', function () {
-                var comment,
-                    getFinalJSON = function (json) {
-                        for (var j = 0; j < json.length; j++) {
-                            comment = json[j];
-                            var commentid = comment.comment;
-                            if (commentid) {
-                                return commentid;
-                            }
-                        }
-                        return null;
-                    };
-                var id = getFinalJSON(that.props.scripts);
+                var comment, author;
+                var id = that.getJsonLDProperty(that.props.scripts,'comment');
                 if (id === null) {
                     that.setState({nocomments: true});
                 } else {
