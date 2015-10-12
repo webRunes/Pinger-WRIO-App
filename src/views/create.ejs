@@ -6,7 +6,8 @@
 	<script type="text/javascript">
 
 		var files = [];
-		var posturl = '<%= host %>'; //default one, will be changed by incoming message
+		var posturl = '<%= host %>';
+		var userID = '<%= userID %>'
 
 
 		// Return cookie as "name". "undefined" is a default name
@@ -94,21 +95,12 @@
 
 		}
 
-		function donateWrg(amount,to,cb) {
-
-			$.ajax(getWebgoldUrl()+"/api/webgold/donate?amount="+amount+"&to="+to).success(function(res) {
-				console.log(res);
-			}).fail(function (err) {
-				console.log(err);
-			})
-
-		}
 
 		function sendComment() {
 
 			var amount = document.getElementById('inputAmount').value;
 
-			sendTitterComment(0);
+			sendTitterComment(amount);
 
 		}
 		function sendTitterComment(amountdonated) {
@@ -118,7 +110,7 @@
 			var _data = {
 				text: comment,
 				title: title,
-				comment : posturl
+				comment : posturl,
 			};
 
 			var len = files.length;
@@ -132,9 +124,16 @@
 				data.append(key, value);
 			});
 
+			$('.comment-limit').html("Loading");
+
+			var params = '';
+			if (amountdonated > 0 && userID) {
+				params = 'to='+userID+'&amount='+amountdonated;
+			}
+
 			//dataType: 'json', removed because of ajax error
 			$.ajax({
-				url: '/sendComment',
+				url: '/sendComment?'+params,
 				type: 'post',
 				processData: false, // Не обрабатываем файлы (Don't process the files)
 				contentType: false,
@@ -144,8 +143,10 @@
 				document.getElementById('comment').value = '';
 				console.log("successfully sent");
 				$('#result').html("Successfully sent!").removeClass("redError");
+				$('.comment-limit').html("Ok");
 
 			}).fail(function(request,error) {
+				$('.comment-limit').html("Fail");
 				console.log("Request: " + JSON.stringify(request));
 				$('#result').html("Error while executing your request :(").addClass("redError");
 			});
