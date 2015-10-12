@@ -157,7 +157,7 @@ function server_setup(db) {
 					if (err) {
 						return reject(err);
 					}
-					resolve(res);
+					resolve(res.body);
 			});
 		});
 
@@ -192,14 +192,10 @@ function server_setup(db) {
 
 				images.unshift(data.media_id_string);
 				console.log("Sending images: ",images);
-				var res = await titterSender.replyP(cred, title + '\n' + message + ' Donate '+ amount +' WRG', images);
-				response.send({"status":'Done'});
 
-
-			} else {
-				var res = titterSender.reply(cred, title + '\n' + message + ' Donate ' +amount +' WRG', images);
-				response.send({"status":'Done'});
 			}
+			 var res = await titterSender.replyP(cred, title + '\n' + message + ' Donate '+ amount +' WRG', images);
+
 		};
 
 		try {
@@ -207,11 +203,17 @@ function server_setup(db) {
 			var amount = request.query.amount;
 			var to = request.query.to;
 
-			console.log("R",amount,to);
+			var amountUser = 0;
+			var fee = 0;
+			var feepercent = 0;
 
 			if (amount > 0 && to) {
 				console.log("Starting donate");
 				var r = await requesDonate(to,amount,ssid);
+				console.log("Donate result",r);
+				amountUser = r.amount;
+				fee = r.fee;
+				feepercent = r.feePercent;
 
 			} else {
 				amount = 0;
@@ -231,8 +233,14 @@ function server_setup(db) {
 			}
 			if (text) {
 				await sendTitterComment(cred,amount);
-				return;
 			}
+			response.send({
+				"status":'Done',
+				"donated":amount,
+				amountUser:amountUser,
+				fee:fee,
+				feePercent: feepercent
+			});
 
 		} catch (e) {
 			console.log("Twitter auth failed");

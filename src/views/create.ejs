@@ -7,7 +7,10 @@
 
 		var files = [];
 		var posturl = '<%= host %>';
-		var userID = '<%= userID %>'
+		var userID = '<%= userID %>';
+
+
+
 
 
 		// Return cookie as "name". "undefined" is a default name
@@ -154,6 +157,13 @@
 		}
 		$(document).ready(function() {
 			loadDraft();
+			if (userID === "undefined") {
+				console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
+				$('#donationStuff').hide();
+			}
+			if (posturl === "undefined") {
+				throw new Error("Origin paramater not specified, use &origin=urlencode(hostname)");
+			}
 		});
 
 
@@ -203,7 +213,7 @@
 <div id="frame_container">
 	<div id="titter-id">
 		<form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
-                   <div data-reactid=".0.0.1.0.4.1.1">
+                   <div id="donationStuff">
                         <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2" data-reactid=".0.0.1.0.4.1.1.0" >
                             <label class="col-sm-2 control-label" for="inputAmount" data-reactid=".0.0.1.0.4.1.1.0.0">Donation</label>
                         </div>
