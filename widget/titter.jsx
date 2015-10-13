@@ -172,7 +172,7 @@ var React = require('react');
         }
     });
 
-    var Donatate = React.createClass({
+    var Donate = React.createClass({
         getInitialState: function() {
             return {
                 title: 'Donation'
@@ -363,12 +363,13 @@ var React = require('react');
               );
             }
 
+            //  { this.state.addFundsMode ? <iframe src={this.state.webgoldIframeUrl } style={ this.editIframeStyles } />
+            //: <Donate /> }
 
             return (
                 <div>
                     { addCommentFundsMode }
-                    { this.state.addFundsMode ? <iframe src={this.state.webgoldIframeUrl } style={ this.editIframeStyles } />
-                        : <Donatate /> }
+
                     {parts}
                 </div>
             );

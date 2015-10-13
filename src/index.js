@@ -211,8 +211,8 @@ function server_setup(db) {
 				console.log("Starting donate");
 				var r = await requesDonate(to,amount,ssid);
 				console.log("Donate result",r);
-				amountUser = r.amount;
-				fee = r.fee;
+				amountUser = r.amount / 100;
+				fee = r.fee / 100;
 				feepercent = r.feePercent;
 
 			} else {
@@ -234,13 +234,15 @@ function server_setup(db) {
 			if (text) {
 				await sendTitterComment(cred,amount);
 			}
-			response.send({
+			var donateres = {
 				"status":'Done',
 				"donated":amount,
 				amountUser:amountUser,
 				fee:fee,
 				feePercent: feepercent
-			});
+			};
+			console.log("Donate result: ",donateres);
+			response.send(donateres);
 
 		} catch (e) {
 			console.log("Twitter auth failed");
