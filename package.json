@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.899",
+  "version": "1.0.900",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
