@@ -153,17 +153,22 @@
                 console.log(data);
                 if (data.status == "Done") {
                     if (data.donated > 0) {
-                        $('#donatedStats').show();
+                        var $donatedStats = $('#donatedStats');
+                        $donatedStats.show();
+                        $donatedStats.attr('class','alert alert-success');
                         $('#donatedAmount').html("You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!")
 
                     }
                 }
-
-
             }).fail(function (request, error) {
                 $('.comment-limit').html("Fail");
                 console.log("Request: " + JSON.stringify(request));
-                $('#result').html("Error while executing your request :(").addClass("redError");
+
+                var $donatedStats = $('#donatedStats');
+                $donatedStats.show();
+                $donatedStats.attr('class','alert alert-danger');
+                $('#donatedAmount').html("There was error during donation "+error);
+
             });
 
         }
