@@ -211,7 +211,7 @@ function server_setup(db) {
 				console.log("Starting donate");
 				var r = await requesDonate(to,amount,ssid);
 				console.log("Donate result",r);
-				amountUser = r.amount / 100;
+				amountUser = r.amountUser / 100;
 				fee = r.fee / 100;
 				feepercent = r.feePercent;
 
