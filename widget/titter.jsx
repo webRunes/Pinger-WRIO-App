@@ -226,10 +226,11 @@ var React = require('react');
             };
 
             var twheight = 10000;
-            document.getElementById('titteriframe').style.height = '520px';
+            document.getElementById('titteriframe').style.height = '315px';
 
+            var commentTitle = '<ul class="breadcrumb twitter"><li class="active">Comments</li><li class="pull-right"></li></ul>';
             var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + window.innerWidth + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
-            document.getElementById('titter_frame_container').innerHTML += twitterTemplate;
+            document.getElementById('titter_frame_container').innerHTML += commentTitle + twitterTemplate;
 
             var js,
                 fjs = document.getElementsByTagName('script')[0],
@@ -269,6 +270,18 @@ var React = require('react');
                 addFundsMode: true
             });
         },
+        prepTwitWidget: function() {
+            var that = this;
+            document.getElementById('titteriframe').addEventListener('load', function () {
+                var comment, author;
+                var id = that.getJsonLDProperty(that.props.scripts,'comment');
+                if (id === null) {
+                    that.setState({nocomments: true});
+                } else {
+                    that.createTwitterWidget(id);
+                }
+            });
+        },
         editIframeStyles: {
             width: '100%',
             height: '650px',
@@ -304,16 +317,7 @@ var React = require('react');
             if (!this.state.article) {
                 return;
             }
-            var that = this;
-            document.getElementById('titteriframe').addEventListener('load', function () {
-                var comment, author;
-                var id = that.getJsonLDProperty(that.props.scripts,'comment');
-                if (id === null) {
-                    that.setState({nocomments: true});
-                } else {
-                    that.createTwitterWidget(id);
-                }
-            });
+            this.prepTwitWidget();
         },
         render: function () {
             var parts = [];
@@ -331,29 +335,27 @@ var React = require('react');
                 return null;
             }
 
-            if (this.state.nocomments) {
-                parts.push(
-                    <div key="a" className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
-                );
-            }
-            if (this.state.article) {
-                parts.push(
-                    <section key="b" id="titter_frame_container">
-                        <iframe id="titteriframe" src={this.state.titterFrameUrl} frameBorder="no" scrolling="no" />
-                    </section>
-                );
-            }
-
             var addCommentFundsMode;
 
-
             if (!this.state.addFundsMode) {
-              addCommentFundsMode = (
-                <ul className="breadcrumb">
-                <li className="active">{this.state.addComment}</li>
-                <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
-                </ul>
-              );
+                addCommentFundsMode = (
+                    <ul className="breadcrumb">
+                        <li className="active">{this.state.addComment}</li>
+                        <li><a onClick={ this.switchToAddFundsMode }>Add funds</a></li>
+                    </ul>
+                );
+                if (this.state.nocomments) {
+                    parts.push(
+                        <div key="a" className="alert alert-warning">Comments are disabled. <a href="#">Enable</a></div>
+                    );
+                }
+                if (this.state.article) {
+                    parts.push(
+                        <section key="b" id="titter_frame_container">
+                            <iframe id="titteriframe" src={this.state.titterFrameUrl} frameBorder="no" scrolling="no" />
+                        </section>
+                    );
+                }
             } else {
               addCommentFundsMode = (
                 <ul className="breadcrumb">
