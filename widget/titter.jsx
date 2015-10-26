@@ -11,7 +11,7 @@ var React = require('react');
         getInitialState: function() {
             return {
                 text1: 'You\'ve donated 10 WRG. The author received 82%, which amounts to 8.2 WRG or 0.19 USD. Thank you!',
-                text2: 'More information on donations and percentage you can find ',
+                text2: 'More information on prepayments and percentage you can find ',
                 link: {
                     text: 'here',
                     url: '#'

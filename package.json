@@ -45,7 +45,8 @@
     "bumpVersion": "npm run version && npm run bundle",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
-    "test": "export NODE_ENV=testing && mocha --timeout 20000 --compilers js:babel/register"
+    "test": "export NODE_ENV=testing && mocha --timeout 20000 --compilers js:babel/register",
+    "babel-node": "babel-node --stage 0 --ignore='foo|bar|baz'"
   },
   "repository": {
     "type": "git",
