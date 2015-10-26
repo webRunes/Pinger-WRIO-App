@@ -226,7 +226,7 @@ var React = require('react');
             };
 
             var twheight = 10000;
-            document.getElementById('titteriframe').style.height = '315px';
+            document.getElementById('titteriframe').style.height = '320px';
 
             var commentTitle = '<ul class="breadcrumb twitter"><li class="active">Comments</li><li class="pull-right"></li></ul>';
             var twitterTemplate = '<a class="twitter-timeline" href="https://twitter.com/search?q=' + window.location.href + '" data-widget-id="' + commentId + '" width="' + window.innerWidth + '" height="' + twheight + '" data-chrome="nofooter">Tweets about ' + window.location.href + '</a>';
