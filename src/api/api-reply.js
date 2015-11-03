@@ -29,6 +29,7 @@ router.post('/reply', function(request, response) {
 		}
 	}
 	var twitter = _ ? TwitterClient._Client(creds) : TwitterClient.Client(creds);
+	console.log(params, access)
 	twitter.statuses('update', params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
 			return response.status(400)
@@ -48,6 +49,7 @@ router.post('/uploadMedia', multer.single('image'), function(request, response) 
 			media: request.file.buffer
 		},
 		twitter = TwitterClient.Client(creds);
+	console.log(access)
 	twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 		if (err) {
 			return response.status(400)
@@ -65,16 +67,19 @@ router.post('/drawComment', function(request, response) {
 	var creds = request.body.creds || {},
 		message = request.body.message || '',
 		access = request.body.access || {};
+	console.log(0, request.body, access)
 	titterPicture.drawComment(message, function(err, filename) {
+		console.log(1, access)
 		if (err) {
 			console.log(err);
 			return console.log('Draw comment error:', err.message);
 		}
-
+		console.log(2, access)
 		var params = {
 				media: filename
 			},
 			twitter = TwitterClient.Client(creds);
+		console.log(3, access)
 		twitter.uploadMedia(params, access.accessToken, access.accessTokenSecret, function(err, data, res) {
 			if (err) {
 				return response.status(400)
