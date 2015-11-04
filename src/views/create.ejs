@@ -186,6 +186,7 @@
             var balance;
 
             function updateBalance() {
+                $('#balancestuff').show();
                 if (balance) {
                     $('#wrgBalance').html('&nbsp'+balance);
                 }
@@ -284,7 +285,7 @@
                         <span>More information on donations and percentage you can find </span>
                         <a href="#">here</a>
                     </div>
-                    <ul class="leaders">
+                    <ul class="leaders" id="balancestuff" style="display: none;">
                         <li>
                             <span>Current balance&nbsp;</span>
 							<span>
