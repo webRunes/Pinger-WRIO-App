@@ -70,6 +70,7 @@ router.post('/drawComment', function(request, response) {
 			console.log(err);
 			return console.log('Draw comment error:', err.message);
 		}
+
 		var params = {
 				media: filename
 			},
