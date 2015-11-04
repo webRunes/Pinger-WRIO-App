@@ -120,7 +120,9 @@ function server_setup(db) {
 				}
 				default:
 				{
-					response.sendFile(__dirname + '/hub/index.htm');
+					fs.readFile(__dirname + '/../hub/index.htm', function(err, data) {
+						response.end(data);
+					});
 				}
 			}
 		} catch (e) {
