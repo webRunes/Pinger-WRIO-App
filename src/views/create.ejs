@@ -191,7 +191,8 @@
                     $('#wrgBalance').html('&nbsp'+balance);
                 }
                 if (exchangeRate) {
-                    $('#usdBalance').html('&nbsp$'+exchangeRate*balance/(10000));
+                    var usdBalance = exchangeRate*balance/(10000);
+                    $('#usdBalance').html('&nbsp$'+usdBalance.toFixed(2));
                 }
 
             }
@@ -223,7 +224,7 @@
                 updateBalance();
             }).fail(function(err) {
                 $('#balancestuff').hide();
-                throw new Error("Cannon get exchange rates!!!!");
+                throw new Error("Cannot get exchange rates!!!!");
             });;
         });
 
