@@ -97,10 +97,11 @@ function server_setup(db) {
 
 					try {
 						var user = await getLoggedInUser(request.sessionID);
+						console.log(user);
 						if (user) {
 							console.log("User found " + user);
 							response.render('create.ejs', {
-								"user": <user className="wrioID"></user>,
+								"user": user,
 								"userID": request.query.id,
 								"host": decodeURIComponent(origin)
 							});

@@ -7,7 +7,7 @@
 
         var files = [];
         var posturl = '<%= host %>';
-        var loggedUserID = '<%= user %>';
+        var loggedUserID = '<%= user.wrioID %>';
         var userID = '<%= userID %>';
 
 
@@ -315,7 +315,7 @@
                         <li>
                             <span>Current balance&nbsp;</span>
 							<span>
-								<span id="wrgBalance">&nbsp;</span>
+								<span id="wrgBalance">0</span>
 								<small class="currency">WRG</small>
 								<sup class="currency">
                                     <span id="usdBalance"></span>
