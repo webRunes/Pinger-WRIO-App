@@ -7,8 +7,12 @@
 
         var files = [];
         var posturl = '<%= host %>';
+        <% if (user) { %>
         var loggedUserID = '<%= user.wrioID %>';
-        var userID = '<%= userID %>';
+        <% } else { %>
+        var loggedUserID = null;
+        <% } %>
+        var recipientWrioID = '<%= userID %>';
 
 
         // Return cookie as "name". "undefined" is a default name
@@ -133,8 +137,8 @@
             $('.comment-limit').html("Loading");
 
             var params = '';
-            if (amountdonated > 0 && userID) {
-                params = 'to=' + userID + '&amount=' + amountdonated;
+            if (amountdonated > 0 && recipientWrioID) {
+                params = 'to=' + recipientWrioID + '&amount=' + amountdonated;
             }
 
             //dataType: 'json', removed because of ajax error
@@ -182,17 +186,17 @@
             }
 
 
-            if (loggedUserID == "undefined") {
+            if (!loggedUserID) {
                 hideInput();
                 return; // don't process anything since we're not logged in
             }
 
-            if (userID === "undefined") {
+            if (recipientWrioID === "undefined") {
                 console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
                 hideInput();
             }
 
-            if (userID === loggedUserID) {
+            if (recipientWrioID === loggedUserID) {
                 console.log("Cannot donate to yourself");
                 hideInput();
             }
