@@ -7,6 +7,7 @@
 
         var files = [];
         var posturl = '<%= host %>';
+        var loggedUserID = '<%= user %>';
         var userID = '<%= userID %>';
 
 
@@ -176,9 +177,21 @@
             loadDraft();
             if (userID === "undefined") {
                 console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
-                $('#donationStuff').hide();
+                $("#inputAmount").prop('disabled', true);
+                $("#IDtweet_title").prop('disabled', true);
+
+                //$('#donationStuff ').hide();
             }
+
+            if (userID === loggedUserID) {
+                console.log("Cannot donate to yourself");
+                $("#inputAmount").prop('disabled', true);
+                $("#IDtweet_title").prop('disabled', true);
+            }
+
             if (posturl === "undefined") {
+                $("#inputAmount").prop('disabled', true);
+                $("#IDtweet_title").prop('disabled', true);
                 throw new Error("Origin paramater not specified, use &origin=urlencode(hostname)");
             }
 
