@@ -100,7 +100,7 @@ function server_setup(db) {
 						if (user) {
 							console.log("User found " + user);
 							response.render('create.ejs', {
-								"user": user,
+								"user": <user className="wrioID"></user>,
 								"userID": request.query.id,
 								"host": decodeURIComponent(origin)
 							});
