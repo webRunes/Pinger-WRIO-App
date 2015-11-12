@@ -175,23 +175,30 @@
         }
         $(document).ready(function () {
             loadDraft();
-            if (userID === "undefined") {
-                console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
+
+            function hideInput() {
                 $("#inputAmount").prop('disabled', true);
                 $("#IDtweet_title").prop('disabled', true);
+            }
 
-                //$('#donationStuff ').hide();
+
+            if (loggedUserID == "undefined") {
+                hideInput();
+                return; // don't process anything since we're not logged in
+            }
+
+            if (userID === "undefined") {
+                console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
+                hideInput();
             }
 
             if (userID === loggedUserID) {
                 console.log("Cannot donate to yourself");
-                $("#inputAmount").prop('disabled', true);
-                $("#IDtweet_title").prop('disabled', true);
+                hideInput();
             }
 
             if (posturl === "undefined") {
-                $("#inputAmount").prop('disabled', true);
-                $("#IDtweet_title").prop('disabled', true);
+                hideInput();
                 throw new Error("Origin paramater not specified, use &origin=urlencode(hostname)");
             }
 
