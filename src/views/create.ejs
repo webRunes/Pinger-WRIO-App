@@ -117,6 +117,19 @@
             sendTitterComment(amount);
 
         }
+
+        function deactivateButton() {
+            $('#sendButton').addClass("disabled")
+            $('#sendButton img').show();
+            $('#sendButton span').hide();
+        }
+
+        function activteButton() {
+            $('#sendButton').removeClass("disabled");
+            $('#sendButton img').hide();
+            $('#sendButton span').show();
+        }
+
         function sendTitterComment(amountdonated) {
             var comment = document.getElementById('comment').value;
             var title = document.getElementById('IDtweet_title').value;
@@ -133,7 +146,7 @@
             for (var i = 0; i < len; i++) {
                 data.append('images[]', files[i]);
             }
-            ;
+            
 
             $.each(_data, function (key, value) {
                 data.append(key, value);
@@ -145,7 +158,7 @@
             if (amountdonated > 0 && recipientWrioID) {
                 params = 'to=' + recipientWrioID + '&amount=' + amountdonated;
             }
-
+            deactivateButton();
             //dataType: 'json', removed because of ajax error
             $.ajax({
                 url: '/sendComment?' + params,
@@ -155,6 +168,7 @@
                 dataType: 'json',
                 data: data
             }).done(function (data) {
+                activteButton();
                 document.getElementById('comment').value = '';
                 console.log("successfully sent");
                 $('#result').html("Successfully sent!").removeClass("redError");
@@ -170,14 +184,22 @@
 
                     }
                 }
-            }).fail(function (request, error) {
+            }).fail(function (request) {
+                activteButton();
                 $('.comment-limit').html("Fail");
                 console.log("Request: " + JSON.stringify(request));
+
+                var errCode = "Unknown";
+                if (request.responseJSON) {
+                    if (request.responseJSON.error) {
+                        errCode = request.responseJSON.error;
+                    }
+                }
 
                 var $donatedStats = $('#donatedStats');
                 $donatedStats.show();
                 $donatedStats.attr('class','alert alert-danger');
-                $('#donatedAmount').html("There was error during donation "+error);
+                $('#donatedAmount').html("There was error during donation: \""+errCode+"\"");
 
             });
 
@@ -385,12 +407,15 @@
                     <label class="comment-limit">1024</label>
                     <label class="title-limit">72</label>
                     <% if (user) { %>
-                    <button type="button" class="btn btn-primary" onclick="sendComment();"><span
-                                class="glyphicon glyphicon-ok"></span>Submit
+                    <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <img src="http://wrioos.com.s3.amazonaws.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
+                        Submit
                     </button>
                     <% } else { %>
-                    <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary"><span
-                                class="glyphicon glyphicon-ok"></span>Login and submit
+                    <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Login and submit
                     </button>
                     <% } %>
                 </div>
