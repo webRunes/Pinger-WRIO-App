@@ -117,6 +117,15 @@
             sendTitterComment(amount);
 
         }
+
+        function deactivateButton() {
+            $('#sendButton').addClass("disabled").html('<img src="http://wrioos.com.s3.amazonaws.com/Default-WRIO-Theme/img/loading.gif">');
+        }
+
+        function activteButton() {
+            $('#sendButton').removeClass("disabled").html("Submit");
+        }
+
         function sendTitterComment(amountdonated) {
             var comment = document.getElementById('comment').value;
             var title = document.getElementById('IDtweet_title').value;
@@ -145,7 +154,7 @@
             if (amountdonated > 0 && recipientWrioID) {
                 params = 'to=' + recipientWrioID + '&amount=' + amountdonated;
             }
-
+            deactivateButton();
             //dataType: 'json', removed because of ajax error
             $.ajax({
                 url: '/sendComment?' + params,
@@ -155,6 +164,7 @@
                 dataType: 'json',
                 data: data
             }).done(function (data) {
+                activteButton();
                 document.getElementById('comment').value = '';
                 console.log("successfully sent");
                 $('#result').html("Successfully sent!").removeClass("redError");
@@ -171,6 +181,7 @@
                     }
                 }
             }).fail(function (request) {
+                activteButton();
                 $('.comment-limit').html("Fail");
                 console.log("Request: " + JSON.stringify(request));
 
@@ -392,7 +403,7 @@
                     <label class="comment-limit">1024</label>
                     <label class="title-limit">72</label>
                     <% if (user) { %>
-                    <button type="button" class="btn btn-primary" onclick="sendComment();"><span
+                    <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();"><span
                                 class="glyphicon glyphicon-ok"></span>Submit
                     </button>
                     <% } else { %>
