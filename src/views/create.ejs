@@ -170,14 +170,21 @@
 
                     }
                 }
-            }).fail(function (request, error) {
+            }).fail(function (request) {
                 $('.comment-limit').html("Fail");
                 console.log("Request: " + JSON.stringify(request));
+
+                var errCode = "Unknown";
+                if (request.responseJSON) {
+                    if (request.responseJSON.error) {
+                        errCode = request.responseJSON.error;
+                    }
+                }
 
                 var $donatedStats = $('#donatedStats');
                 $donatedStats.show();
                 $donatedStats.attr('class','alert alert-danger');
-                $('#donatedAmount').html("There was error during donation "+error);
+                $('#donatedAmount').html("There was error during donation: \""+errCode+"\"");
 
             });
 
