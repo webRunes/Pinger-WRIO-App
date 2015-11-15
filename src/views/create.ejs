@@ -3,6 +3,11 @@
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://webrunes.github.io/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
+    <style type="text/css">
+        html {
+            padding-top:0px !important;
+        }
+    </style>
     <script type="text/javascript">
 
         var files = [];
@@ -366,10 +371,7 @@
                 <div class="help-block">Max 1024 characters</div>
             </div>
             <div class="form-group send-comment-form col-xs-12">
-                <% if (user) { %>
-                <h4>as <%= user.lastName %>.</h4>
-                <a href="javascript:logoff();">Logoff</a>
-                <% } %>
+
                 <div style="height:0px;overflow:hidden">
                     <input type="file" accept="image/*" multiple id="fileInput" name="fileInput"/>
                 </div>
@@ -399,11 +401,6 @@
         <h3 id="result" class="centertext"></h3>
     </div>
 
-    <ul class="breadcrumb twitter">
-        <li class="active">Comments</li>
-        <li class="pull-right">
-            <!--<a href="#" class="link"><span class="glyphicon glyphicon-flag"></span>Flag</a>--></li>
-    </ul>
 </div>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </body>
