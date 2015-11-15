@@ -149,6 +149,8 @@ function server_setup(db) {
 	});
 
 
+	/* Request donate from webgold via api*/
+
 	function requesDonate(to,amount,ssid) {
 		return new Promise((resolve,reject) => {
 			var url = 'http://webgold'+nconf.get('server:workdomain')+"/api/webgold/donate?amount="+amount+"&to="+to+"&sid="+ssid;
@@ -156,6 +158,13 @@ function server_setup(db) {
 			request.get(url).
 				end((err,res) => {
 					if (err) {
+						//console.log(err);
+						//console.log(res.body);
+						if (res.body) {
+							if (res.body.error) {
+								return reject(res.body.error);
+							}
+						}
 						return reject(err);
 					}
 					resolve(res.body);
@@ -246,9 +255,14 @@ function server_setup(db) {
 			response.send(donateres);
 
 		} catch (e) {
-			console.log("Twitter auth failed");
+			console.log("Error during /sendComment");
 			dumpError(e);
-			response.status(401).send('Error processing request');
+			if (!e) {
+				e = "Unknown error"
+			}
+			response.status(401).send({
+				"error": e.toString()
+			});
 
 		}
 
