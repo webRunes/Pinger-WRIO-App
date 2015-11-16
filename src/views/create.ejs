@@ -335,6 +335,10 @@
 
             <form class="margin-bottom" role="form" >
                 <div class="form-group">
+                    <div class="alert alert-warning" style="display: none">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        No author - no donation
+                    </div>
                     <div class="alert alert-success" style="display: none;" id="donatedStats">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <span id="donatedAmount"></span>
@@ -364,7 +368,7 @@
                 <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2">
                     <label class="col-sm-2 control-label" for="inputAmount">Donation</label>
                 </div>
-                <div class="form-group send-comment-form-donation col-xs-4 col-md-4 col-lg-3 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-3 has-error">
                     <div class="input-group input-group-sm tooltip-demo">
                         <span class="input-group-addon">WRG</span>
                         <input type="number" class="form-control" id="inputAmount" value="0" min="0">
@@ -376,7 +380,7 @@
                         <a href="webgold-add_funds.htm">Add funds</a>
                     </div>
                 </div>
-                <div class="form-group send-comment-form-donation col-xs-4 col-md-4 col-lg-7 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7 has-error">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon twitter-limit">72</span>
                         <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72"

@@ -77,57 +77,44 @@ function server_setup(db) {
 
 	}
 
-	app.get('/', async (request, response) => {
+	app.get('/iframe/',async (request,response) => {
+
 		try {
+			var origin = request.query.origin;
+			console.log('ORIGIN: ', origin);
 
-			console.log(request.sessionID);
-			var command = '';
-			for (var i in request.query) {
-				if (command === '') {
-					command = i;
+			try {
+				var user = await getLoggedInUser(request.sessionID);
+				console.log(user);
+				if (user) {
+					console.log("User found " + user);
+					response.render('create.ejs', {
+						"user": user,
+						"userID": request.query.id,
+						"host": decodeURIComponent(origin)
+					});
+				} else {
+					throw new Error("Error getting user profile");
 				}
-
-			}
-			switch (command) {
-				case 'create':
-				{
-
-					var origin = request.query.origin;
-					console.log('ORIGIN: ', origin);
-
-					try {
-						var user = await getLoggedInUser(request.sessionID);
-						console.log(user);
-						if (user) {
-							console.log("User found " + user);
-							response.render('create.ejs', {
-								"user": user,
-								"userID": request.query.id,
-								"host": decodeURIComponent(origin)
-							});
-						} else {
-							throw new Error("Error getting user profile");
-						}
-					} catch (e) {
-						console.log("User not found:");
-						response.render('create.ejs', {
-							"error": "Not logged in",
-							"user": undefined,
-							"host": decodeURIComponent(origin),
-							"userID": ""
-						});
-					}
-					break;
-				}
-				default:
-				{
-					response.sendFile(__dirname + '/views/index.htm');
-				}
+			} catch (e) {
+				console.log("User not found:");
+				response.render('create.ejs', {
+					"error": "Not logged in",
+					"user": undefined,
+					"host": decodeURIComponent(origin),
+					"userID": ""
+				});
 			}
 		} catch (e) {
 			console.log("Error during request",e);
 			response.status(400).send("Fault");
 		}
+
+	});
+
+
+	app.get('/', async (request, response) => {
+			response.sendFile(__dirname + '/views/index.htm');
 	});
 
 
