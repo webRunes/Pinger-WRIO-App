@@ -221,6 +221,7 @@
             if (recipientWrioID === "undefined") {
                 console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
                 hideInput();
+                $('#noAuthor').show();
             }
 
             if (recipientWrioID === loggedUserID) {
@@ -335,7 +336,7 @@
 
             <form class="margin-bottom" role="form" >
                 <div class="form-group">
-                    <div class="alert alert-warning" style="display: none">
+                    <div class="alert alert-warning" style="display: none" id="noAuthor">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         No author - no donation
                     </div>
