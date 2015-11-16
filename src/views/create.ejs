@@ -146,7 +146,7 @@
             for (var i = 0; i < len; i++) {
                 data.append('images[]', files[i]);
             }
-            
+
 
             $.each(_data, function (key, value) {
                 data.append(key, value);
@@ -335,6 +335,10 @@
 
             <form class="margin-bottom" role="form" >
                 <div class="form-group">
+                    <div class="alert alert-warning" style="display: none">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        No author - no donation
+                    </div>
                     <div class="alert alert-success" style="display: none;" id="donatedStats">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <span id="donatedAmount"></span>
