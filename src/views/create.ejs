@@ -259,6 +259,9 @@
                 console.log(data);
                 balance = data.balance;
                 updateBalance();
+                if (data.balance < 0 || data.blockchain == 0) {
+                    $('#noMoney').show();
+                }
 
             }).fail(function(err) {
                 $('#wrgBalance').html('&nbsp'+0);
@@ -339,6 +342,10 @@
                     <div class="alert alert-warning" style="display: none" id="noAuthor">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         No author - no donation
+                    </div>
+                    <div class="alert alert-warning" style="display: none" id="noMoney">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        No funds. You're still able to make promised donations up to 500 WRG.
                     </div>
                     <div class="alert alert-success" style="display: none;" id="donatedStats">
                         <button type="button" class="close" data-dismiss="alert">×</button>
