@@ -6,6 +6,7 @@ try {
  console.log("Babel polyfill already loaded, seems to be ok, relaxing....");
  }
 
+
 var app = require('./src');
 
 module.exports = app;

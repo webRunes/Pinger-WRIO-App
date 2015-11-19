@@ -77,58 +77,44 @@ function server_setup(db) {
 
 	}
 
-	app.get('/', async (request, response) => {
+	app.get('/iframe/',async (request,response) => {
+
 		try {
+			var origin = request.query.origin;
+			console.log('ORIGIN: ', origin);
 
-			console.log(request.sessionID);
-			var command = '';
-			for (var i in request.query) {
-				if (command === '') {
-					command = i;
-				}
-
-			}
-			switch (command) {
-				case 'create':
-				{
-
-					var origin = request.query.origin;
-					console.log('ORIGIN: ', origin);
-
-					try {
-						var user = await getLoggedInUser(request.sessionID);
-						if (user) {
-							console.log("User found " + user);
-							response.render('create.ejs', {
-								"user": user,
-								"userID": request.query.id,
-								"host": decodeURIComponent(origin)
-							});
-						} else {
-							throw new Error("Error getting user profile");
-						}
-					} catch (e) {
-						console.log("User not found:");
-						response.render('create.ejs', {
-							"error": "Not logged in",
-							"user": undefined,
-							"host": decodeURIComponent(origin),
-							"userID": ""
-						});
-					}
-					break;
-				}
-				default:
-				{
-					fs.readFile(__dirname + '/../hub/index.htm', function(err, data) {
-						response.end(data);
+			try {
+				var user = await getLoggedInUser(request.sessionID);
+				console.log(user);
+				if (user) {
+					console.log("User found " + user);
+					response.render('create.ejs', {
+						"user": user,
+						"userID": request.query.id,
+						"host": decodeURIComponent(origin)
 					});
+				} else {
+					throw new Error("Error getting user profile");
 				}
+			} catch (e) {
+				console.log("User not found:");
+				response.render('create.ejs', {
+					"error": "Not logged in",
+					"user": undefined,
+					"host": decodeURIComponent(origin),
+					"userID": ""
+				});
 			}
 		} catch (e) {
 			console.log("Error during request",e);
 			response.status(400).send("Fault");
 		}
+
+	});
+
+
+	app.get('/', async (request, response) => {
+			response.sendFile(__dirname + '/views/index.htm');
 	});
 
 
@@ -150,6 +136,8 @@ function server_setup(db) {
 	});
 
 
+	/* Request donate from webgold via api*/
+
 	function requesDonate(to,amount,ssid) {
 		return new Promise((resolve,reject) => {
 			var url = 'http://webgold'+nconf.get('server:workdomain')+"/api/webgold/donate?amount="+amount+"&to="+to+"&sid="+ssid;
@@ -157,6 +145,13 @@ function server_setup(db) {
 			request.get(url).
 				end((err,res) => {
 					if (err) {
+						//console.log(err);
+						//console.log(res.body);
+						if (res.body) {
+							if (res.body.error) {
+								return reject(res.body.error);
+							}
+						}
 						return reject(err);
 					}
 					resolve(res.body);
@@ -247,9 +242,14 @@ function server_setup(db) {
 			response.send(donateres);
 
 		} catch (e) {
-			console.log("Twitter auth failed");
+			console.log("Error during /sendComment");
 			dumpError(e);
-			response.status(401).send('Error processing request');
+			if (!e) {
+				e = "Unknown error"
+			}
+			response.status(401).send({
+				"error": e.toString()
+			});
 
 		}
 

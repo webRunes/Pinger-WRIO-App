@@ -3,11 +3,21 @@
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://webrunes.github.io/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
+    <style type="text/css">
+        html {
+            padding-top:0px !important;
+        }
+    </style>
     <script type="text/javascript">
 
         var files = [];
         var posturl = '<%= host %>';
-        var userID = '<%= userID %>';
+        <% if (user) { %>
+        var loggedUserID = '<%= user.wrioID %>';
+        <% } else { %>
+        var loggedUserID = null;
+        <% } %>
+        var recipientWrioID = '<%= userID %>';
 
 
         // Return cookie as "name". "undefined" is a default name
@@ -107,6 +117,19 @@
             sendTitterComment(amount);
 
         }
+
+        function deactivateButton() {
+            $('#sendButton').addClass("disabled")
+            $('#sendButton img').show();
+            $('#sendButton span').hide();
+        }
+
+        function activteButton() {
+            $('#sendButton').removeClass("disabled");
+            $('#sendButton img').hide();
+            $('#sendButton span').show();
+        }
+
         function sendTitterComment(amountdonated) {
             var comment = document.getElementById('comment').value;
             var title = document.getElementById('IDtweet_title').value;
@@ -123,7 +146,7 @@
             for (var i = 0; i < len; i++) {
                 data.append('images[]', files[i]);
             }
-            ;
+
 
             $.each(_data, function (key, value) {
                 data.append(key, value);
@@ -132,10 +155,10 @@
             $('.comment-limit').html("Loading");
 
             var params = '';
-            if (amountdonated > 0 && userID) {
-                params = 'to=' + userID + '&amount=' + amountdonated;
+            if (amountdonated > 0 && recipientWrioID) {
+                params = 'to=' + recipientWrioID + '&amount=' + amountdonated;
             }
-
+            deactivateButton();
             //dataType: 'json', removed because of ajax error
             $.ajax({
                 url: '/sendComment?' + params,
@@ -145,6 +168,7 @@
                 dataType: 'json',
                 data: data
             }).done(function (data) {
+                activteButton();
                 document.getElementById('comment').value = '';
                 console.log("successfully sent");
                 $('#result').html("Successfully sent!").removeClass("redError");
@@ -160,25 +184,53 @@
 
                     }
                 }
-            }).fail(function (request, error) {
+            }).fail(function (request) {
+                activteButton();
                 $('.comment-limit').html("Fail");
                 console.log("Request: " + JSON.stringify(request));
+
+                var errCode = "Unknown";
+                if (request.responseJSON) {
+                    if (request.responseJSON.error) {
+                        errCode = request.responseJSON.error;
+                    }
+                }
 
                 var $donatedStats = $('#donatedStats');
                 $donatedStats.show();
                 $donatedStats.attr('class','alert alert-danger');
-                $('#donatedAmount').html("There was error during donation "+error);
+                $('#donatedAmount').html("There was error during donation: \""+errCode+"\"");
 
             });
 
         }
         $(document).ready(function () {
             loadDraft();
-            if (userID === "undefined") {
-                console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
-                $('#donationStuff').hide();
+
+            function hideInput() {
+                $("#inputAmount").prop('disabled', true);
+              //  $("#IDtweet_title").prop('disabled', true);
             }
+
+
+            if (!loggedUserID) {
+                hideInput();
+                return; // don't process anything since we're not logged in
+            }
+
+            if (recipientWrioID === "undefined") {
+                console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
+                hideInput();
+                $('#noAuthor').show();
+            }
+
+            if (recipientWrioID === loggedUserID) {
+                console.log("Cannot donate to yourself");
+                hideInput();
+            }
+
             if (posturl === "undefined") {
+                hideInput();
                 throw new Error("Origin paramater not specified, use &origin=urlencode(hostname)");
             }
 
@@ -186,11 +238,13 @@
             var balance;
 
             function updateBalance() {
+                $('#balancestuff').show();
                 if (balance) {
                     $('#wrgBalance').html('&nbsp'+balance);
                 }
                 if (exchangeRate) {
-                    $('#usdBalance').html('&nbsp$'+exchangeRate*balance/(10000));
+                    var usdBalance = exchangeRate*balance/(10000);
+                    $('#usdBalance').html('&nbsp$'+usdBalance.toFixed(2));
                 }
 
             }
@@ -205,7 +259,12 @@
                 console.log(data);
                 balance = data.balance;
                 updateBalance();
+                if (data.balance < 0 || data.blockchain == 0) {
+                    $('#noMoney').show();
+                }
 
+            }).fail(function(err) {
+                $('#wrgBalance').html('&nbsp'+0);
             });
 
             $.ajax({
@@ -218,7 +277,10 @@
                 console.log(data);
                 exchangeRate = data.exchangeRate;
                 updateBalance();
-            });
+            }).fail(function(err) {
+                $('#balancestuff').hide();
+                throw new Error("Cannot get exchange rates!!!!");
+            });;
         });
 
 
@@ -277,6 +339,14 @@
 
             <form class="margin-bottom" role="form" >
                 <div class="form-group">
+                    <div class="alert alert-warning" style="display: none" id="noAuthor">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        No author - no donation
+                    </div>
+                    <div class="alert alert-warning" style="display: none" id="noMoney">
+                        <button type="button" class="close" data-dismiss="alert">×</button>
+                        No funds. You're still able to make promised donations up to 500 WRG.
+                    </div>
                     <div class="alert alert-success" style="display: none;" id="donatedStats">
                         <button type="button" class="close" data-dismiss="alert">×</button>
                         <span id="donatedAmount"></span>
@@ -284,11 +354,11 @@
                         <span>More information on donations and percentage you can find </span>
                         <a href="#">here</a>
                     </div>
-                    <ul class="leaders">
+                    <ul class="leaders" id="balancestuff">
                         <li>
                             <span>Current balance&nbsp;</span>
 							<span>
-								<span id="wrgBalance">&nbsp;</span>
+								<span id="wrgBalance">0</span>
 								<small class="currency">WRG</small>
 								<sup class="currency">
                                     <span id="usdBalance"></span>
@@ -306,7 +376,7 @@
                 <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2">
                     <label class="col-sm-2 control-label" for="inputAmount">Donation</label>
                 </div>
-                <div class="form-group donation-wrg send-comment-form-donation col-xs-12 col-md-4 col-lg-3 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-3 has-error">
                     <div class="input-group input-group-sm tooltip-demo">
                         <span class="input-group-addon">WRG</span>
                         <input type="number" class="form-control" id="inputAmount" value="0" min="0">
@@ -318,7 +388,7 @@
                         <a href="webgold-add_funds.htm">Add funds</a>
                     </div>
                 </div>
-                <div class="form-group donation-title send-comment-form-donation col-xs-12 col-md-4 col-lg-7 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7 has-error">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon twitter-limit">72</span>
                         <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72"
@@ -334,7 +404,8 @@
 
                 <div class="help-block">Max 1024 characters</div>
             </div>
-            <div class="form-group send-comment-form-photo-submit send-comment-form col-xs-12">
+            <div class="form-group send-comment-form col-xs-12">
+
                 <div style="height:0px;overflow:hidden">
                     <input type="file" accept="image/*" multiple id="fileInput" name="fileInput"/>
                 </div>
@@ -348,12 +419,15 @@
                     <label class="comment-limit">1024</label>
                     <label class="title-limit">72</label>
                     <% if (user) { %>
-                    <button type="button" class="btn btn-primary" onclick="sendComment();"><span
-                                class="glyphicon glyphicon-ok"></span>Submit
+                    <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        <img src="http://wrioos.com.s3.amazonaws.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
+                        Submit
                     </button>
                     <% } else { %>
-                    <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary"><span
-                                class="glyphicon glyphicon-ok"></span>Login and submit
+                    <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary">
+                        <span class="glyphicon glyphicon-ok"></span>
+                        Login and submit
                     </button>
                     <% } %>
                 </div>
@@ -363,6 +437,7 @@
     <div style="display:none">
         <h3 id="result" class="centertext"></h3>
     </div>
+
 </div>
 <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </body>
