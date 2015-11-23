@@ -44,7 +44,7 @@
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "echo Ok",
     "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
-    "bumpVersion": "npm run version && npm run bundle",
+    "bumpVersion": "npm run version",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
     "test": "export NODE_ENV=testing && mocha --timeout 20000 --compilers js:babel/register"
