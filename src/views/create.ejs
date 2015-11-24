@@ -3,11 +3,6 @@
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://webrunes.github.io/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
-    <style type="text/css">
-        html {
-            padding-top:0px !important;
-        }
-    </style>
     <script type="text/javascript">
 
         var files = [];
@@ -96,11 +91,9 @@
 
             var t_limit = $('#IDtweet_title').attr('maxlength');
             var t_delta = t_limit - title.length;
-            console.log(title.length, t_delta);
             $('label.title-limit').html(t_delta);
             var limit = $('#comment').attr('maxlength');
             var delta = limit - comment.length;
-            console.log(comment.length, delta);
             $('label.comment-limit').html(delta);
 
         }
@@ -119,13 +112,19 @@
         }
 
         function deactivateButton() {
-            $('#sendButton').addClass("disabled")
+            $('#sendButton').addClass("disabled");
+            var buttonText = $('#sendButton').html();
+            buttonText = buttonText.replace("Submit", "Sending...");
+            $('#sendButton').html(buttonText);
             $('#sendButton img').show();
             $('#sendButton span').hide();
         }
 
         function activteButton() {
             $('#sendButton').removeClass("disabled");
+            var buttonText = $('#sendButton').html();
+            buttonText = buttonText.replace("Sending...", "Submit");
+            $('#sendButton').html(buttonText);
             $('#sendButton img').hide();
             $('#sendButton span').show();
         }
@@ -376,7 +375,7 @@
                 <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2">
                     <label class="col-sm-2 control-label" for="inputAmount">Donation</label>
                 </div>
-                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-3 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-3">
                     <div class="input-group input-group-sm tooltip-demo">
                         <span class="input-group-addon">WRG</span>
                         <input type="number" class="form-control" id="inputAmount" value="0" min="0">
@@ -388,7 +387,7 @@
                         <a href="webgold-add_funds.htm">Add funds</a>
                     </div>
                 </div>
-                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7 has-error">
+                <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7">
                     <div class="input-group input-group-sm">
                         <span class="input-group-addon twitter-limit">72</span>
                         <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72"
@@ -397,12 +396,12 @@
                     <div class="help-block">Max 72 characters</div>
                 </div>
             </div>
-            <div class="form-group send-comment-form col-xs-12 has-error">
+            <div class="form-group send-comment-form col-xs-12">
                 <textarea maxlength="1024" rows="3" class="form-control"
                           placeholder="Let us know your thoughts! Max 1024 characters" name="comment" id="comment"
                           onkeyup="keyPress();"></textarea>
 
-                <div class="help-block">Max 1024 characters</div>
+                <label class="comment-limit">1024</label>
             </div>
             <div class="form-group send-comment-form col-xs-12">
 
@@ -416,8 +415,6 @@
                     </button>
                 </div>
                 <div class="pull-right">
-                    <label class="comment-limit">1024</label>
-                    <label class="title-limit">72</label>
                     <% if (user) { %>
                     <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
                         <span class="glyphicon glyphicon-ok"></span>

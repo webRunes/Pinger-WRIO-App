@@ -4,12 +4,21 @@ import multer from 'multer';
 import fs from 'fs';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import {loginWithSessionId,getTwitterCredentials,getLoggedInUser,getTwitterCreds} from './wriologin.js'
+import {
+	loginWithSessionId, getTwitterCredentials, getLoggedInUser, getTwitterCreds
+}
+from './wriologin.js'
 import titterPicture from './titter-picture';
 import titterSender from './titter-sender';
 import express from 'express';
-import {init} from './utils/db.js';
-import {dumpError} from './utils/utils.js'
+import {
+	init
+}
+from './utils/db.js';
+import {
+	dumpError
+}
+from './utils/utils.js'
 import request from 'superagent';
 
 var DOMAIN = nconf.get('db:workdomain');
@@ -77,7 +86,7 @@ function server_setup(db) {
 
 	}
 
-	app.get('/iframe/',async (request,response) => {
+	app.get('/iframe/', async(request, response) => {
 
 		try {
 			var origin = request.query.origin;
@@ -106,15 +115,16 @@ function server_setup(db) {
 				});
 			}
 		} catch (e) {
-			console.log("Error during request",e);
-			response.status(400).send("Fault");
+			console.log("Error during request", e);
+			response.status(400)
+				.send("Fault");
 		}
 
 	});
 
 
-	app.get('/', async (request, response) => {
-			response.sendFile(__dirname + '/views/index.htm');
+	app.get('/', async(request, response) => {
+		response.sendFile(__dirname + '/views/index.htm');
 	});
 
 
@@ -138,124 +148,125 @@ function server_setup(db) {
 
 	/* Request donate from webgold via api*/
 
-	function requesDonate(to,amount,ssid) {
-		return new Promise((resolve,reject) => {
-			var url = 'http://webgold'+nconf.get('server:workdomain')+"/api/webgold/donate?amount="+amount+"&to="+to+"&sid="+ssid;
+	function requesDonate(to, amount, ssid) {
+		return new Promise((resolve, reject) => {
+			var url = 'http://webgold' + nconf.get('server:workdomain') + "/api/webgold/donate?amount=" + amount + "&to=" + to + "&sid=" + ssid;
 			console.log(url);
-			request.get(url).
-				end((err,res) => {
-					if (err) {
-						//console.log(err);
-						//console.log(res.body);
-						if (res.body) {
-							if (res.body.error) {
-								return reject(res.body.error);
-							}
+			request.get(url)
+				.
+			end((err, res) => {
+				if (err) {
+					//console.log(err);
+					//console.log(res.body);
+					if (res.body) {
+						if (res.body.error) {
+							return reject(res.body.error);
 						}
-						return reject(err);
 					}
-					resolve(res.body);
+					return reject(err);
+				}
+				resolve(res.body);
 			});
 		});
 
 	}
 
 
-	app.post('/sendComment', multer().array('images[]'), async (request, response) => {
-		var text = request.body.text;
-		var title = request.body.title || '';
-		var message = request.body.comment || '';
-		var ssid = request.sessionID || '';
-		var images = [];
+	app.post('/sendComment', multer()
+		.array('images[]'), async(request, response) => {
+			var text = request.body.text;
+			var title = request.body.title || '';
+			var message = request.body.comment || '';
+			var ssid = request.sessionID || '';
+			var images = [];
 
-		console.log("Sending comment " + message);
+			console.log("Sending comment " + message);
 
 
-		 var sendTitterComment = async (cred, amount) => { // sends comment and
-			 console.log("SendTitterComment");
+			var sendTitterComment = async(cred, amount) => { // sends comment and
+				console.log("SendTitterComment");
 
-			if (text) {
-				var filename = await titterPicture.drawCommentP(text);
-				var data = await titterSender.uploadP(cred, filename);
+				if (text) {
+					var filename = await titterPicture.drawCommentP(text);
+					var data = await titterSender.uploadP(cred, filename);
 
-				try {
-					console.log(data);
-					data = JSON.parse(data);
-				} catch (e) {}
-
-				if (data['errors']) {
-					throw new Error("Upload failed, check twitter credentials ");
-				}
-
-				images.unshift(data.media_id_string);
-				console.log("Sending images: ",images);
-
-			}
-			 var res = await titterSender.replyP(cred, title + '\n' + message + ' Donate '+ amount +' WRG', images);
-
-		};
-
-		try {
-			var cred = await getTwitterCreds(ssid);
-			var amount = request.query.amount;
-			var to = request.query.to;
-
-			var amountUser = 0;
-			var fee = 0;
-			var feepercent = 0;
-
-			if (amount > 0 && to) {
-				console.log("Starting donate");
-				var r = await requesDonate(to,amount,ssid);
-				console.log("Donate result",r);
-				amountUser = r.amountUser / 100;
-				fee = r.fee / 100;
-				feepercent = r.feePercent;
-
-			} else {
-				amount = 0;
-			}
-
-			console.log("got keys", cred);
-			if (request.files.length > 0) { // handle attached files
-				console.log("handling attached files:");
-				var files = request.files;
-				for (var file in files) {
-					var data = await titterSender.uploadP(cred, files[file].buffer);
 					try {
+						console.log(data);
 						data = JSON.parse(data);
 					} catch (e) {}
-					images.push(data.media_id_string);
-				};
-			}
-			if (text) {
-				await sendTitterComment(cred,amount);
-			}
-			var donateres = {
-				"status":'Done',
-				"donated":amount,
-				amountUser:amountUser,
-				fee:fee,
-				feePercent: feepercent
+
+					if (data['errors']) {
+						throw new Error("Upload failed, check twitter credentials ");
+					}
+
+					images.unshift(data.media_id_string);
+					console.log("Sending images: ", images);
+
+				}
+				var res = await titterSender.replyP(cred, title + '\n' + message + ' Donate ' + amount + ' WRG', images);
+
 			};
-			console.log("Donate result: ",donateres);
-			response.send(donateres);
 
-		} catch (e) {
-			console.log("Error during /sendComment");
-			dumpError(e);
-			if (!e) {
-				e = "Unknown error"
+			try {
+				var cred = await getTwitterCreds(ssid);
+				var amount = request.query.amount;
+				var to = request.query.to;
+
+				var amountUser = 0;
+				var fee = 0;
+				var feepercent = 0;
+
+				if (amount > 0 && to) {
+					console.log("Starting donate");
+					var r = await requesDonate(to, amount, ssid);
+					console.log("Donate result", r);
+					amountUser = r.amountUser / 100;
+					fee = r.fee / 100;
+					feepercent = r.feePercent;
+
+				} else {
+					amount = 0;
+				}
+
+				console.log("got keys", cred);
+				if (request.files.length > 0 || text) { // handle attached files
+					console.log("handling attached files:");
+					var files = request.files;
+					for (var file in files) {
+						var data = await titterSender.uploadP(cred, files[file].buffer);
+						try {
+							data = JSON.parse(data);
+						} catch (e) {}
+						images.push(data.media_id_string);
+					};
+					await sendTitterComment(cred, amount);
+				}
+				var donateres = {
+					"status": 'Done',
+					"donated": amount,
+					amountUser: amountUser,
+					fee: fee,
+					feePercent: feepercent
+				};
+				console.log("Donate result: ", donateres);
+				response.send(donateres);
+
+			} catch (e) {
+				console.log("Error during /sendComment");
+				dumpError(e);
+				if (!e) {
+					e = "Unknown error"
+				}
+				response.status(401)
+					.send({
+						"error": e.toString()
+					});
+
 			}
-			response.status(401).send({
-				"error": e.toString()
-			});
-
-		}
 
 
 
-	});
+		});
 
 	console.log("Titter server config finished");
 };
