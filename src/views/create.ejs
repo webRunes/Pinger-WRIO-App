@@ -96,11 +96,9 @@
 
             var t_limit = $('#IDtweet_title').attr('maxlength');
             var t_delta = t_limit - title.length;
-            console.log(title.length, t_delta);
             $('label.title-limit').html(t_delta);
             var limit = $('#comment').attr('maxlength');
             var delta = limit - comment.length;
-            console.log(comment.length, delta);
             $('label.comment-limit').html(delta);
 
         }
@@ -119,13 +117,19 @@
         }
 
         function deactivateButton() {
-            $('#sendButton').addClass("disabled")
+            $('#sendButton').addClass("disabled");
+            var buttonText = $('#sendButton').html();
+            buttonText = buttonText.replace("Submit", "Sending...");
+            $('#sendButton').html(buttonText);
             $('#sendButton img').show();
             $('#sendButton span').hide();
         }
 
         function activteButton() {
             $('#sendButton').removeClass("disabled");
+            var buttonText = $('#sendButton').html();
+            buttonText = buttonText.replace("Sending...", "Submit");
+            $('#sendButton').html(buttonText);
             $('#sendButton img').hide();
             $('#sendButton span').show();
         }
@@ -417,7 +421,6 @@
                 </div>
                 <div class="pull-right">
                     <label class="comment-limit">1024</label>
-                    <label class="title-limit">72</label>
                     <% if (user) { %>
                     <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
                         <span class="glyphicon glyphicon-ok"></span>
