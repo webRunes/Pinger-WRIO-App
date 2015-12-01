@@ -267,11 +267,11 @@
                 if (data.balance < 0 || data.blockchain == 0) {
                     $('#noMoney').show();
                 }
-                frameReady();
+
 
             }).fail(function(err) {
                 $('#wrgBalance').html('&nbsp'+0);
-                frameReady();
+
             });
 
             $.ajax({
@@ -284,12 +284,11 @@
                 console.log(data);
                 exchangeRate = data.exchangeRate;
                 updateBalance();
-                frameReady();
+
             }).fail(function(err) {
                 $('#balancestuff').hide();
                 throw new Error("Cannot get exchange rates!!!!");
-                frameReady();
-            });;
+            });
         }
 
 
@@ -344,6 +343,30 @@
         function chooseFile() {
             $("#fileInput").click();
         }
+
+        (function() {
+            var throttle = function(type, name, obj) {
+                obj = obj || window;
+                var running = false;
+                var func = function() {
+                    if (running) { return; }
+                    running = true;
+                    requestAnimationFrame(function() {
+                        obj.dispatchEvent(new CustomEvent(name));
+                        running = false;
+                    });
+                };
+                obj.addEventListener(type, func);
+            };
+
+            /* init - you can init any event */
+            throttle("resize", "optimizedResize");
+        })();
+
+        // handle event
+        window.addEventListener("optimizedResize", function() {
+           frameReady();
+        });
 
 
     </script>
