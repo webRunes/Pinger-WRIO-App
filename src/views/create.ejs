@@ -288,8 +288,7 @@
             }).fail(function(err) {
                 $('#balancestuff').hide();
                 throw new Error("Cannot get exchange rates!!!!");
-
-            });;
+            });
         }
 
 
@@ -345,7 +344,7 @@
             $("#fileInput").click();
         }
 
-        ;(function() {
+        (function() {
             var throttle = function(type, name, obj) {
                 obj = obj || window;
                 var running = false;
