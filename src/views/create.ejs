@@ -217,17 +217,17 @@
               //  $("#IDtweet_title").prop('disabled', true);
             }
 
+           if (recipientWrioID === "undefined") {
+               console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
+               hideInput();
+               $('#noAuthor').show();
+           }
 
             if (!loggedUserID) {
                 hideInput();
                 return; // don't process anything since we're not logged in
             }
-
-            if (recipientWrioID === "undefined") {
-                console.log("Donation recipient not specified, hiding donate form, use get parameter &id=xxxxxxxxxx");
-                hideInput();
-                $('#noAuthor').show();
-            }
+            
 
             if (recipientWrioID === loggedUserID) {
                 console.log("Cannot donate to yourself");
