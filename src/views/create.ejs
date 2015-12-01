@@ -1,8 +1,14 @@
+<!DOCTYPE html>
 <html>
 <head>
     <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
     <link href="http://webrunes.github.io/Default-WRIO-Theme/css/webrunes.css" rel="stylesheet">
+    <style>
+        body {
+            height: auto !important;
+        }
+    </style>
     <script type="text/javascript">
 
         var files = [];
@@ -203,7 +209,7 @@
             });
 
         }
-        $(document).ready(function () {
+       function InitTitter() {
             loadDraft();
 
             function hideInput() {
@@ -261,9 +267,11 @@
                 if (data.balance < 0 || data.blockchain == 0) {
                     $('#noMoney').show();
                 }
+                frameReady();
 
             }).fail(function(err) {
                 $('#wrgBalance').html('&nbsp'+0);
+                frameReady();
             });
 
             $.ajax({
@@ -276,11 +284,13 @@
                 console.log(data);
                 exchangeRate = data.exchangeRate;
                 updateBalance();
+                frameReady();
             }).fail(function(err) {
                 $('#balancestuff').hide();
                 throw new Error("Cannot get exchange rates!!!!");
+                frameReady();
             });;
-        });
+        }
 
 
         function onTimelineLoad() {
@@ -314,18 +324,27 @@
 
         }
 
+        function frameReady() {
+            var ht = $("body").outerHeight(true);
+            console.log(ht);
+            parent.postMessage(JSON.stringify({"titterHeight":ht}), "*"); // signal that iframe is renered and ready to go, so we can calculate it's actual height now
+        }
+
         $(document).ready(function () {
             console.log("Iframe loaded");
+            InitTitter();
             $("#fileInput").change(function () {
                 $.each(this.files, function (key, value) {
                     files.push(value);
                 })
             });
+            frameReady();
         });
 
         function chooseFile() {
             $("#fileInput").click();
         }
+
 
     </script>
 </head>
