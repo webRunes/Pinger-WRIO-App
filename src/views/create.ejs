@@ -243,7 +243,7 @@
                 }
                 if (exchangeRate) {
                     var usdBalance = exchangeRate*balance/(10000);
-                    $('#usdBalance').html('&nbsp$'+usdBalance.toFixed(2));
+                    $('#usdBalance').html('&nbsp'+usdBalance.toFixed(2));
                 }
 
             }
@@ -284,11 +284,8 @@
 
 
         function onTimelineLoad() {
-
             $('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
-
-        }
-        ;
+        };
 
         function createTwitterWidget() {
 
@@ -361,9 +358,9 @@
 								<small class="currency">WRG</small>
 								<sup class="currency">
                                     <span id="usdBalance"></span>
-                                    <span class="currency">USD</span>
+                                    <span><a href="http://webgold.wrioos.com.com/add_funds" target="_blank">Add funds</a></span>
                                     <span>·</span>
-                                    <a href="http://webgold.wrioos.com.com/add_funds" target="_blank">Add funds</a>
+                                    <span class="currency">USD</span>
                                 </sup>
 							</span>
                         </li>
