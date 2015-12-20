@@ -247,7 +247,7 @@
                 if (balance) {
                     $('#wrgBalance').html('&nbsp'+balance);
                 }
-                if (exchangeRate) {
+                if (exchangeRate && balance) {
                     var usdBalance = exchangeRate*balance/(10000);
                     $('#usdBalance').html('&nbsp$'+usdBalance.toFixed(2));
                 }
