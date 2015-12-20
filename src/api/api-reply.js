@@ -35,7 +35,9 @@ router.post('/reply', function(request, response) {
 				.send(err);
 		} else {
 			response.status(200)
-				.end();
+				.json({
+					data: data
+				});
 		}
 	});
 });
