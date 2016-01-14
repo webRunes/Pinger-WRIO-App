@@ -12,4 +12,4 @@ mocha --timeout 20000
 '''
 It's mandatory to pass all tests before making pull request
 
-Powered by [Open Copyright](https://opencopyright.webrunes.com)
+Powered by [Open Copyright](https://opencopyright.wrioos.com)
