@@ -1,0 +1,20 @@
+{
+	"api": {
+		"twitterLogin": {
+			"consumerKey": "",
+			"consumerSecret": ""
+		}
+	},
+	"mongo": {
+		"host": "localhost",
+		"dbname": "test",
+		"user": "",
+		"password": "",
+		"workdomain": ".wrioos.com"
+	},
+	"server": {
+		"cookiesecret": "hd37Js!9sk(wjM",
+		"port": 5003,
+		"workdomain": ".wrioos.com"
+	}
+}
