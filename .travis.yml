@@ -7,11 +7,19 @@ before_install:
   - sudo apt-get update && sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
   - NODE_ENV=development
 
-install: npm install
+install: 
+  - npm install
+  - npm install -g gulp
 
 before_script: NODE_ENV=production
 
-script: npm start
+services: mongodb
+
+script:
+  - cp config.json.travis config.json
+  - gulp
+  - gulp test
+  - npm start
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$(git log -1 --format='%an')" == "Alexey Anshakov" ]; then npm run bumpVersion; fi
