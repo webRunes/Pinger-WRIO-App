@@ -4,21 +4,12 @@ import multer from 'multer';
 import fs from 'fs';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import {
-	loginWithSessionId, getTwitterCredentials, getLoggedInUser, getTwitterCreds
-}
-from './wriologin.js'
+import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, getTwitterCreds} from './wriologin.js'
 import titterPicture from './titter-picture';
 import titterSender from './titter-sender';
 import express from 'express';
-import {
-	init
-}
-from './utils/db.js';
-import {
-	dumpError
-}
-from './utils/utils.js'
+import {init} from './utils/db.js';
+import {dumpError} from './utils/utils.js'
 import request from 'superagent';
 
 var DOMAIN = nconf.get('db:workdomain');

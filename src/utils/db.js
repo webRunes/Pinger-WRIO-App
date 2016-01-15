@@ -24,7 +24,11 @@ export function init() {
 		let password = nconf.get('mongo:password');
 		let mongodbname = nconf.get('mongo:dbname');
 
-		url = `mongodb://${user}:${password}@${host}/${mongodbname}`;
+		if (user) {
+			url = `mongodb://${user}:${password}@${host}/${mongodbname}`;
+		} else {
+			url = `mongodb://${host}/${mongodbname}`;
+		}
 		//console.log("Mongo connect url",url);
 	}
 
