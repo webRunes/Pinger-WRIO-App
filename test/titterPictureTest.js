@@ -5,9 +5,9 @@ import titterPicture from '../src/titter-picture.js';
 
 
 describe('titter-picture test', () => {
-   before(() => {
+    before(() => {
 
-   });
+    });
     it("Shoud return correct filename", () => {
         titterPicture.drawComment('test', (err, filename) => {
             should.exist(filename);

@@ -14,7 +14,6 @@ install:
 before_script: NODE_ENV=production
 
 script:
-  - cp config.json.travis config.json
   - gulp
   - gulp test
   - npm start
