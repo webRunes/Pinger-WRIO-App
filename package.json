@@ -38,7 +38,8 @@
     "babelify": "^6.1.2",
     "superagent": "^1.4.0",
     "gulp": "^3.9.0",
-    "gulp-nodemon": "^2.0.4"
+    "gulp-nodemon": "^2.0.4",
+    "gulp-mocha": "^2.2.0"
   },
   "scripts": {
     "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
