@@ -21,7 +21,6 @@
     "express": "^4.10.1",
     "express-session": "^1.12.1",
     "gm": "^1.17.0",
-    "minimist": "^1.1.1",
     "mongodb": "~2.0",
     "nconf": "^0.8.2",
     "node-twitter": "^0.5.3",

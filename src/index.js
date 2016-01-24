@@ -69,13 +69,6 @@ function server_setup(db) {
 	app.use(p3p(p3p.recommended));
 	app.use(express.static(__dirname + '/'));
 
-	var argv = require('minimist')(process.argv.slice(2));
-	if (argv.testjsx == "true") {
-		console.log("\nEntering jsx widget test mode, use /test.html to check widget operation\n");
-		app.use(express.static(__dirname + '/widget'));
-		app.use(express.static(__dirname + '/test'));
-
-	}
 
 	app.get('/iframe/', async(request, response) => {
 
