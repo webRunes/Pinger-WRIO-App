@@ -72,36 +72,29 @@ function server_setup(db) {
 
 	app.get('/iframe/', async(request, response) => {
 
-		try {
-			var origin = request.query.origin;
-			console.log('ORIGIN: ', origin);
+		var origin = request.query.origin;
+		console.log('ORIGIN: ', origin);
 
-			try {
-				var user = await getLoggedInUser(request.sessionID);
-				console.log(user);
-				if (user) {
-					console.log("User found " + user);
-					response.render('create.ejs', {
-						"user": user,
-						"userID": request.query.id,
-						"host": decodeURIComponent(origin)
-					});
-				} else {
-					throw new Error("Error getting user profile");
-				}
-			} catch (e) {
-				console.log("User not found:");
-				response.render('create.ejs', {
-					"error": "Not logged in",
-					"user": undefined,
-					"host": decodeURIComponent(origin),
-					"userID": "request.query.id"
-				});
+		try {
+			var user = await getLoggedInUser(request.sessionID);
+			if (user.temporary) {
+				throw new Error("Temporary user, allow to login")
 			}
+			console.log("User found " + user);
+			response.render('create.ejs', {
+				"user": user,
+				"userID": request.query.id,
+				"host": decodeURIComponent(origin)
+			});
+
 		} catch (e) {
-			console.log("Error during request", e);
-			response.status(400)
-				.send("Fault");
+			console.log("User not found:",e);
+			response.render('create.ejs', {
+				"error": "Not logged in",
+				"user": undefined,
+				"host": decodeURIComponent(origin),
+				"userID": "request.query.id"
+			});
 		}
 
 	});
