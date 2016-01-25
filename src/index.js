@@ -126,7 +126,7 @@ function server_setup(db) {
 
     function requesDonate(to, amount, ssid) {
         return new Promise((resolve, reject) => {
-            var url = 'http://webgold' + nconf.get('server:workdomain') + "/api/webgold/donate?amount=" + amount + "&to=" + to + "&sid=" + ssid;
+            var url = 'https://webgold' + nconf.get('server:workdomain') + "/api/webgold/donate?amount=" + amount + "&to=" + to + "&sid=" + ssid;
             console.log(url);
             request.get(url)
                 .
