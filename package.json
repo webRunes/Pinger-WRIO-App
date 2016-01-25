@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1121",
+  "version": "1.0.1122",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -15,6 +15,10 @@
     "connect-mongo": "^0.8.2",
     "cookie-parser": "^1.4.0",
     "ejs": "^1.0.0",
+    "eslint": "^1.4.3",
+    "babel-eslint": "*",
+    "eslint-plugin-ideal": "^0.1.2",
+    "eslint-plugin-react": "^3.1.0",
     "htm": "^0.0.0",
     "es6-promise": "^2.1.1",
     "es6-promisify": "^3.0.0",
@@ -38,7 +42,8 @@
     "superagent": "^1.4.0",
     "gulp": "^3.9.0",
     "gulp-nodemon": "^2.0.4",
-    "gulp-mocha": "^2.2.0"
+    "gulp-mocha": "^2.2.0",
+    "gulp-eslint": "*"
   },
   "scripts": {
     "start": "echo Ok",
