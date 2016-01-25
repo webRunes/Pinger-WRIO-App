@@ -69,46 +69,32 @@ function server_setup(db) {
 	app.use(p3p(p3p.recommended));
 	app.use(express.static(__dirname + '/'));
 
-	var argv = require('minimist')(process.argv.slice(2));
-	if (argv.testjsx == "true") {
-		console.log("\nEntering jsx widget test mode, use /test.html to check widget operation\n");
-		app.use(express.static(__dirname + '/widget'));
-		app.use(express.static(__dirname + '/test'));
-
-	}
 
 	app.get('/iframe/', async(request, response) => {
 
-		try {
-			var origin = request.query.origin;
-			console.log('ORIGIN: ', origin);
+		var origin = request.query.origin;
+		console.log('ORIGIN: ', origin);
 
-			try {
-				var user = await getLoggedInUser(request.sessionID);
-				console.log(user);
-				if (user) {
-					console.log("User found " + user);
-					response.render('create.ejs', {
-						"user": user,
-						"userID": request.query.id,
-						"host": decodeURIComponent(origin)
-					});
-				} else {
-					throw new Error("Error getting user profile");
-				}
-			} catch (e) {
-				console.log("User not found:");
-				response.render('create.ejs', {
-					"error": "Not logged in",
-					"user": undefined,
-					"host": decodeURIComponent(origin),
-					"userID": "request.query.id"
-				});
+		try {
+			var user = await getLoggedInUser(request.sessionID);
+			if (user.temporary) {
+				throw new Error("Temporary user, allow to login")
 			}
+			console.log("User found " + user);
+			response.render('create.ejs', {
+				"user": user,
+				"userID": request.query.id,
+				"host": decodeURIComponent(origin)
+			});
+
 		} catch (e) {
-			console.log("Error during request", e);
-			response.status(400)
-				.send("Fault");
+			console.log("User not found:",e);
+			response.render('create.ejs', {
+				"error": "Not logged in",
+				"user": undefined,
+				"host": decodeURIComponent(origin),
+				"userID": "request.query.id"
+			});
 		}
 
 	});

@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1117",
+  "version": "1.0.1121",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -21,7 +21,6 @@
     "express": "^4.10.1",
     "express-session": "^1.12.1",
     "gm": "^1.17.0",
-    "minimist": "^1.1.1",
     "mongodb": "~2.0",
     "nconf": "^0.8.2",
     "node-twitter": "^0.5.3",
@@ -42,13 +41,11 @@
     "gulp-mocha": "^2.2.0"
   },
   "scripts": {
-    "jsx": "jsx --no-cache-dir -x jsx ./widget ./js",
     "start": "echo Ok",
-    "watch": "jsx --no-cache-dir -w -x jsx ./widget ./js",
     "bumpVersion": "npm run version",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
-    "test": "export NODE_ENV=testing && mocha --timeout 20000 --compilers js:babel/register"
+    "test": "gulp start"
   },
   "repository": {
     "type": "git",
