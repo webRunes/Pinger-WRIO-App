@@ -7,7 +7,7 @@ module.exports.SearchClient = function(creds) {
         creds.access_token,
         creds.access_token_secret
     );
-}
+};
 
 module.exports.RestClient = function(creds) {
     return new Twitter.RestClient(
@@ -16,5 +16,5 @@ module.exports.RestClient = function(creds) {
         creds.access_token,
         creds.access_token_secret
     );
-}
+};
     
