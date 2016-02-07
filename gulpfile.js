@@ -30,7 +30,7 @@ gulp.task('test', function() {
         })
         .once('end', function () {
             process.exit();
-        });;
+        });
 });
 
 gulp.task('lint', function () {
