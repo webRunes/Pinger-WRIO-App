@@ -160,7 +160,6 @@
                 data.append('images[]', files[i]);
             }
 
-
             $.each(_data, function (key, value) {
                 data.append(key, value);
             });
@@ -183,6 +182,7 @@
             }).done(function (data) {
                 activteButton();
                 document.getElementById('comment').value = '';
+                document.getElementById('IDtweet_title').value = '';
                 console.log("successfully sent");
                 $('#result').html("Successfully sent!").removeClass("redError");
                 $('.comment-limit').html("Ok");
