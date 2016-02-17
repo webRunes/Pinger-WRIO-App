@@ -1,5 +1,7 @@
 import db from './utils/db';
-import promisify from 'es6-promisify';
+import nconf from 'nconf';
+import {Promise} from 'es6-promise';
+
 
 // used to deserialize the user
 function deserialize(id, done) {
@@ -12,7 +14,6 @@ function deserialize(id, done) {
             done(err);
             return;
         }
-
         done(err, user);
     });
 };
@@ -41,6 +42,8 @@ export function loginWithSessionId(ssid, done) {
             user = undefined;
         }
 
+        console.log(user);
+
         if (user != undefined) {
             deserialize(user, done);
         } else {
@@ -51,29 +54,17 @@ export function loginWithSessionId(ssid, done) {
     });
 }
 
-export function getTwitterCredentials(sessionId, done) {
+export function getTwitterCredentials(request) {
 
-    loginWithSessionId(sessionId, function callback(err, res) {
-        if (err || !res) {
-            console.log("Error executing request");
-            done(err);
-        } else {
-            if (res.token && res.tokenSecret) {
-                done(null, {
-                    "token": res.token,
-                    "tokenSecret": res.tokenSecret
-                });
-            } else {
-                done("No login with twitter");
-            }
-        }
-    });
+    return {
+        "token": request.user.token,
+        "tokenSecret": request.user.tokenSecret
+    };
 }
 
 
 
 export function getLoggedInUser(ssid) {
-
     return new Promise((resolve, reject) => {
         loginWithSessionId(ssid, (err, res) => {
             if (err) {
@@ -84,4 +75,58 @@ export function getLoggedInUser(ssid) {
     });
 }
 
-export var getTwitterCreds = promisify(getTwitterCredentials);
+/*
+export function authS2S(request,response,next) {
+    var creds = auth(request);
+    var login = nconf.get("service2service:login");
+    var password = nconf.get("service2service:password");
+    if (creds && login && password) {
+        if ((creds.name === login) && (creds.pass === password)) {
+            next();
+            return;
+        }
+    }
+    console.log("Access denied");
+    response.status(403).send("Access denied");
+}*/
+
+function isAdmin(id) {
+    var admins = nconf.get('payment:admins');
+    if (!admins) {
+        return false;
+    }
+    var result = false;
+    admins.forEach((user)=> {
+        if (id == user) {
+            result = true;
+        }
+    });
+    return result;
+}
+
+export let wrap = fn => (...args) => fn(...args).catch(args[2]);
+
+export function wrioAuth(req,resp,next) {
+
+    loginWithSessionId(req.sessionID, (err, user) => {
+        if (err) {
+            console.log("Permission denied",e);
+            dumpError(e);
+            return resp.status(403).send("Error");
+        }
+        req.user = user;
+        next();
+    });
+
+}
+
+export function wrioAdmin(req,resp,next) {
+    wrioAuth(req,resp,() => {
+        if (isAdmin(req.user.wrioID)) {
+            next();
+        } else {
+            resp.status(403).send("Error: Not admin");
+        }
+    });
+
+}

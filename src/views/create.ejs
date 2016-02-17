@@ -110,6 +110,7 @@
                     $('.help-block').hide();
                 }
             }
+            frameReady();
         }
 
 
@@ -197,6 +198,7 @@
 
                     }
                 }
+                frameReady();
             }).fail(function (request) {
                 activteButton();
                 $('.comment-limit').html("Fail");
@@ -213,6 +215,7 @@
                 $donatedStats.show();
                 $donatedStats.attr('class','alert alert-danger');
                 $('#donatedAmount').html("There was error during donation: \""+errCode+"\"");
+                frameReady();
 
             });
 
@@ -336,6 +339,7 @@
             var ht = $("body").outerHeight(true);
             console.log(ht);
             parent.postMessage(JSON.stringify({"titterHeight":ht}), "*"); // signal that iframe is renered and ready to go, so we can calculate it's actual height now
+            return true;
         }
 
         $(document).ready(function () {
@@ -344,9 +348,11 @@
             $("#fileInput").change(function () {
                 $.each(this.files, function (key, value) {
                     files.push(value);
-                })
+                });
+
             });
             frameReady();
+
         });
 
         function chooseFile() {

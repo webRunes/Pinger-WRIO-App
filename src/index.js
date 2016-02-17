@@ -3,7 +3,7 @@ import multer from 'multer';
 import fs from 'fs';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, getTwitterCreds} from './wriologin.js';
+import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} from './wriologin.js';
 import titterPicture from './titter-picture';
 import titterSender from './titter-sender';
 import express from 'express';
@@ -124,21 +124,34 @@ function server_setup(db) {
 
     /* Request donate from webgold via api*/
 
-    function requesDonate(to, amount, ssid) {
+    function requestDonate(from, to, amount) {
         return new Promise((resolve, reject) => {
-            var url = 'https://webgold' + nconf.get('server:workdomain') + "/api/webgold/donate?amount=" + amount + "&to=" + to + "&sid=" + ssid;
+            var proto = 'https:';
+            if (nconf.get('server:workdomain') == '.wrioos.local') {
+                proto = 'http:';
+            }
+            var url = proto+ '//webgold' +
+                nconf.get('server:workdomain') + "/api/webgold/donate?amount=" +
+                amount + "&to=" + to + "&from=" + from;
+
+            var login = nconf.get("service2service:login");
+            var pass =  nconf.get("service2service:password");
+
             console.log(url);
-            request.get(url)
-                .
-            end((err, res) => {
-                if (err) {
-                    //console.log(err);
-                    //console.log(res.body);
-                    if (res.body) {
-                        if (res.body.error) {
-                            return reject(res.body.error);
+            request
+                .get(url)
+                .auth(login, pass)
+                .end((err, res) => {
+                    if (err) {
+                        if (!res) {
+                            console.log(err);
+                            return reject(err);
                         }
-                    }
+                        if (res.body) {
+                            if (res.body.error) {
+                                return reject(res.body.error);
+                            }
+                        }
                     return reject(err);
                 }
                 resolve(res.body);
@@ -147,9 +160,29 @@ function server_setup(db) {
 
     }
 
+    async function sendTitterComment (cred, amount, text, images, title,message) { // sends comment and
+        console.log("SendTitterComment");
 
-    app.post('/sendComment', multer()
-        .array('images[]'), async(request, response) => {
+        if (text) {
+            var filename = await titterPicture.drawCommentP(text);
+            var data = await titterSender.uploadP(cred, filename);
+
+            try {
+                console.log(data);
+                data = JSON.parse(data);
+            } catch (e) {}
+            if (data['errors']) {
+                throw new Error("Upload failed, check twitter credentials ");
+            }
+            images.unshift(data.media_id_string);
+            console.log("Sending images: ", images);
+        }
+        return await titterSender.replyP(cred, title + '\n' + message + ' Donate ' + amount + ' WRG', images);
+    }
+
+
+
+    app.post('/sendComment', multer().array('images[]'), wrioAuth, wrap(async(request, response) => {
             var text = request.body.text;
             var title = request.body.title || '';
             var message = request.body.comment || '';
@@ -157,92 +190,55 @@ function server_setup(db) {
             var images = [];
 
             console.log("Sending comment " + message);
+            var cred = getTwitterCredentials(request);
+            var amount = request.query.amount;
+            var to = request.query.to;
 
+            var amountUser = 0;
+            var fee = 0;
+            var feepercent = 0;
 
-            var sendTitterComment = async(cred, amount) => { // sends comment and
-                console.log("SendTitterComment");
-
-                if (text) {
-                    var filename = await titterPicture.drawCommentP(text);
-                    var data = await titterSender.uploadP(cred, filename);
-
-                    try {
-                        console.log(data);
-                        data = JSON.parse(data);
-                    } catch (e) {}
-
-                    if (data['errors']) {
-                        throw new Error("Upload failed, check twitter credentials ");
-                    }
-
-                    images.unshift(data.media_id_string);
-                    console.log("Sending images: ", images);
-
-                }
-                var res = await titterSender.replyP(cred, title + '\n' + message + ' Donate ' + amount + ' WRG', images);
-
-            };
-
-            try {
-                var cred = await getTwitterCreds(ssid);
-                var amount = request.query.amount;
-                var to = request.query.to;
-
-                var amountUser = 0;
-                var fee = 0;
-                var feepercent = 0;
-
-                if (amount > 0 && to) {
-                    console.log("Starting donate");
-                    var r = await requesDonate(to, amount, ssid);
-                    console.log("Donate result", r);
-                    amountUser = r.amountUser / 100;
-                    fee = r.fee / 100;
-                    feepercent = r.feePercent;
-
-                } else {
-                    amount = 0;
-                }
-
-                console.log("got keys", cred);
-                if (request.files.length > 0 || text) { // handle attached files
-                    console.log("handling attached files:");
-                    var files = request.files;
-                    for (var file in files) {
-                        var data = await titterSender.uploadP(cred, files[file].buffer);
-                        try {
-                            data = JSON.parse(data);
-                        } catch (e) {}
-                        images.push(data.media_id_string);
-                    };
-                    await sendTitterComment(cred, amount);
-                }
-                var donateres = {
-                    "status": 'Done',
-                    "donated": amount,
-                    amountUser: amountUser,
-                    fee: fee,
-                    feePercent: feepercent
-                };
-                console.log("Donate result: ", donateres);
-                response.send(donateres);
-
-            } catch (e) {
-                console.log("Error during /sendComment");
-                dumpError(e);
-                if (!e) {
-                    e = "Unknown error";
-                }
-                response.status(401)
-                    .send({
-                        "error": e.toString()
-                    });
-
+            if (amount > 0 && to) {
+                console.log("Starting donate");
+                var r = await requestDonate(request.user.wrioID, to, amount);
+                console.log("Donate result", r);
+                amountUser = r.amountUser / 100;
+                fee = r.fee / 100;
+                feepercent = r.feePercent;
+            } else {
+                amount = 0;
             }
 
+            console.log("got keys", cred);
+            if (request.files.length > 0 || text) { // handle attached files
+                console.log("handling attached files:");
+                var files = request.files;
+                for (var file in files) {
+                    var data = await titterSender.uploadP(cred, files[file].buffer);
+                    try {
+                        data = JSON.parse(data);
+                    } catch (e) {}
+                    images.push(data.media_id_string);
+                }
+                await sendTitterComment(cred, amount,text,images,title,message);
+            }
+            var donateResult = {
+                "status": 'Done',
+                "donated": amount,
+                amountUser: amountUser,
+                fee: fee,
+                feePercent: feepercent
+            };
+            console.log("Donate result: ", donateResult);
+            response.send(donateResult);
 
 
-        });
+        }));
+
+    app.use(function (err, req, res, next) {
+        dumpError(err);
+        res.status(403).send("There was error processing your request");
+    });
 
     console.log("Titter server config finished");
 };
