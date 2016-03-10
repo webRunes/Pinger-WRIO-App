@@ -13,6 +13,11 @@
 
         var files = [];
         var posturl = '<%= host %>';
+        var filename = posturl.substring(posturl.lastIndexOf('/')+1);
+        if (filename == "") {
+            posturl = posturl + "index.html";
+        }
+
         <% if (user) { %>
         var loggedUserID = '<%= user.wrioID %>';
         <% } else { %>
