@@ -92,7 +92,7 @@ function server_setup(db) {
                 "error": "Not logged in",
                 "user": undefined,
                 "host": decodeURIComponent(origin),
-                "userID": "request.query.id"
+                "userID": request.query.id
             });
         }
 
