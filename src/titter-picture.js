@@ -47,7 +47,7 @@ function createImage(text, done) {
     wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight);
 
     ctx.fillStyle = "#aaa";
-    ctx.fillText('Posted via Titter - Advanced tweets, visit titter.wrioos.com', 10, ms_height);
+    ctx.fillText('Posted via Titter — Advanced tweets, visit titter.wrioos.com', 10, ms_height);
 
 
     canvas.toBuffer(function(err, buf) {
