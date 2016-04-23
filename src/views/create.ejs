@@ -394,6 +394,10 @@
            frameReady();
         });
 
+        function goAddFunds() {
+            parent.postMessage(JSON.stringify({"goAddFunds":true}), "*");
+        }
+
 
     </script>
 </head>
@@ -413,7 +417,7 @@
                     <div class="callout" style="display: none" id="noMoney">
                         <h5>No funds.</h5>
                         You're still able to make promised donations up to 500 WRG.
-                        <span><a href="//webgold.wrioos.com/add_funds" >Add funds</a></span>
+                        <span><a href="javascript:goAddFunds();">Add funds</a></span>
                     </div>
                     <div class="alert alert-success" style="display: none;" id="donatedStats">
                         <button type="button" class="close" data-dismiss="alert">×</button>
