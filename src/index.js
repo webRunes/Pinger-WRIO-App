@@ -10,6 +10,7 @@ import express from 'express';
 import {init} from './utils/db.js';
 import {dumpError} from './utils/utils.js';
 import request from 'superagent';
+import startPhantom from './widget-extractor/phantom.js';
 
 var DOMAIN = nconf.get('db:workdomain');
 
@@ -119,6 +120,20 @@ function server_setup(db) {
     app.get('/callback', function(request, response) {
         console.log("Our callback called");
         response.render('callback', {});
+    });
+
+    app.get('/get_widget_id', function(request,response) {
+        var login = request.query.login;
+        var password = request.query.password;
+        var query = request.query.query;
+
+        if (!login || !password || ! query) {
+            return response.status(403).send("Wrong parameters");
+        }
+
+        startPhantom(login,password,query).then(function(code) {
+           response.send("Got code"+code);
+        });
     });
 
 
