@@ -38,3 +38,4 @@ comment.png
 *.swp
 config.json
 js/titter.js
+src/widget-extractor/comp/**
