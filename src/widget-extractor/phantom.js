@@ -5,6 +5,9 @@ import phantom from 'phantom';
 import {dumpError} from '../utils/utils.js';
 import fs from 'fs';
 
+import helperAccount from  '../dbmodels/helperAccount.js';
+import widgetID from '../dbmodels/widgetID.js';
+
 var sitepage = null;
 var phInstance = null;
 
@@ -141,7 +144,7 @@ async function createTimeline(page,url) {
 
     }
 
-export default async function startPhantom (login,pass,url) {
+export async function startPhantom (login,pass,url) {
 
     try {
         phInstance = await phantom.create();//["--remote-debugger-port=9000"]); // ["--cookies-file=/tmp/cookies.txt"]);
@@ -167,4 +170,35 @@ export default async function startPhantom (login,pass,url) {
 
 
 };
+
+async function obtainWidgetID(userID,query) {
+    var helper = new helperAccount();
+    var widget = new widgetID();
+
+    var workAccount = await helper.getLeastUsedAccount();
+    console.log("Obtaing user id with ",workAccount.id," account");
+    var wID = await startPhantom(workAccount.id,workAccount.password,query);
+
+    await widget.create(wID,userID,query);
+    return wID;
+}
+
+export async function getSharedWidgetID(userID,query) {
+
+    try {
+        console.log("Getting widget ID from shared pool");
+
+        var helper = new helperAccount();
+        var widget = new widgetID();
+
+        var existingID = await widget.get({'query': query});
+        if (existingID) {
+            return existingID.widgetId;
+        } else {
+            return await obtainWidgetID(userID, query);
+        }
+    } catch (error) {
+        dumpError(error);
+    }
+}
 

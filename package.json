@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1144",
+  "version": "1.0.1146",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -9,7 +9,8 @@
   },
   "dependencies": {
     "gulp-babel": "^5.1.0",
-    "phantom": "^2.0.10"
+    "phantom": "^2.0.10",
+    "winston": "^2.2.0"
   },
   "devDependencies": {
     "aws-sdk-apis": "^3.1.10",
