@@ -53,9 +53,10 @@ async function setupPhantom(phantom,page) {
 
 async function loginTwitter(page,login,pass) {
     console.log('Step 1 - Open Twitter Login page');
-    var status = await page.open("https://twitter.com");
+    var status = await page.open("https://twitter.com/login?lang=en");
     console.log(status);
 
+    await waitLoadingToFinish();
 
 
     console.log('Step 2 - Populate and submit the login form');
@@ -63,7 +64,8 @@ async function loginTwitter(page,login,pass) {
         console.log("Logging in");
         document.getElementsByName("session[username_or_email]")[1].value=login;
         document.getElementsByName("session[password]")[1].value=pass;
-        document.getElementsByClassName('flex-table-btn')[0].click();
+        document.getElementsByClassName('submit')[1].click();
+      //  document.getElementsByClassName('flex-table-btn')[0].click();
         return "ok";
     },login,pass);
     console.log(r);
@@ -74,7 +76,7 @@ async function loadTweets(page) {
 
     var content = await page.property('content');
 
-    fs.writeFileSync('/tmp/page.html',content);
+    fs.writeFileSync('/tmp/page.html',content, { mode: '0755' });
 
     var result = await page.evaluate(function() {
         console.log("Turbo");
@@ -97,7 +99,7 @@ async function createTimeline(page,url) {
     var status = page.open("https://twitter.com/settings/widgets/new/search");
     await waitLoadingToFinish();
     var content = await page.property('content');
-    fs.writeFileSync('/tmp/sett.html',content);
+    fs.writeFileSync('/tmp/sett.html',content, { mode: '0755' });
 
     var r = await page.evaluate(function(url) {
 
