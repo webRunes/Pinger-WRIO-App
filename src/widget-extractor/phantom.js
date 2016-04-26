@@ -56,6 +56,7 @@ async function loginTwitter(page,login,pass) {
     var status = await page.open("https://twitter.com");
     console.log(status);
 
+    await waitLoadingToFinish();
 
 
     console.log('Step 2 - Populate and submit the login form');
