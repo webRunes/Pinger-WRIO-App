@@ -10,7 +10,7 @@ import express from 'express';
 import {init} from './utils/db.js';
 import {dumpError} from './utils/utils.js';
 import request from 'superagent';
-import startPhantom from './widget-extractor/phantom.js';
+import {startPhantom,getSharedWidgetID} from './widget-extractor/phantom.js';
 
 var DOMAIN = nconf.get('db:workdomain');
 
@@ -133,6 +133,18 @@ function server_setup(db) {
 
         startPhantom(login,password,query).then(function(code) {
            response.send("Got code"+code);
+        });
+    });
+
+    app.get('/obtain_widget_id', function(request,response) {
+        var query = request.query.query;
+
+        if (! query) {
+            return response.status(403).send("Wrong parameters");
+        }
+
+        getSharedWidgetID(111,query).then(function(code) {
+            response.send("Got code"+code);
         });
     });
 
