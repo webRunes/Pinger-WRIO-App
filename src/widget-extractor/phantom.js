@@ -74,7 +74,7 @@ async function loadTweets(page) {
 
     var content = await page.property('content');
 
-    fs.writeFileSync('/tmp/page.html',content);
+    fs.writeFileSync('/tmp/page.html',content, { mode: '666' });
 
     var result = await page.evaluate(function() {
         console.log("Turbo");
@@ -97,7 +97,7 @@ async function createTimeline(page,url) {
     var status = page.open("https://twitter.com/settings/widgets/new/search");
     await waitLoadingToFinish();
     var content = await page.property('content');
-    fs.writeFileSync('/tmp/sett.html',content);
+    fs.writeFileSync('/tmp/sett.html',content, { mode: '666' });
 
     var r = await page.evaluate(function(url) {
 
