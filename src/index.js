@@ -132,20 +132,28 @@ function server_setup(db) {
         }
 
         startPhantom(login,password,query).then(function(code) {
-           response.send("Got code"+code);
+           response.send(code);
         });
     });
 
-    app.get('/obtain_widget_id', function(request,response) {
+    app.get('/obtain_widget_id', async (request,response) => {
         var query = request.query.query;
 
         if (! query) {
             return response.status(403).send("Wrong parameters");
         }
 
-        getSharedWidgetID(111,query).then(function(code) {
-            response.send("Got code"+code);
-        });
+        try {
+            var user = await getLoggedInUser(request.sessionID);
+            var code = await getSharedWidgetID(user.wrioID, query);
+
+            response.send(code);
+
+        } catch (e) {
+            dumpError(e);
+            return response.status(403).send("Error during execution of request");
+        }
+
     });
 
 
