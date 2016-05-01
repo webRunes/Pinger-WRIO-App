@@ -25,7 +25,7 @@ exports.init = function(express) {
         var host = request.get('origin');
         if (host == undefined) host = "";
 
-        var domain = nconf.get("db:workdomain");
+        var domain = nconf.get("server:workdomain");
 
         domain = domain.replace(/\./g,'\\.')+'$';
         logger.log('silly',domain);
