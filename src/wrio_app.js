@@ -3,11 +3,24 @@ import logger from 'winston';
 
 var exports = module.exports = {};
 
+
+function hasPassportUser(request) {
+    var sessionData = request.session;
+    if (sessionData.passport) {
+        if (sessionData.passport.user) {
+            return sessionData.passport.user;
+        }
+    }
+}
+
 exports.init = function(express) {
+
+
     var app = express();
     var bodyParser = require('body-parser');
     // Add headers
     app.use(function(request, response, next) {
+
         //console.log(request);
         var host = request.get('origin');
         if (host == undefined) host = "";
