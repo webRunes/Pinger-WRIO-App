@@ -139,7 +139,7 @@ function server_setup(db) {
     app.get('/obtain_widget_id', async (request,response) => {
         var query = request.query.query;
 
-        console.log("DBG:",request.session);
+        //console.log("DBG:",request.session);
 
         if (! query) {
             return response.status(403).send("Wrong parameters");
