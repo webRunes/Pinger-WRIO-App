@@ -5,13 +5,13 @@
 import request from 'supertest';
 import assert from 'assert';
 import should from 'should';
-import {init} from '../src/utils/db.js';
+import {db} from 'wriocommon';
 import helperAccount from '../src/dbmodels/helperAccount.js';
 
 
 describe('test data models', () => {
     before(async () => {
-        await init();
+        await db.init();
     });
     it("Shoud return correct filename", async () => {
         var acc = new helperAccount();

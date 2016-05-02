@@ -4,12 +4,12 @@
 
 
 import logger from 'winston';
-import db from '../utils/db';
+import {db} from 'wriocommon';var dbInst = db.db;
 
 export default class WidgetID {
 
     constructor () {
-        this.widgets = db.db.collection('titterWidgetID');
+        this.widgets = dbInst.db.collection('titterWidgetID');
     }
 
     create(widgetId,userID,q) {
