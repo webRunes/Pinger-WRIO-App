@@ -2,7 +2,7 @@
  * Created by michbil on 23.04.16.
  */
 import phantom from 'phantom';
-import {dumpError} from '../utils/utils.js';
+import {utils} from 'wriocommon';var dumpError = utils.dumpError;
 import fs from 'fs';
 
 import helperAccount from  '../dbmodels/helperAccount.js';

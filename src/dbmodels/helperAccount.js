@@ -3,13 +3,13 @@
  */
 
 import logger from 'winston';
-import db from '../utils/db';
+import {db} from 'wriocommon';var dbInst = db.db;
 
 export default class HelperAccount {
 
     constructor () {
 
-        this.widgets = db.db.collection('titterHelperAccounts');
+        this.widgets = dbInst.db.collection('titterHelperAccounts');
 
     }
 
