@@ -43,6 +43,14 @@ async function init() {
 
 init_env();
 
+function getTwitterCredentials(request) {
+
+    return {
+        "token": request.user.token,
+        "tokenSecret": request.user.tokenSecret
+    };
+}
+
 function server_setup(db) {
 
     //wrioLogin = require('./wriologin')(db);
