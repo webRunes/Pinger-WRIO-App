@@ -3,40 +3,45 @@ import multer from 'multer';
 import fs from 'fs';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
-import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} from './wriologin.js';
+//import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} from './wriologin.js';
 import titterPicture from './titter-picture';
 import titterSender from './titter-sender';
 import express from 'express';
-import {init} from './utils/db.js';
-import {dumpError} from './utils/utils.js';
 import request from 'superagent';
 import {startPhantom,getSharedWidgetID} from './widget-extractor/phantom.js';
+import {server,db,utils,login} from 'wriocommon';
+import logger from 'winston';
 
 var DOMAIN = nconf.get('db:workdomain');
+var dumpError = utils.dumpError;
+let {wrap,wrioAuth} = login;
 
-var app = require("./wrio_app.js")
-    .init(express);
-
+var app = express();
 app.ready = function() {};
 
-init()
-    .then(function(db) {
-        console.log("Connected correctly to database");
-        var server = require('http')
-            .createServer(app)
-            .listen(nconf.get("server:port"), function(req, res) {
-                console.log('app listening on port ' + nconf.get('server:port') + '...');
-                app.use('/api/', (require('./api/api-search.js')));
-                app.use('/api/', (require('./api/api-reply.js')));
-                server_setup(db);
-                console.log("Application Started!");
-                app.ready();
-            });
-    })
-    .catch(function(err) {
-        console.log('Error connect to database:' + err.code + ': ' + err.message);
-    });
+async function init_env() {
+    try {
+        await init();
+    } catch (e) {
+        console.log("Caught error during server init");
+        utils.dumpError(e);
+    }
+}
 
+async function init() {
+    var dbInstance =  await db.init();
+    logger.log('info','Successfuly connected to Mongo');
+    server.initserv(app,dbInstance);
+    app.listen(nconf.get("server:port"));
+    console.log('app listening on port ' + nconf.get('server:port') + '...');
+    app.use('/api/', (require('./api/api-search.js')));
+    app.use('/api/', (require('./api/api-reply.js')));
+    server_setup(db);
+    console.log("Application Started on ",nconf.get("server:port"));
+    app.ready();
+}
+
+init_env();
 
 function server_setup(db) {
 
@@ -44,39 +49,18 @@ function server_setup(db) {
 
     app.set('views', __dirname + '/views');
     app.set('view engine', 'ejs');
-    //var SessionStore = require('express-mysql-session');
-    var SessionStore = require('connect-mongo')(session);
-    var cookie_secret = nconf.get("server:cookiesecret");
-    app.use(cookieParser(cookie_secret));
-    var sessionStore = new SessionStore({
-        db: db
-    });
-    app.use(session({
-
-        secret: cookie_secret,
-        saveUninitialized: true,
-        store: sessionStore,
-        resave: true,
-        cookie: {
-            secure: false,
-            domain: DOMAIN,
-            maxAge: 1000 * 60 * 60 * 24 * 30
-        },
-        key: 'sid'
-    }));
 
     var p3p = require('p3p');
     app.use(p3p(p3p.recommended));
     app.use(express.static(__dirname + '/'));
 
-
-    app.get('/iframe/', async(request, response) => {
+    app.get('/iframe/', wrioAuth, async(request, response) => {
 
         var origin = request.query.origin;
         console.log('ORIGIN: ', origin);
 
         try {
-            var user = await getLoggedInUser(request.sessionID);
+            var user = request.user;
             if (user.temporary) {
                 throw new Error("Temporary user, allow to login");
             }
@@ -136,7 +120,7 @@ function server_setup(db) {
         });
     });
 
-    app.get('/obtain_widget_id', async (request,response) => {
+    app.get('/obtain_widget_id', wrioAuth, async (request,response) => {
         var query = request.query.query;
 
         //console.log("DBG:",request.session);
@@ -146,7 +130,7 @@ function server_setup(db) {
         }
 
         try {
-            var user = await getLoggedInUser(request.sessionID);
+            var user = request.user;
             var code = await getSharedWidgetID(user.wrioID, query);
 
             response.send(code);
