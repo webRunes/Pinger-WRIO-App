@@ -93,7 +93,7 @@ function server_setup(db) {
 
 
     app.get('/', async(request, response) => {
-        response.sendFile(__dirname + '/views/index.htm');
+        response.sendFile(__dirname + '/views/index.html');
     });
 
 
