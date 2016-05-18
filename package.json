@@ -13,7 +13,7 @@
     "media-typer": "^0.3.0",
     "phantom": "^2.0.10",
     "winston": "^2.2.0",
-    "wriocommon": "michbil/WRIOOS-Common"
+    "wriocommon": "webRunes/WRIOOS-Common"
   },
   "devDependencies": {
     "aws-sdk-apis": "^3.1.10",
