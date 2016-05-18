@@ -1,12 +1,3 @@
-try {
- require("babel/register")({
- stage: 0
- });
- } catch (e) {
- console.log("Babel polyfill already loaded, seems to be ok, relaxing....");
- }
-
-
-var app = require('./src');
+var app = require('./app');
 
 module.exports = app;
