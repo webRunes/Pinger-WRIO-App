@@ -7,6 +7,8 @@ var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var mocha = require('gulp-mocha');
 var eslint = require('gulp-eslint');
+var babel = require('gulp-babel');
+var babelify = require('babelify');
 
 function restart_nodemon () {
     if (nodemon_instance) {
@@ -52,8 +54,21 @@ gulp.task('lint', function () {
 });
 
 
+
 gulp.task('babel-server', function() {
-    restart_nodemon();
+
+    gulp.src('src/views/**/*.*')
+        .pipe(gulp.dest('app/views'));
+
+    return gulp.src(['src/**/*.*',"!src/views/*.*"])
+        .pipe(babel())
+        .on('error', function(err) {
+            console.log('Babel server:', err.toString());
+        })
+        .pipe(gulp.dest('app/'))
+        .on('end',function() {
+            restart_nodemon();
+        });
 });
 
 var nodemon_instance;
