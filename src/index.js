@@ -95,7 +95,9 @@ function server_setup(db) {
 
 
     app.get('/', async(request, response) => {
-        response.sendFile(__dirname + '/views/index.html');
+        response.sendFile("index.html",{
+            root: path.join(__dirname, '..', '/hub/')
+        });
     });
 
 
