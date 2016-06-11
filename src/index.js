@@ -3,6 +3,7 @@ require("babel/polyfill");
 import nconf from "./wrio_nconf.js";
 import multer from 'multer';
 import fs from 'fs';
+import path from 'path';
 import session from 'express-session';
 import cookieParser from 'cookie-parser';
 //import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} from './wriologin.js';
@@ -95,9 +96,16 @@ function server_setup(db) {
 
 
     app.get('/', async(request, response) => {
-        response.sendFile("index.html",{
-            root: path.join(__dirname, '..', '/hub/')
-        });
+        try {
+            var p = path.join(__dirname, '..', '/hub/');
+            console.log(p);
+            response.sendFile("index.html", {
+                root: p
+            });
+        } catch (e) {
+            dumpError(e);
+            response.status(500).send("Internal server error");
+        }
     });
 
 
