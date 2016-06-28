@@ -1,19 +1,51 @@
 language: node_js
 
 node_js:
-  - 0.10
+  - 0.12
 
-install : npm install
-script  : npm start
+before_install:
+  - sudo apt-get update && sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
+  - NODE_ENV=development
+  - npm install -g npm@3
+
+install: 
+  - npm install
+  - npm install -g gulp
+
+before_script: NODE_ENV=production
+
+services: mongodb
+
+script:
+  - cp config.json.travis config.json
+  - gulp
+  - gulp test
+  - npm start
+
+after_success:
+  - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$(git log -1 --format='%an')" == "Alexey Anshakov" ]; then npm run bumpVersion; fi
+
+before_deploy:
+- gem install mime-types -v 2.6.2
+
 
 deploy:
-  provider: s3
-  access_key_id:
-    secure: mR+kXkYTSLM50ICSs7Fm29iFpJo8jCsyYKiyF8ZlBhzmSP8GoHpcsSWd6J/HFnW1WQqa6vAmv/Sxd1Lr23AnxtKyGm+ROej2QQWrp2EouHLEFxuOwy2whLDqAvQcyZyi4eRqeWicAFhM/qrkK4EdvgbsgBqXIY9RXEH1y6Hgxi4=
-  secret_access_key:
-    secure: G3QfqVMapeaGxersv8Oumdc9QWSnCNmq70hJNmD8OrFgOhKj7F48+uv9WLoBAJxw31WIBBWqMSY9l7CO3ur9plPwL+Gfda7yGUE8HDBMJ/pukL2DAzwd1pu/iPlt/+HMO4YYIDJZsDpSWN5PvxAf+MtsG7hXJUlJSy/nwpvpZ3M=
-  bucket: wrio
-  local-dir: Widget
-  upload-dir: Titter-WRIO-App
-  acl: public_read
+  - provider: opsworks
+    access_key_id:
+      secure: CpJ6OYeiTKJ/SYlne4/oAJCxUOiviGYjEc6h/E3A7Tfbyu9baNN4mv821WKRgiRar9tqNrBrzQ7n/eSdzu/IK5rWnG+vuYzj5BoDINRsdvbQpICvpIB88xdE6bvRRaUQrLVUUVxc4GZXCwL8jP72ohz09FpU9HQlUq1V6AzQtF8=
+    secret_access_key:
+      secure: FNq2Va9UYwqYayTKbMLQiq6mUcRe2f3aAK9jLOKfMsW1gx6Y6bwtWNzaocH0aAC2m4vheH2rktzvy0604g6YDPh2lPgD4/9JvQi6/x4UwXzzKzTHyDtAuSg5zEYie0/h5HhHKmOm/YeXIMh3msqqy9+bfsWKDG7rdihynZqprG8=
+    app-id: 4539a5ac-9d5f-4ce1-bbac-e3456b3b4c22
+    on:
+      branch: master
+  - provider: s3
+    access_key_id:
+      secure: mR+kXkYTSLM50ICSs7Fm29iFpJo8jCsyYKiyF8ZlBhzmSP8GoHpcsSWd6J/HFnW1WQqa6vAmv/Sxd1Lr23AnxtKyGm+ROej2QQWrp2EouHLEFxuOwy2whLDqAvQcyZyi4eRqeWicAFhM/qrkK4EdvgbsgBqXIY9RXEH1y6Hgxi4=
+    secret_access_key:
+      secure: G3QfqVMapeaGxersv8Oumdc9QWSnCNmq70hJNmD8OrFgOhKj7F48+uv9WLoBAJxw31WIBBWqMSY9l7CO3ur9plPwL+Gfda7yGUE8HDBMJ/pukL2DAzwd1pu/iPlt/+HMO4YYIDJZsDpSWN5PvxAf+MtsG7hXJUlJSy/nwpvpZ3M=
+    bucket: dev.wrioos.com
+    upload-dir: Titter-WRIO-App
+    acl: public_read
+    on:
+      branch: master
 
