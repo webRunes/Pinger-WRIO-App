@@ -1,9 +1,15 @@
 [![Build Status](https://travis-ci.org/webRunes/Titter-WRIO-App.svg?branch=master)](https://travis-ci.org/webRunes/Titter-WRIO-App)
 
-#Titter <sup>[WRIO](http://wr.io) App</sup>
-(coming soon)
+#Titter <sup>[WRIO](https://wrioos.com) App</sup>
+(coming  soon)
 
 ##Official Hub
-[https://titter.webrunes.com](https://titter.webrunes.com)
+[titter.wrioos.com](https://titter.wrioos.com)
 
-Powered by [Open Copyright](http://opencopyright.webrunes.com)
+Added mocha unit tests, can be run with
+'''
+mocha --timeout 20000
+'''
+It's mandatory to pass all tests before making pull request
+
+Powered by [Open Copyright](https://opencopyright.wrioos.com)
