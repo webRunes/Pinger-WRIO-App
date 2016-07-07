@@ -95,18 +95,7 @@ function server_setup(db) {
     });
 
 
-    app.get('/', async(request, response) => {
-        try {
-            var p = path.join(__dirname, '..', '/hub/');
-            console.log(p);
-            response.sendFile("index.html", {
-                root: p
-            });
-        } catch (e) {
-            dumpError(e);
-            response.status(500).send("Internal server error");
-        }
-    });
+
 
 
     app.get('/logoff', function(request, response) {
@@ -275,6 +264,8 @@ function server_setup(db) {
 
 
         }));
+
+    app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
 
     app.use(function (err, req, res, next) {
         dumpError(err);
