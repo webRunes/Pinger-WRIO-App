@@ -1,12 +1,14 @@
 language: ruby
 
 services:
-  - mongodb
   - docker
 
 before_install:
-  - docker build --tag login .
-  - docker run -v `pwd`:/srv/host login /bin/sh -c "cp /srv/host/config.json.travis /srv/www/config.json && gulp test"
+  - docker pull mongo:latest
+  - docker run --name mongo -p 27017:27017 -d mongo mongod --smallfiles
+  - docker build --tag titter .
+  - docker ps -a
+  - docker run --link mongo:mongo -v `pwd`:/srv/host titter /bin/sh -c "cp /srv/host/config.json.travis /srv/www/config.json && gulp test"
 
 script:
   - docker ps -a
