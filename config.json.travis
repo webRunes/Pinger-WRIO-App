@@ -6,7 +6,7 @@
 		}
 	},
 	"mongo": {
-		"host": "localhost",
+		"host": "mongo",
 		"dbname": "test",
 		"user": "",
 		"password": "",
