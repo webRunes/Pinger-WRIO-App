@@ -1,43 +1,28 @@
-language: node_js
+language: ruby
 
-node_js:
-  - 0.12
+services:
+  - mongodb
+  - docker
 
 before_install:
-  - sudo apt-get update && sudo apt-get install libcairo2-dev libjpeg8-dev libpango1.0-dev libgif-dev build-essential g++
-  - NODE_ENV=development
-  - npm install -g npm@3
-
-install: 
-  - npm install
-  - npm install -g gulp
-
-before_script: NODE_ENV=production
-
-services: mongodb
+  - docker build --tag login .
+  - docker run -v `pwd`:/srv/host login /bin/sh -c "cp /srv/host/config.json.travis /srv/www/config.json && gulp test"
 
 script:
-  - cp config.json.travis config.json
-  - gulp
-  - gulp test
-  - npm start
+  - docker ps -a
+
+branches:
+  only:
+    - master
+    - production
+
+notifications:
+  slack: wrioos:XDZWFBrf9TDtoEOcw5YGBM4a
 
 after_success:
   - if [ "$TRAVIS_BRANCH" == "master" ] && [ "$(git log -1 --format='%an')" == "Alexey Anshakov" ]; then npm run bumpVersion; fi
 
-before_deploy:
-- gem install mime-types -v 2.6.2
-
-
 deploy:
-  - provider: opsworks
-    access_key_id:
-      secure: CpJ6OYeiTKJ/SYlne4/oAJCxUOiviGYjEc6h/E3A7Tfbyu9baNN4mv821WKRgiRar9tqNrBrzQ7n/eSdzu/IK5rWnG+vuYzj5BoDINRsdvbQpICvpIB88xdE6bvRRaUQrLVUUVxc4GZXCwL8jP72ohz09FpU9HQlUq1V6AzQtF8=
-    secret_access_key:
-      secure: FNq2Va9UYwqYayTKbMLQiq6mUcRe2f3aAK9jLOKfMsW1gx6Y6bwtWNzaocH0aAC2m4vheH2rktzvy0604g6YDPh2lPgD4/9JvQi6/x4UwXzzKzTHyDtAuSg5zEYie0/h5HhHKmOm/YeXIMh3msqqy9+bfsWKDG7rdihynZqprG8=
-    app-id: 4539a5ac-9d5f-4ce1-bbac-e3456b3b4c22
-    on:
-      branch: master
   - provider: s3
     access_key_id:
       secure: mR+kXkYTSLM50ICSs7Fm29iFpJo8jCsyYKiyF8ZlBhzmSP8GoHpcsSWd6J/HFnW1WQqa6vAmv/Sxd1Lr23AnxtKyGm+ROej2QQWrp2EouHLEFxuOwy2whLDqAvQcyZyi4eRqeWicAFhM/qrkK4EdvgbsgBqXIY9RXEH1y6Hgxi4=
