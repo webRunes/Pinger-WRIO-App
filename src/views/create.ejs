@@ -329,6 +329,26 @@
             $('#twitter-widget-0').contents().find('style').html($('#twitter-widget-0').contents().find('style').html() + "img.autosized-media {width:auto;height:auto;}");
         };
 
+
+        function getEthereumId() {
+            $.ajax({
+                url: getWebgoldUrl() + '/api/webgold/get_wallet',
+                type: "GET",
+                xhrFields: {
+                    withCredentials: true
+                },
+                headers: {
+                    'X-Requested-With':"XMLHttpRequest"
+                }
+            }).done(function (data) {
+
+            }).fail(function(err) {
+                $('#createwallet').show();
+            });
+
+        }
+        getEthereumId();
+
         function createTwitterWidget() {
 
             var frameheight = $(window).height();
@@ -418,6 +438,9 @@
 
 <div id="frame_container">
     <div id="titter-id">
+        <div id="createwallet" style="display:none">
+            <a href="javascript:;" target="popup" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=600,height=400')">Please register your Ethereum wallet to work with webgold transactions</a>
+        </div>
         <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment"
               role="form">
 
