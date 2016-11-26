@@ -218,7 +218,7 @@ function server_setup(db) {
             images.unshift(data.media_id_string);
             console.log("Sending images: ", images);
         }
-        return await titterSender.replyP(cred, title + '\n' + message + ' Donate ' + amount + ' WRG', images);
+        return await titterSender.replyP(cred, title + '\n' + message + ' Donated ' + amount + ' THX', images);
     }
 
 
@@ -240,9 +240,9 @@ function server_setup(db) {
             var feepercent = 0;
 
             if (amount > 0 && to) {
-                console.log("Starting donate");
+                console.log("Donation process has been started");
                 var r = await requestDonate(request.user.wrioID, to, amount);
-                console.log("Donate result", r);
+                console.log("Donation result", r);
                 amountUser = r.amountUser / 100;
                 fee = r.fee / 100;
                 feepercent = r.feePercent;
@@ -270,7 +270,7 @@ function server_setup(db) {
                 fee: fee,
                 feePercent: feepercent
             };
-            console.log("Donate result: ", donateResult);
+            console.log("A donation result: ", donateResult);
             response.send(donateResult);
 
 
@@ -278,7 +278,7 @@ function server_setup(db) {
 
     app.use(function (err, req, res, next) {
         dumpError(err);
-        res.status(403).send("There was error processing your request");
+        res.status(403).send("There was an error processing your request");
     });
 
     console.log("Titter server config finished");
