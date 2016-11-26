@@ -1,5 +1,3 @@
-require("babel/polyfill");
-
 import nconf from "./wrio_nconf.js";
 import multer from 'multer';
 import fs from 'fs';
@@ -95,18 +93,7 @@ function server_setup(db) {
     });
 
 
-    app.get('/', async(request, response) => {
-        try {
-            var p = path.join(__dirname, '..', '/hub/');
-            console.log(p);
-            response.sendFile("index.html", {
-                root: p
-            });
-        } catch (e) {
-            dumpError(e);
-            response.status(500).send("Internal server error");
-        }
-    });
+
 
 
     app.get('/logoff', function(request, response) {
@@ -238,14 +225,14 @@ function server_setup(db) {
             var amountUser = 0;
             var fee = 0;
             var feepercent = 0;
-
+            var donateResult = {};
             if (amount > 0 && to) {
                 console.log("Starting donate");
-                var r = await requestDonate(request.user.wrioID, to, amount);
-                console.log("Donate result", r);
-                amountUser = r.amountUser / 100;
-                fee = r.fee / 100;
-                feepercent = r.feePercent;
+                donateResult = await requestDonate(request.user.wrioID, to, amount);
+                console.log("Donate result", donateResult);
+                amountUser = donateResult.amountUser / 100;
+                fee = donateResult.fee / 100;
+                feepercent = donateResult.feePercent;
             } else {
                 amount = 0;
             }
@@ -268,13 +255,16 @@ function server_setup(db) {
                 "donated": amount,
                 amountUser: amountUser,
                 fee: fee,
-                feePercent: feepercent
+                feePercent: feepercent,
+                callback: donateResult.callback
             };
             console.log("Donate result: ", donateResult);
             response.send(donateResult);
 
 
         }));
+
+    app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
 
     app.use(function (err, req, res, next) {
         dumpError(err);
