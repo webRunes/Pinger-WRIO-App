@@ -1,7 +1,7 @@
 import nconf from "./wrio_nconf.js";
-import Twitter from 'node-twitter';
 import TwitterClient from "./utils/twitter-client";
 import promisify from 'es6-promisify';
+
 
 var titterSender = {};
 titterSender.comment = function(cred, message, imagePath, done) {
@@ -36,6 +36,7 @@ titterSender.upload = function(creds, file, cb) {
         var params = {
             media: file
         };
+    console.log(params,creds);
     twitter.uploadMedia(params, creds.token, creds.tokenSecret, function(err, data) {
         if (err) {
             console.log('Upload error:', err);

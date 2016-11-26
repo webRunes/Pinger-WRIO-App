@@ -1,4 +1,4 @@
-FROM michbil/wrio:latest
+FROM webrunes/wriobase:latest
 MAINTAINER denso.ffff@gmail.com
 
 # Titter
