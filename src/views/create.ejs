@@ -199,13 +199,13 @@
                 $('#result').html("Successfully sent!").removeClass("redError");
                 $('.comment-limit').html("Ok");
 
-
+                //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
                 if (data.status == "Done") {
                     if (data.donated > 0) {
                         var $donatedStats = $('#donatedStats');
                         $donatedStats.show();
                         $donatedStats.attr('class','alert alert-success');
-                        $('#donatedAmount').html("You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!")
+                        $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you!")
 
                     }
                 }
@@ -441,10 +441,6 @@
               role="form">
 
             <form class="margin-bottom" role="form" >
-                <div class="alert alert-warning" style="display: none" id="noAuthor">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    Author unknown. Transfer of dontaions disabled
-                </div>
                 <div class="well" style="display: none" id="noMoney">
                     <h4>Get free Thanks coins (THX)</h4>
                     <p>You can top up the balance free of charge up to 10 THX every hour</p>
@@ -454,12 +450,16 @@
                     <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins" target="_parent"><span
                         class="glyphicon"></span>What are Thanks coins?</a>
                 </div>
-                <div class="callout" style="display: none">
+                <div class="alert alert-warning" style="display:none" id="noAuthor">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    Author unknown. Transfer of dontaions disabled
+                </div>
+                <div class="callout" style="display:none">
                     <h5>No funds</h5>
                     You're still able to make promised donations up to 500 WRG.
                     <span><a href="javascript:goAddFunds();">Add funds</a></span>
                 </div>
-                <div class="alert alert-success" style="display: none;" id="donatedStats">
+                <div class="alert alert-success" style="display:none;" id="donatedStats">
                     <button type="button" class="close" data-dismiss="alert">×</button>
                     <span id="donatedAmount"></span>
                     <br>
@@ -471,10 +471,9 @@
                         <span>Current balance&nbsp;</span>
 						<span>
 							<span id="wrgBalance">0</span>
-							<small class="currency">WRG</small>
-							<sup class="currency">
+							<small class="currency">THX</small>
+							<sup class="currency" style="display:none">
                                 <span id="usdBalance"></span>
-
                                 <span>·</span>
                                 <span class="currency">USD</span>
                             </sup>
@@ -512,7 +511,6 @@
 
             </div>
             <div class="form-group send-comment-form col-xs-12">
-
                 <div style="height:0px;overflow:hidden">
                     <input type="file" accept="image/*" multiple id="fileInput" name="fileInput"/>
                 </div>
@@ -528,7 +526,7 @@
                     <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
                         <span class="glyphicon glyphicon-ok"></span>
                         <img src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
-                        Submit
+                        Send
                     </button>
                     <% } else { %>
                     <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary">
