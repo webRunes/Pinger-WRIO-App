@@ -437,9 +437,6 @@
 <body>
 <div id="frame_container">
     <div id="titter-id">
-        <div id="createwallet" style="display:none">
-            <a href="javascript:;" target="popup" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=600,height=400')">Please register your Ethereum wallet to work with webgold transactions</a>
-        </div>
         <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment"
               role="form">
 
@@ -448,18 +445,14 @@
                     <button type="button" class="close" data-dismiss="alert">×</button>
                     Author unknown. Transfer of dontaions disabled
                 </div>
-                <div class="callout">
-                    <h5></h5>
-                    </span>
-                </div>
-                <div className="well" style="display: none" id="noMoney">
-                <h4>Get free Thanks coins (THX)</h4>
-                <p>You can top up the balance free of charge up to 10 THX every hour</p>
-                <br />
-                <a className="btn btn-sm btn-success" href="javascript:goAddFunds();"><span
-                    className="glyphicon glyphicon-thumbs-up"></span>Get Thanks coins</a>
-                <a className="btn btn-link" href="https://wrioos.com/#Thanks_coins" target="_parent"><span
-                    className="glyphicon"></span>What are Thanks coins?</a>
+                <div class="well" style="display: none" id="noMoney">
+                    <h4>Get free Thanks coins (THX)</h4>
+                    <p>You can top up the balance free of charge up to 10 THX every hour</p>
+                    <br />
+                    <a class="btn btn-sm btn-success" href="javascript:goAddFunds();"><span
+                        class="glyphicon glyphicon-thumbs-up"></span>Get Thanks coins</a>
+                    <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins" target="_parent"><span
+                        class="glyphicon"></span>What are Thanks coins?</a>
                 </div>
                 <div class="callout" style="display: none">
                     <h5>No funds</h5>
