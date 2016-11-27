@@ -441,8 +441,9 @@
               role="form">
 
             <form class="margin-bottom" role="form" >
-                <div class="well" style="display: none" id="noMoney">
-                    <h4>Get free Thanks coins (THX)</h4>
+                <div class="well" style="display: none;" id="noMoney">
+                    <h4 id="balancestuff">Current balance <span id="wrgBalance">0</span><small class="currency">THX</small><sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
+                    </sup></h4>
                     <p>You can top up the balance free of charge up to 10 THX every hour</p>
                     <br />
                     <a class="btn btn-sm btn-success" href="javascript:goAddFunds();"><span
@@ -466,20 +467,6 @@
                     <span>More information on donations and percentage you can find </span>
                     <a href="#">here</a>
                 </div>
-                <ul class="leaders" id="balancestuff">
-                    <li>
-                        <span>Current balance&nbsp;</span>
-						<span>
-							<span id="wrgBalance">0</span>
-							<small class="currency">THX</small>
-							<sup class="currency" style="display:none">
-                                <span id="usdBalance"></span>
-                                <span>·</span>
-                                <span class="currency">USD</span>
-                            </sup>
-						</span>
-                    </li>
-                </ul>
             </form>
 
             <div id="donationStuff">
