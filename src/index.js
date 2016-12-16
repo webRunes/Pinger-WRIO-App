@@ -92,10 +92,6 @@ function server_setup(db) {
 
     });
 
-
-
-
-
     app.get('/logoff', function(request, response) {
         console.log("Logoff called");
         response.clearCookie('sid', {
@@ -106,7 +102,6 @@ function server_setup(db) {
         //response.redirect('/?create');
 
     });
-
 
     app.get('/callback', function(request, response) {
         console.log("Our callback called");
