@@ -1,26 +1,27 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html>
-<head>
+<head id="head">
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Titter WRIO хаб">
+    <meta name="description" content="">
     <meta name="author" content="webRunes">
     <meta name="keywords" content="Titter">
-    <title>Titter</title>
+    <meta name="google-site-verification" content="wW3kG-1bD4IishxXaidLtiLMKNTR3S0MH7Dnd3HpoY8" />
+    <title>Official Titter hub</title>
 
     <script type="application/ld+json">
         {
-        "@context": "https://schema.org",
+        "@context": "http://schema.org",
         "@type": "ItemList",
-        "name": "Обложка",
+        "name": "Titter cover",
         "itemListElement": [
         {
         "@type": "ItemList",
-        "name": "Обложка",
-        "description": "Обложки для хаба webGold",
-        "image": "https://webgold.wrioos.com/img/cover1-200x200.jpg",
-        "url": "https://webgold.wrioos.com/ru/обложка/?cover"
+        "name": "Cover",
+        "description": "Titter cover",
+        "image": "default.wrioos.com/img/no-photo-200x200.png",
+        "url": "titter.wrioos.com/cover.html?cover"
         }
         ]
         }
@@ -28,37 +29,94 @@
 
     <script type="application/ld+json">
         {
-        "@context": "https://schema.org",
+        "@context": "http://schema.org",
         "@type": "Article",
-        "inLanguage": "Ru",
-        "keywords": "Titter, WRIO, хаб",
-        "author": "https://aa.wr.io",
+        "inLanguage": "en",
+        "keywords": "Titter",
         "name": "Titter",
-        "thumbnailUrl": "https://titter.wrioos.com/img/cover1-200x200.jpg",
-        "about": "Titter.",
+        "about": "Официальный хаб Titter.",
         "articleBody": [
-        ""
+        "Titter — одно из первых приложений WRIO OS (ссылка) платформы и разработано для комментирования и распространения статей с помощью твитов.",
+        "Если вы еще не авторизованы, то чтобы включить функционал комментирования нажмите под статьей кнопку ''Join the conversation'' после чего приложение перенаправит вас на сервер Твиттера для авторизации. Кнопка ''Send'' дает приложению команду автоматически трансформировать текст вашего сообщения в картинку, которая вставляется в твит вместе со ссылкой на статью. Перевод текста в картинку позволяет расширить ограничение твита с 140 символов до 1024.",
+        "Твиты будут видны в тайлайне благодаря чему с вашей помощью автор получит дополнительную аудиторию и увеличит количество донейтов. Другие пользователи также будут помогать в распространении ваших статей.",
+        "Под статьей вы можете опробовать Титтер и отправить комментарий или перейти по ссылке (ссылка на создание статьи) для создания собственной WRIO OS страницы.",
+        "Читатели могут не только финансово отблагодарить автора контента с помощью встроенной криптовалюты webGold, но и помогают в распространении каждым своим комментарием. Система комментирования построена на основе API Twitter. С его помощью каждый комментарий публикуется ввиде твита в ленте своего автора и содержит ссылку на пост, сумму доната и трансформированный в картинку текст. Вместо стандартного ограничения в 140 символов, комментарий может содержать до 1024 знаков.",
+        "Внизу страницы располагается виджет Твиттера, который отображает относящиеся к посту твиты отфильтровывая их по URL страницы."
         ],
         "hasPart": [
         {
         "@type": "Article",
-        "name": "Глава 1",
+        "name": "How it works",
         "articleBody": [
-        "В разработке. "
+        "Приложение создано на базе Nodejs + React и использует Twitter API. Каждая страница построенная с помощью WRIO OS и включенными комментариями содержит внутри параметр ''comment'': ''ID''. Он указывает на идентификатор Твиттер-виджета и берется из Embed кода (data-widget-id). Например, для текущей страницы этот параметр равен ''570802230606176256'', а твиты виджета можно увидеть по ссылке https://twitter.com/search?f=tweets&q=titter.wrioos.com (ссылка). Адрес страницы с которой отправлен комментарий автоматически добавляется в твит и используется как параметр группировки твитов по URL.",
+        "Код Титтера (ссылка на гитхаб), как и всех других WRIO OS приложений (ссылка на список), открыт и может быть использован любым желающим. Мы будем рады, если вы решите присоединиться к разработке Титтера либо используете его в своих разработках!",
+        "Код опубликован в рамках проекта Open Copyright (ссылка)."
         ]
+        },
+        {
+        "@type": "Article",
+        "name": "Работа с другими приложениями WRIO OS",
+        "articleBody": [
+        "Титтер включает в себя функционал webGold для возможности отправки донейтов (ссылка на туториал) авторам с помощью твитов, а так же используется в других приложениях, например, Core и Chess. Ссылки с описанием на указанные WRIO OS приложения приведены ниже."
+        ]
+        },
+        {
+        "@type": "Article",
+        "name": "webGold",
+        "about": "Приложение созданно для работы с одноименной криптовалютой обозначаемой как WRG и помогает не только проводить финансовые операции, но и добавляет возможность поощрять донейтами интересных авторов. Криптовалюта основана на золотом стандарте — цена всегда привязана к стоимости золота, что выгодно отличает webGold от других криптовалют для желающих сохранить свои сбережения.",
+        "url": "webgold.wrioos.com"
+        },
+        {
+        "@type": "Article",
+        "name": "Core",
+        "about": "Редактор страниц WRIO OS платформы. С его помощью вы можете не только создавать страницы и писать статьи, но и благодаря использованию функционала webGold монетизировать свои посты из различных соцсетей.",
+        "url": "core.wrioos.com"
+        },
+        {
+        "@type": "Article",
+        "name": "Chess",
+        "about": "С помощью твитов вы можете играть с друзьями в шахматы! Игра разработана как эксперементальный проект открывающий дорогу другим приложениям основанными на управлении через твит-команды.",
+        "url": "chess.wrioos.com"
         }
         ],
         "mentions": [
         {
         "@type": "Article",
-        "name": "Alternative",
-        "about": "Эксперементальный проект. Его цель — попытка предоставить децентрализованные решения в сфере финансов, бизнеса, законов и всех остальных сфер общества с минимальным, а в идеале вовсе без вмешательства государства.",
-        "url": "https://alternative.webrunes.org/ru/?'созданию нового типа общества':8,34"
+        "name": "WRIO OS",
+        "about": "WRIO OS official hub",
+        "url": "wrioos.com/index.html?'WRIO OS':1,0"
+        }
+        ],
+        "author": "",
+        "editor": "",
+        "comment": "570802230606176256"
+        }
+    </script>
+
+    <script type="application/ld+json">
+        {
+        "@context": "http://schema.org",
+        "@type": "ItemList",
+        "name": "My lists",
+        "itemListElement": [
+        {
+        "@type": "ItemList",
+        "name": "Tutorials",
+        "description": "Titter tutorials",
+        "image": "default.wrioos.com/img/no-photo-200x200.png",
+        "url": "titter.wrioos.com/tutorials-list.html"
+        },
+        {
+        "@type": "ItemList",
+        "name": "Blog",
+        "description": "Official Titter blog",
+        "image": "default.wrioos.com/img/no-photo-200x200.png",
+        "url": "titter.wrioos.com/blog-list.html"
         }
         ]
         }
     </script>
-    
+
     <script>
         (function (i, s, o, g, r, a, m) {
             i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
@@ -71,6 +129,6 @@
     </script>
 </head>
 <body>
-    <script type="text/javascript" src="https://wrioos.com/start.js"></script>
+    <script type="text/javascript" src="//wrioos.com/start.js"></script>
 </body>
 </html>

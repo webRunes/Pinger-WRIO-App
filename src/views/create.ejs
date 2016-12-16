@@ -199,13 +199,13 @@
                 $('#result').html("Successfully sent!").removeClass("redError");
                 $('.comment-limit').html("Ok");
 
-
+                //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
                 if (data.status == "Done") {
                     if (data.donated > 0) {
                         var $donatedStats = $('#donatedStats');
                         $donatedStats.show();
                         $donatedStats.attr('class','alert alert-success');
-                        $('#donatedAmount').html("You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!")
+                        $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you!")
 
                     }
                 }
@@ -247,7 +247,6 @@
 
             if (!loggedUserID) {
                 hideInput();
-
             }
 
 
@@ -434,66 +433,46 @@
 
     </script>
 </head>
-<body class="container-liquid">
-
+<body>
 <div id="frame_container">
     <div id="titter-id">
-        <div id="createwallet" style="display:none">
-            <a href="javascript:;" target="popup" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=600,height=400')">Please register your Ethereum wallet to work with webgold transactions</a>
-        </div>
         <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment"
               role="form">
 
             <form class="margin-bottom" role="form" >
-                <div class="form-group">
-                    <div class="alert alert-warning" style="display: none" id="noAuthor">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        Author unknown
-                    </div>
-                    <div class="callout" style="display: none" id="noMoney">
-                        <h5>No funds</h5>
-                        You're still able to make promised donations up to 500 WRG.
-                        <span><a href="javascript:goAddFunds();">Add funds</a></span>
-                    </div>
-                    <div class="alert alert-success" style="display: none;" id="donatedStats">
-                        <button type="button" class="close" data-dismiss="alert">×</button>
-                        <span id="donatedAmount"></span>
-                        <br>
-                        <span>More information on donations and percentage you can find </span>
-                        <a href="#">here</a>
-                    </div>
-                    <ul class="leaders" id="balancestuff">
-                        <li>
-                            <span>Current balance&nbsp;</span>
-							<span>
-								<span id="wrgBalance">0</span>
-								<small class="currency">WRG</small>
-								<sup class="currency">
-                                    <span id="usdBalance"></span>
-
-                                    <span>·</span>
-                                    <span class="currency">USD</span>
-                                </sup>
-							</span>
-                        </li>
-                    </ul>
+                <div class="well" style="display: none;" id="noMoney">
+                    <h4 id="balancestuff">Current balance <span id="wrgBalance">0</span><small class="currency">THX</small><sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
+                    </sup></h4>
+                    <p>You can receive 10 THX every hour free of charge</p>
+                    <br />
+                    <a class="btn btn-sm btn-success" href="javascript:goAddFunds();"><span
+                        class="glyphicon glyphicon-thumbs-up"></span>Get free Thanks coins</a>
+                    <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins" target="_parent"><span
+                        class="glyphicon"></span>What are Thanks coins?</a>
+                </div>
+                <div class="callout warning" style="display:none" id="noAuthor">
+                    <h5>Author unknown</h5>
+                    <p>Transfer of dontaions disabled</p>
+                </div>
+                <div class="callout" style="display:none">
+                    <h5>No funds</h5>
+                    You're still able to make promised donations up to 500 WRG.
+                    <span><a href="javascript:goAddFunds();">Add funds</a></span>
+                </div>
+                <div class="alert alert-success" style="display:none;" id="donatedStats">
+                    <button type="button" class="close" data-dismiss="alert">×</button>
+                    <span id="donatedAmount"></span>
                 </div>
             </form>
 
             <div id="donationStuff">
-                <div class="form-group donation send-comment-form-donation col-xs-12 col-md-4 col-lg-2">
-                    <label class="col-sm-2 control-label" for="inputAmount">Donation</label>
-                </div>
                 <div class="form-group send-comment-form-donation donation-form col-xs-12 col-md-4 col-lg-3">
                     <div class="input-group input-group-sm tooltip-demo">
-                        <span class="input-group-addon">WRG</span>
-                        <input type="number" class="form-control" id="inputAmount" value="0" min="0" onchange="keyPress();" onkeyup="keyPress();">
-                        <span class="input-group-addon" data-toggle="tooltip" data-placement="top"
-                              title="The author will receive 82%, which amounts to 8.2 WRG or 0.19 USD. The bigger the donated amount, the bigger the received percentage up to 95%">82%</span>
+                        <span class="input-group-addon">Donation</span>
+                        <input type="number" class="form-control" id="inputAmount" value="0" min="0" onchange="keyPress();" onkeyup="keyPress();"><span class="input-group-addon">THX</span>
                     </div>
                     <div class="help-block" style="display: none">
-                        <span>Insufficient funds. </span>
-                        <a href="webgold-add_funds.htm">Add funds</a>
+                        <span>Insufficient funds</span>
                     </div>
                 </div>
                 <div class="form-group send-comment-form-donation col-xs-12 col-md-4 col-lg-7">
@@ -511,7 +490,6 @@
 
             </div>
             <div class="form-group send-comment-form col-xs-12">
-
                 <div style="height:0px;overflow:hidden">
                     <input type="file" accept="image/*" multiple id="fileInput" name="fileInput"/>
                 </div>
@@ -527,7 +505,7 @@
                     <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
                         <span class="glyphicon glyphicon-ok"></span>
                         <img src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
-                        Submit
+                        Send
                     </button>
                     <% } else { %>
                     <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary">
