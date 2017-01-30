@@ -261,13 +261,13 @@
             }
 
             var exchangeRate;
-            var balance;
 
-            function updateBalance() {
+            function updateBalance(balance,rtx) {
                 $('#balancestuff').show();
                 if (balance) {
                     $('#wrgBalance').html('&nbsp'+balance);
                 }
+                $('#rtx').html('&nbsp'+rtx);
                 if (exchangeRate && balance) {
                     var usdBalance = exchangeRate*balance/(10000);
                     $('#usdBalance').html('&nbsp'+usdBalance.toFixed(2));
@@ -287,16 +287,12 @@
                 }
             }).done(function (data) {
                 console.log(data);
-
-                balance = data.balance;
-                updateBalance();
-                if (data.balance < 0 || data.blockchain == 0) {
-                    $('#noMoney').show();
-                }
+                updateBalance(data.balance,data.rtx);
+                $('#balancePane').show();
 
             }).fail(function(err) {
                 $('#wrgBalance').html('&nbsp'+0);
-                $('#noMoney').show();
+                $('#balancePane').show();
                 frameReady();
             });
 
@@ -318,7 +314,7 @@
             }).fail(function(err) {
                 $('#balancestuff').hide();
                 throw new Error("Cannot get exchange rates!!!!");
-                $('#noMoney').show();
+                $('#balancePane').show();
                 frameReady();
             });
         }
@@ -440,10 +436,13 @@
               role="form">
 
             <form class="margin-bottom" role="form" >
-                <div class="well" style="display: none;" id="noMoney">
-                    <h4 id="balancestuff">Current balance <span id="wrgBalance">0</span><small class="currency">THX</small><sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
+                <div class="well" style="display: none;" id="balancePane">
+                    <h4 id="balancestuff">Current balance
+                        <span id="wrgBalance">0</span><small class="currency">THX</small>
+                        <sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
                     </sup></h4>
                     <p>You can receive 10 THX every hour free of charge</p>
+                    <p>Rating <span id="rtx">0</span> RTX</p>
                     <br />
                     <a class="btn btn-sm btn-success" href="javascript:goAddFunds();"><span
                         class="glyphicon glyphicon-thumbs-up"></span>Get free Thanks coins</a>
