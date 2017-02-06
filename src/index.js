@@ -225,9 +225,9 @@ function server_setup(db) {
                 console.log("Donation process has been started");
                 donateResult = await requestDonate(request.user.wrioID, to, amount);
                 console.log("Donation result", donateResult);
-                amountUser = donateResult.amountUser / 100;
-                fee = donateResult.fee / 100;
-                feepercent = donateResult.feePercent;
+                if (donateResult.success == false) {
+                    return response.status(403).send({error: donateResult.error});
+                }
             } else {
                 amount = 0;
             }
@@ -249,8 +249,6 @@ function server_setup(db) {
                 "status": 'Done',
                 "donated": amount,
                 amountUser: amountUser,
-                fee: fee,
-                feePercent: feepercent,
                 callback: donateResult.callback
             };
             console.log("Donation result: ", donateResult);
