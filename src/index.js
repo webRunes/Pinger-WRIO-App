@@ -258,6 +258,7 @@ function server_setup(db) {
         }));
 
     app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
+    app.use('/js/', express.static(path.join(__dirname, '.', '/clientjs/')));
 
     app.use(function (err, req, res, next) {
         dumpError(err);
