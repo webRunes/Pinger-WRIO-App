@@ -1,7 +1,7 @@
 // TODO legacy code, rewrite in react, get rid of globals
 
 import {getCookie,getLoginUrl,getWebgoldUrl,saveDraft,loadDraft} from './utils.js';
-import {sendCommentRequest,getBalanceRequest,getAddFundsDataRequest,getEthereumIdRequest,freeWrgRequest} from './requests.js'
+import {sendCommentRequest,getBalanceRequest,getAddFundsDataRequest,getEthereumIdRequest,freeWrgRequest} from './requests.js';
 require('./iframeresize'); // require iframe resizer middleware
 
 var files = [];
@@ -248,4 +248,4 @@ $(document).ready(function () {
 
 window.chooseFile = () => {
     $("#fileInput").click();
-}
+};

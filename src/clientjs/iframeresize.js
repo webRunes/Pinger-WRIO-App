@@ -36,4 +36,4 @@ window.frameReady = () => {
     console.log(ht);
     parent.postMessage(JSON.stringify({"titterHeight":ht}), "*"); // signal that iframe is renered and ready to go, so we can calculate it's actual height now
     return true;
-}
+};
