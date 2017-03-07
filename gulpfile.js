@@ -104,7 +104,7 @@ gulp.task('nodemon', function() {
 
 });
 
-gulp.task('default', ['lint','babel-server']);
+gulp.task('default', ['lint','babel-server','client']);
 
 gulp.task('watch', ['default', 'nodemon'], function() {
     gulp.watch(['./src/**/*.js','!./src/clientjs/*.js'], ['babel-server']);
