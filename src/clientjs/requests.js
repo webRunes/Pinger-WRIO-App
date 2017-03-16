@@ -56,3 +56,14 @@ export const freeWrgRequest = () => $.ajax({
         'X-Requested-With':"XMLHttpRequest"
     }
 });
+
+export const txStatusRequest = (hash) => $.ajax({
+    url: getWebgoldUrl() +`/api/webgold/tx_poll?txhash=${hash}`,
+    type: "GET",
+    xhrFields: {
+        withCredentials: true
+    },
+    headers: {
+        'X-Requested-With':"XMLHttpRequest"
+    }
+});
