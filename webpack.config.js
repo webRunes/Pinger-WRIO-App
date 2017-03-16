@@ -3,7 +3,7 @@ var webpack = require('webpack');
 var envs = {};
 var minify = false;
 var e = {
-    entry: ['./src/clientjs/index.js'],
+    entry: ['babel-polyfill','./src/clientjs/index.js'],
     output:
     {
         path: '.',
