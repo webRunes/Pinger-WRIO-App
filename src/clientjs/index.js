@@ -6,6 +6,7 @@ require('./iframeresize'); // require iframe resizer middleware
 
 var files = [];
 
+window.getWebgoldUrl = getWebgoldUrl;
 
 
 window.keyPress = () => {
