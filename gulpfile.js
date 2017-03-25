@@ -10,6 +10,7 @@ var mocha = require('gulp-mocha');
 var eslint = require('gulp-eslint');
 var babel = require('gulp-babel');
 var babelify = require('babelify');
+var webpack = require('webpack');
 
 function restart_nodemon () {
     if (nodemon_instance) {
@@ -58,8 +59,6 @@ gulp.task('lint', function () {
 
 gulp.task('babel-server', function() {
 
-    gulp.src('src/views/**/*.*')
-        .pipe(gulp.dest('app/views'));
 
     return gulp.src(['src/**/*.*',"!src/views/*.*"])
         .pipe(babel())
@@ -72,6 +71,20 @@ gulp.task('babel-server', function() {
         });
 });
 
+gulp.task('client', (callback)=>{
+
+    gulp.src('src/views/**/*.*')
+        .pipe(gulp.dest('app/views'));
+    return  webpack(require('./webpack.config.js'),
+        function(err, stats) {
+            if(err) throw new gutil.PluginError("webpack", err);
+            console.log("[webpack]", stats.toString({
+                // output options
+            }));
+            callback();
+        });
+});
+
 var nodemon_instance;
 
 gulp.task('nodemon', function() {
@@ -81,7 +94,7 @@ gulp.task('nodemon', function() {
             script: 'server.js',
             watch: 'src/__manual_watch__',
             ext: '__manual_watch__',
-            verbose: false,
+            verbose: false
         }).on('restart', function() {
             console.log('~~~ restart server ~~~');
         });
@@ -91,8 +104,9 @@ gulp.task('nodemon', function() {
 
 });
 
-gulp.task('default', ['lint','babel-server']);
+gulp.task('default', ['lint','babel-server','client']);
 
 gulp.task('watch', ['default', 'nodemon'], function() {
-    gulp.watch(['./src/**/*.js'], ['babel-server']);
+    gulp.watch(['./src/**/*.js','!./src/clientjs/*.js'], ['babel-server']);
+    gulp.watch(['./src/clientjs/*.js','./src/views/*.ejs'], ['client']);
 });

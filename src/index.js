@@ -92,10 +92,6 @@ function server_setup(db) {
 
     });
 
-
-
-
-
     app.get('/logoff', function(request, response) {
         console.log("Logoff called");
         response.clearCookie('sid', {
@@ -106,7 +102,6 @@ function server_setup(db) {
         //response.redirect('/?create');
 
     });
-
 
     app.get('/callback', function(request, response) {
         console.log("Our callback called");
@@ -205,7 +200,7 @@ function server_setup(db) {
             images.unshift(data.media_id_string);
             console.log("Sending images: ", images);
         }
-        return await titterSender.replyP(cred, title + '\n' + message + ' Donate ' + amount + ' WRG', images);
+        return await titterSender.replyP(cred, title + '\n' + message + ' Donated ' + amount + ' THX', images);
     }
 
 
@@ -227,12 +222,12 @@ function server_setup(db) {
             var feepercent = 0;
             var donateResult = {};
             if (amount > 0 && to) {
-                console.log("Starting donate");
+                console.log("Donation process has been started");
                 donateResult = await requestDonate(request.user.wrioID, to, amount);
-                console.log("Donate result", donateResult);
-                amountUser = donateResult.amountUser / 100;
-                fee = donateResult.fee / 100;
-                feepercent = donateResult.feePercent;
+                console.log("Donation result", donateResult);
+                if (donateResult.success == false) {
+                    return response.status(403).send({error: donateResult.error});
+                }
             } else {
                 amount = 0;
             }
@@ -254,21 +249,20 @@ function server_setup(db) {
                 "status": 'Done',
                 "donated": amount,
                 amountUser: amountUser,
-                fee: fee,
-                feePercent: feepercent,
                 callback: donateResult.callback
             };
-            console.log("Donate result: ", donateResult);
+            console.log("Donation result: ", donateResult);
             response.send(donateResult);
 
 
         }));
 
     app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
+    app.use('/js/', express.static(path.join(__dirname, '.', '/clientjs/')));
 
     app.use(function (err, req, res, next) {
         dumpError(err);
-        res.status(403).send("There was error processing your request");
+        res.status(403).send("There was an error processing your request");
     });
 
     console.log("Titter server config finished");
