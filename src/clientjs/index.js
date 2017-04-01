@@ -69,6 +69,10 @@ const genFormData = () => {
         comment: posturl
     };
 
+    if (comment == "") {
+        comment = " "; // to address issue, when empty message is sent
+    }
+
     var len = files.length;
     if (len > 3) len = 3;
 
@@ -215,7 +219,7 @@ function InitTitter() {
 }
 
 var faucetInterval = false;
-window.wrgFaucet = async () => {
+window.wrgFaucet = () => (async () => {
     $('#faucetLoader').show();
     $('#faucetGroup').hide();
     if (faucetInterval) {
@@ -251,6 +255,7 @@ window.wrgFaucet = async () => {
                             clearInterval(faucetInterval);
                             $('#faucetLoader').hide();
                             $('#faucetGroup').show();
+                            $('#faucetMsg').html('');
                         }
                     },60*1000);
                     $('#faucetLoader').hide();
@@ -261,7 +266,7 @@ window.wrgFaucet = async () => {
         $('#faucetMsg').html("Failed to receive free THX, reason:"+err.responseText);
         $('#faucetLoader').hide();
     }
-};
+})();
 
 var noAccount = false;
 
