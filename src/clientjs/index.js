@@ -100,11 +100,12 @@ window.addEventListener('message', (msg)=> { // callback to listen data sent bac
         if (msgdata.txId) {
             console.log("GOT TX id to watch!", msgdata.txId);
             watchTX('...',msgdata.txId).then(()=> {
-
+                activateButton();
             }).catch(err => {
                 console.log(err);
                 $('#faucetMsg').html("Failed to process trasaction, reason:"+err.responseText);
                 $('#faucetLoader').hide();
+                activateButton();
             });
         }
     } catch (e) {}
@@ -125,17 +126,20 @@ function afterDonate() {
     console.log("successfully sent");
     $('#result').html("Successfully sent!").removeClass("redError");
     $('.comment-limit').html("Ok");
+    var $donatedStats = $('#donatedStats');
 
     //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
     if (data.status == "Done") {
         if (data.donated > 0) {
-            var $donatedStats = $('#donatedStats');
+
             $donatedStats.show();
             $donatedStats.attr('class','alert alert-success');
             $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed.");
-
+            return;
         }
     }
+    $donatedStats.hide();
+
     frameReady();
 }
 
