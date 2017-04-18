@@ -11,7 +11,13 @@
     </style>
     <script type="text/javascript">
 
-        var posturl = '<%= host %>';
+        function rmTrailingHash(url) {
+            let i = url.lastIndexOf('#');
+            console.log(i);
+            return url.substring(0,i);
+        }
+
+        var posturl = rmTrailingHash('<%= host %>');
         var filename = posturl.substring(posturl.lastIndexOf('/')+1);
         if (filename == "") {
             posturl = posturl + "index.html";
@@ -29,9 +35,13 @@
 </head>
 <body>
 <div id="frame_container">
+    <div id="unlock" style="display: none;flex-direction: row;justify-content: space-between;">
+        <span>&nbsp</span>
+        <button class="btn" style="margin-top: 45px;" onclick="raiseUnlockPopup();">Unlock your account </button>
+        <a href="#" style="margin:10px" onclick="cancelUnlock();">X</a>
+    </div>
     <div id="titter-id">
-        <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment"
-              role="form">
+        <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
 
             <form class="margin-bottom" role="form" >
                 <div class="well" style="display: none;" id="balancePane">

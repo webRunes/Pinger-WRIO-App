@@ -86,6 +86,59 @@ const genFormData = () => {
     return data;
 };
 
+window.raiseUnlockPopup = function () {
+    window.popupLink = window.open(window.cburl,'name','width=800,height=500');
+};
+
+window.addEventListener('message', (msg)=> { // callback to listen data sent back from the popup
+    console.log("GOT message",msg);
+    try {
+        let msgdata = JSON.parse(msg.data);
+        if (msgdata.closePopup) {
+            cancelUnlock();
+        }
+        if (msgdata.txId) {
+            console.log("GOT TX id to watch!", msgdata.txId);
+            watchTX('...',msgdata.txId).then(()=> {
+
+            }).catch(err => {
+                console.log(err);
+                $('#faucetMsg').html("Failed to process trasaction, reason:"+err.responseText);
+                $('#faucetLoader').hide();
+            });
+        }
+    } catch (e) {}
+
+});
+
+window.cancelUnlock = function() {
+    $('#titter-id').show();
+    $('#unlock').hide();
+    window.cburl = "";
+
+};
+
+function afterDonate() {
+    activateButton();
+    document.getElementById('comment').value = '';
+    document.getElementById('IDtweet_title').value = '';
+    console.log("successfully sent");
+    $('#result').html("Successfully sent!").removeClass("redError");
+    $('.comment-limit').html("Ok");
+
+    //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
+    if (data.status == "Done") {
+        if (data.donated > 0) {
+            var $donatedStats = $('#donatedStats');
+            $donatedStats.show();
+            $donatedStats.attr('class','alert alert-success');
+            $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you!");
+
+        }
+    }
+    frameReady();
+}
+
 function sendTitterComment(amountdonated) {
 
     $('.comment-limit').html("Loading");
@@ -98,28 +151,15 @@ function sendTitterComment(amountdonated) {
     sendCommentRequest(genFormData(),params).done((data) => {
         console.log(data);
         if (data.callback) {
-            window.location.href = data.callback; // TODO: make popup instead
+            $('#titter-id').hide();
+            $('#unlock').show().css('display', 'flex');
+            window.cburl = data.callback;
             return;
         }
 
-        activateButton();
-        document.getElementById('comment').value = '';
-        document.getElementById('IDtweet_title').value = '';
-        console.log("successfully sent");
-        $('#result').html("Successfully sent!").removeClass("redError");
-        $('.comment-limit').html("Ok");
+        afterDonate();
 
-        //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
-        if (data.status == "Done") {
-            if (data.donated > 0) {
-                var $donatedStats = $('#donatedStats');
-                $donatedStats.show();
-                $donatedStats.attr('class','alert alert-success');
-                $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you!");
 
-            }
-        }
-        frameReady();
     }).fail(function (request) {
         activateButton();
         $('.comment-limit').html("Fail");
@@ -220,27 +260,9 @@ function InitTitter() {
 
 var faucetInterval = false;
 window.wrgFaucet = () => (async () => {
-    $('#faucetLoader').show();
-    $('#faucetGroup').hide();
-    if (faucetInterval) {
-        clearInterval(faucetInterval);
-    }
     try {
         let data = await freeWrgRequest();
-        const NUM_TRIES = 3;
-        const TRY_DELAY = 10000;
-        $('#faucetMsg').html(`<a href="${data.txurl}">Transaction</a> processing, please wait`);
-        for (let i=0;i<NUM_TRIES;i++) {
-            await delay(TRY_DELAY);
-            let txStatus = await txStatusRequest(data.txhash);
-            console.log("Status",txStatus);
-            if (txStatus.blockNumber) {
-                break;
-            }
-        }
-        await queryBalance();
-        $('#faucetLoader').hide();
-        $('#faucetGroup').show();
+        await watchTX(data.txUrl,data.txhash);
     } catch (err) {
         if (err.responseJSON) {
             let r = err.responseJSON;
@@ -266,7 +288,34 @@ window.wrgFaucet = () => (async () => {
         $('#faucetMsg').html("Failed to receive free THX, reason:"+err.responseText);
         $('#faucetLoader').hide();
     }
+
+
 })();
+
+async function watchTX(txUrl,txHash) {
+    $('#faucetLoader').show();
+    $('#faucetGroup').hide();
+    if (faucetInterval) {
+        clearInterval(faucetInterval);
+    }
+    const NUM_TRIES = 5;
+    const TRY_DELAY = 15000;
+    $('#faucetMsg').html(`<a href="${txUrl}">Transaction</a> processing, please wait`);
+    for (let i=0;i<NUM_TRIES;i++) {
+        await delay(TRY_DELAY);
+        let txStatus = await txStatusRequest(txHash);
+        console.log("Status",txStatus);
+        if (txStatus.blockNumber) {
+            break;
+        }
+    }
+    await queryBalance();
+    $('#faucetLoader').hide();
+    $('#faucetGroup').show();
+    $('#faucetMsg').html('');
+
+}
+
 
 var noAccount = false;
 

@@ -12,10 +12,21 @@ import request from 'superagent';
 import {startPhantom,getSharedWidgetID} from './widget-extractor/phantom.js';
 import {server,db,utils,login} from 'wriocommon';
 import logger from 'winston';
+import DeferredTweet from './dbmodels/DeferredTweet.js';
+import amqplib from 'amqplib';
+
 
 var DOMAIN = nconf.get('db:workdomain');
 var dumpError = utils.dumpError;
 let {wrap,wrioAuth} = login;
+
+var queuePromise = require('amqplib').connect('amqp://rabbitmq');
+
+queuePromise.then(()=>console.log('Connected to the queue')).catch((err)=>{
+    console.log("Unable connect to the queue, aborting",err);
+    process.exit(-1);
+});
+
 
 var app = express();
 app.ready = function() {};
@@ -53,7 +64,7 @@ function getTwitterCredentials(request) {
 }
 
 function server_setup(db) {
-
+    handleDeferred();
     //wrioLogin = require('./wriologin')(db);
 
     app.set('views', __dirname + '/views');
@@ -147,105 +158,63 @@ function server_setup(db) {
 
     /* Request donate from webgold via api*/
 
-    function requestDonate(from, to, amount) {
-        return new Promise((resolve, reject) => {
-            var proto = 'https:';
+    async function requestDonate(from, to, amount) {
+            let proto = 'https:';
             if (nconf.get('server:workdomain') == '.wrioos.local') {
                 proto = 'http:';
             }
-            var url = proto+ '//webgold' +
+            const url = proto+ '//webgold' +
                 nconf.get('server:workdomain') + "/api/webgold/donate?amount=" +
                 amount + "&to=" + to + "&from=" + from;
 
-            var login = nconf.get("service2service:login");
-            var pass =  nconf.get("service2service:password");
+            const login = nconf.get("service2service:login");
+            const pass =  nconf.get("service2service:password");
 
-            console.log(url);
-            request
+            let res = await request
                 .get(url)
-                .auth(login, pass)
-                .end((err, res) => {
-                    if (err) {
-                        if (!res) {
-                            console.log(err);
-                            return reject(err);
-                        }
-                        if (res.body) {
-                            if (res.body.error) {
-                                return reject(res.body.error);
-                            }
-                        }
-                    return reject(err);
-                }
-                resolve(res.body);
-            });
-        });
+                .auth(login, pass);
+
+            return res.body;
 
     }
 
-    async function sendTitterComment (cred, amount, text, images, title,message) { // sends comment and
-        console.log("SendTitterComment");
-
-        if (text) {
-            var filename = await titterPicture.drawCommentP(text);
-            var data = await titterSender.uploadP(cred, filename);
-
-            try {
-                console.log(data);
-                data = JSON.parse(data);
-            } catch (e) {}
-            if (data['errors']) {
-                throw new Error("Upload failed, check twitter credentials ");
-            }
-            images.unshift(data.media_id_string);
-            console.log("Sending images: ", images);
-        }
-        return await titterSender.replyP(cred, title + '\n' + message + ' Donated ' + amount + ' THX', images);
-    }
 
 
 
     app.post('/sendComment', multer().array('images[]'), wrioAuth, wrap(async(request, response) => {
-            var text = request.body.text;
-            var title = request.body.title || '';
-            var message = request.body.comment || '';
-            var ssid = request.sessionID || '';
-            var images = [];
+            let text = request.body.text;
+            let title = request.body.title || '';
+            let message = request.body.comment || '';
+            let amount = request.query.amount;
+            let to = request.query.to;
+
+            let queuename = '';
 
             console.log("Sending comment " + message);
-            var cred = getTwitterCredentials(request);
-            var amount = request.query.amount;
-            var to = request.query.to;
 
-            var amountUser = 0;
-            var fee = 0;
-            var feepercent = 0;
-            var donateResult = {};
+            let amountUser = 0;
+            let donateResult = {};
+            let creds = getTwitterCredentials(request);
             if (amount > 0 && to) {
-                console.log("Donation process has been started");
+                console.log("Donation request process has been started");
                 donateResult = await requestDonate(request.user.wrioID, to, amount);
-                console.log("Donation result", donateResult);
+                console.log("Donation request result", donateResult);
                 if (donateResult.success == false) {
                     return response.status(403).send({error: donateResult.error});
                 }
+
+                let d = new DeferredTweet(); //send tweet later, when transaction executed
+                await d.create(donateResult.txID,amount,text,title,message,creds);
+
             } else {
                 amount = 0;
+                if (request.files.length > 0 || text ) { // handle attached files
+                    console.log("Sending tweet right away");
+                    await sendTweet(amount,text,title,message,await extractFiles(creds, request.files),creds);
+                }
             }
 
-            console.log("got keys", cred);
-            if (request.files.length > 0 || text) { // handle attached files
-                console.log("handling attached files:");
-                var files = request.files;
-                for (var file in files) {
-                    var data = await titterSender.uploadP(cred, files[file].buffer);
-                    try {
-                        data = JSON.parse(data);
-                    } catch (e) {}
-                    images.push(data.media_id_string);
-                }
-                await sendTitterComment(cred, amount,text,images,title,message);
-            }
-            var donateResult = {
+            donateResult = {
                 "status": 'Done',
                 "donated": amount,
                 amountUser: amountUser,
@@ -257,6 +226,16 @@ function server_setup(db) {
 
         }));
 
+
+
+    // extracts media_id's from the request.files property
+    async function extractFiles(cred,files) {
+        const data = await Promise.all(files.map((file) => { // upload in parallel
+            return titterSender.uploadP(cred, file.buffer);
+        }));
+        return data.map((data) => data.media_id_string);
+    }
+
     app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
     app.use('/js/', express.static(path.join(__dirname, '.', '/clientjs/')));
 
@@ -267,5 +246,60 @@ function server_setup(db) {
 
     console.log("Titter server config finished");
 };
+
+async function sendTitterComment (cred, amount, text, images, title,message) { // sends comment and
+    console.log("SendTitterComment");
+
+    if (text) {
+        var filename = await titterPicture.drawCommentP(text);
+        var data = await titterSender.uploadP(cred, filename);
+
+        try {
+            console.log(data);
+            data = JSON.parse(data);
+        } catch (e) {}
+        if (data['errors']) {
+            throw new Error("Upload failed, check twitter credentials ");
+        }
+        images.unshift(data.media_id_string);
+        console.log("Sending images: ", images);
+    }
+    return await titterSender.replyP(cred, title + '\n' + message + ' Donated ' + amount + ' THX', images);
+}
+
+
+async function sendTweet(amount,text,title,message,files,creds) {
+    console.log("got keys", creds);
+    await sendTitterComment(creds, amount, text, files, title, message);
+}
+
+// handle tweets, that will be sent after the money transfer
+
+async function handleDeferred () {
+    const queue = await queuePromise;
+    const queuename = 'deferredTweets';
+    console.log("handling attached files:",queuename);
+    let ch = await queue.createChannel();
+    await ch.assertQueue(queuename);
+    ch.consume(queuename,async (msg) => {
+        try {
+            if (msg !== null) {
+                const payload = msg.content.toString();
+                console.log("Got response from the queue, sending tweet", payload);
+                let d = new DeferredTweet();
+                let tweetData = await d.get({associatedTx: payload});
+                if (tweetData) {
+                    await sendTweet(tweetData.amount, tweetData.text, tweetData.title, tweetData.message,[],tweetData.creds);
+                } else {
+                    console.log("Cannot find deferred tweet", msg);
+                }
+            }
+        } catch (e) {
+            console.log("Error during message received from the queue",e);
+            dumpError(e);
+        }
+
+    },{noAck: true});
+}
 
 module.exports = app; // For unit testing purposes
