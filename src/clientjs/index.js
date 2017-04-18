@@ -132,12 +132,13 @@ function afterDonate() {
             var $donatedStats = $('#donatedStats');
             $donatedStats.show();
             $donatedStats.attr('class','alert alert-success');
-            $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you!");
+            $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed.");
 
         }
     }
     frameReady();
 }
+
 
 function sendTitterComment(amountdonated) {
 
@@ -158,8 +159,6 @@ function sendTitterComment(amountdonated) {
         }
 
         afterDonate();
-
-
     }).fail(function (request) {
         activateButton();
         $('.comment-limit').html("Fail");
