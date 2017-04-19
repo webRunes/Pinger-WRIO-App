@@ -6,7 +6,7 @@ var e = {
     entry: ['babel-polyfill','./src/clientjs/index.js'],
     output:
     {
-        path: '.',
+        path: path.resolve(__dirname,'.'),
         filename: './app/clientjs/bundle.js',
         devtoolModuleFilenameTemplate: '[absolute-resource-path]'
     },
