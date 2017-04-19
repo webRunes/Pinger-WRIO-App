@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1251",
+  "version": "1.0.1254",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -8,25 +8,26 @@
     ]
   },
   "dependencies": {
+    "amqplib": "^0.5.1",
     "canvas": "1.4.0",
     "cookie-parser": "^1.4.0",
-    "eslint-plugin-ideal": "^0.1.2",
-    "eslint-plugin-react": "^3.1.0",
+    "ejs": "^1.0.0",
     "es6-promise": "^2.1.1",
     "es6-promisify": "^3.0.0",
-    "ejs": "^1.0.0",
+    "eslint-plugin-ideal": "^0.1.2",
+    "eslint-plugin-react": "^3.1.0",
     "express": "^4.10.1",
     "express-session": "^1.12.1",
+    "multer": "^1.1.0",
     "nconf": "^0.8.2",
-    "phantom": "^2.0.10",
     "node-twitter": "^0.5.3",
     "node-twitter-api": "^1.7.4",
     "p3p": "0.0.2",
-    "temp": "^0.8.3",
-    "multer": "^1.1.0",
+    "phantom": "^2.0.10",
     "should": "^6.0.3",
-    "wriocommon": "webRunes/WRIOOS-Common",
-    "winston": "^2.2.0"
+    "temp": "^0.8.3",
+    "winston": "^2.2.0",
+    "wriocommon": "webRunes/WRIOOS-Common"
   },
   "devDependencies": {
     "babel-cli": "^6.4.0",
@@ -47,8 +48,8 @@
     "gulp-mocha": "^2.2.0",
     "eslint": "2.2.0",
     "gulp-eslint": "2.0.0",
-    "webpack": "1.13.3",
-    "webpack-dev-middleware": "1.8.4"
+    "webpack": "2.3.3",
+    "webpack-dev-middleware": "1.10.1"
   },
   "scripts": {
     "start": "echo Ok",
