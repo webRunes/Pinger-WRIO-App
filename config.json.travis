@@ -16,5 +16,9 @@
 		"cookiesecret": "keyboard.cat",
 		"port": 5003,
 		"workdomain": ".wrioos.com"
-	}
+	},
+	 "rabbitmq": {
+        "tweetQueue": "deferredTweets",
+        "url": "amqp://rabbitmq"
+      }
 }

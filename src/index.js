@@ -20,7 +20,7 @@ var DOMAIN = nconf.get('db:workdomain');
 var dumpError = utils.dumpError;
 let {wrap,wrioAuth} = login;
 
-var queuePromise = require('amqplib').connect('amqp://rabbitmq');
+var queuePromise = require('amqplib').connect(nconf.get('rabbitmq:url'));
 
 queuePromise.then(()=>console.log('Connected to the queue')).catch((err)=>{
     console.log("Unable connect to the queue, aborting",err);
@@ -277,8 +277,8 @@ async function sendTweet(amount,text,title,message,files,creds) {
 
 async function handleDeferred () {
     const queue = await queuePromise;
-    const queuename = 'deferredTweets';
-    console.log("handling attached files:",queuename);
+    const queuename = nconf.get('rabbitmq:tweetQueue');
+    console.log("Listening to the queue",queuename);
     let ch = await queue.createChannel();
     await ch.assertQueue(queuename);
     ch.consume(queuename,async (msg) => {
