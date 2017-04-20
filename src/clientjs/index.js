@@ -2,12 +2,14 @@
 
 import {getCookie,getLoginUrl,getWebgoldUrl,saveDraft,loadDraft,delay} from './utils.js';
 import {sendCommentRequest,getBalanceRequest,getAddFundsDataRequest,getEthereumIdRequest,freeWrgRequest,txStatusRequest} from './requests.js';
+import {sanitizePostUrl} from './urlutils.js';
 require('./iframeresize'); // require iframe resizer middleware
 
 var files = [];
 
 window.getWebgoldUrl = getWebgoldUrl;
 
+var posturl = sanitizePostUrl(url_params.posturl);
 
 window.keyPress = () => {
     var comment = document.getElementById('comment').value;

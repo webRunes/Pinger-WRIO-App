@@ -11,16 +11,8 @@
     </style>
     <script type="text/javascript">
 
-        function rmTrailingHash(url) {
-            let i = url.lastIndexOf('#');
-            console.log(i);
-            return url.substring(0,i);
-        }
-
-        var posturl = rmTrailingHash('<%= host %>');
-        var filename = posturl.substring(posturl.lastIndexOf('/')+1);
-        if (filename == "") {
-            posturl = posturl + "index.html";
+        var url_params = {
+            posturl: '<%= host %>'
         }
 
         <% if (user) { %>
@@ -118,7 +110,7 @@
                 <div class="pull-right">
                     <label class="comment-limit">1024</label>
                     <% if (user) { %>
-                    <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
+                    <button type="button" id="" class="btn btn-primary" onclick="sendComment();">
                         <span class="glyphicon glyphicon-ok"></span>
                         <img src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
                         Send
