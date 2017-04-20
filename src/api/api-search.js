@@ -27,8 +27,10 @@ router.post('/search', function(request, response) {
                     statuses: data.statuses
                 });
         } else {
-            response.status(404)
-                .send('Nothing found');
+            response.status(200)
+                .json({
+                    statuses: []
+                });
         }
     });
 });
