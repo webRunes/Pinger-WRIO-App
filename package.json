@@ -56,6 +56,7 @@
     "bumpVersion": "npm run version",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
+    "shell": "docker exec -it wriolocaldev_titter_1 sh",
     "test": "gulp start"
   },
   "repository": {

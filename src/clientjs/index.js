@@ -9,7 +9,7 @@ var files = [];
 
 window.getWebgoldUrl = getWebgoldUrl;
 
-var posturl = sanitizePostUrl(url_params.posturl);
+window.posturl = sanitizePostUrl(url_params.posturl);
 
 window.keyPress = () => {
     var comment = document.getElementById('comment').value;

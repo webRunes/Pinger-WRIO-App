@@ -179,51 +179,52 @@ function server_setup(db) {
     }
 
 
+    app.post('/requestDonate', multer().array('images[]'), wrioAuth, wrap(async(request, response) => {
 
+        let text = request.body.text;
+        let title = request.body.title || '';
+        let message = request.body.comment || '';
+        let amount = request.query.amount;
+        let to = request.query.to;
+        let creds = getTwitterCredentials(request);
+
+        console.log("Requesting donate " + message);
+
+        let amountUser = 0;
+        let donateResult = {};
+
+        donateResult = await requestDonate(request.user.wrioID, to, amount);
+        console.log("Donation request result", donateResult);
+        if (donateResult.success == false) {
+            return response.status(403).send({error: donateResult.error});
+        }
+
+        let d = new DeferredTweet(); //send tweet later, when transaction executed
+        await d.create(donateResult.txID,amount,text,title,message,creds);
+
+        donateResult = {
+            "status": 'Done',
+            "donated": amount,
+            amountUser: amountUser,
+            callback: donateResult.callback
+        };
+        console.log("Donation result: ", donateResult);
+        response.send(donateResult);
+
+    });
 
     app.post('/sendComment', multer().array('images[]'), wrioAuth, wrap(async(request, response) => {
-            let text = request.body.text;
+            let text = request.body.text || " ";
             let title = request.body.title || '';
             let message = request.body.comment || '';
-            let amount = request.query.amount;
-            let to = request.query.to;
-
-            let queuename = '';
 
             console.log("Sending comment " + message);
-
-            let amountUser = 0;
-            let donateResult = {};
             let creds = getTwitterCredentials(request);
-            if (amount > 0 && to) {
-                console.log("Donation request process has been started");
-                donateResult = await requestDonate(request.user.wrioID, to, amount);
-                console.log("Donation request result", donateResult);
-                if (donateResult.success == false) {
-                    return response.status(403).send({error: donateResult.error});
-                }
 
-                let d = new DeferredTweet(); //send tweet later, when transaction executed
-                await d.create(donateResult.txID,amount,text,title,message,creds);
-
-            } else {
-                amount = 0;
-                if (request.files.length > 0 || text ) { // handle attached files
-                    console.log("Sending tweet right away");
-                    await sendTweet(amount,text,title,message,await extractFiles(creds, request.files),creds);
-                }
-            }
-
-            donateResult = {
-                "status": 'Done',
-                "donated": amount,
-                amountUser: amountUser,
-                callback: donateResult.callback
-            };
-            console.log("Donation result: ", donateResult);
-            response.send(donateResult);
-
-
+            amount = 0;
+            console.log("Sending tweet right away");
+            await sendTweet(amount,text,title,message,await extractFiles(creds, request.files),creds);
+            response.send({status:done});
         }));
 
 
