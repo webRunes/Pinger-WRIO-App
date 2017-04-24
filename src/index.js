@@ -241,7 +241,7 @@ function server_setup(db) {
 
     app.use(function (err, req, res, next) {
         dumpError(err);
-        res.status(403).send("There was an error processing your request");
+        res.status(403).send("There was an error processing your request. The error might be caused by Adblock or other disablers.");
     });
 
     console.log("Titter server config finished");
