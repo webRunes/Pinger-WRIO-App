@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1272",
+  "version": "1.0.1275",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "browserify": {
     "transform": [
@@ -24,6 +24,7 @@
     "node-twitter-api": "^1.7.4",
     "p3p": "0.0.2",
     "phantom": "^2.0.10",
+    "prettier": "^1.2.2",
     "should": "^6.0.3",
     "temp": "^0.8.3",
     "winston": "^2.2.0",
@@ -56,6 +57,7 @@
     "bumpVersion": "npm run version",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
+    "shell": "docker exec -it wriolocaldev_titter_1 sh",
     "test": "gulp start"
   },
   "repository": {
