@@ -27,11 +27,6 @@
 </head>
 <body>
 <div id="frame_container">
-    <div id="unlock" style="display: none;flex-direction: row;justify-content: space-between;">
-        <span>&nbsp</span>
-        <button class="btn" style="margin-top: 45px;" onclick="raiseUnlockPopup();">Unlock your account </button>
-        <a href="#" style="margin:10px" onclick="cancelUnlock();">X</a>
-    </div>
     <div id="titter-id">
         <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
 
@@ -44,11 +39,12 @@
                     <p>You can receive 10 THX every hour free of charge</p>
                     <p>Rating <span id="rtx">0</span></p>
                     <br />
-                    <img id="faucetLoader" src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
                     <span id="faucetMsg"> </span>
                     <span id="faucetGroup">
-                        <a class="btn btn-sm btn-success" href="javascript:;" onclick="wrgFaucet()"><span
-                            class="glyphicon glyphicon-thumbs-up"></span>Get free Thanks coins</a>
+                        <a id="faucetButton" class="btn btn-sm btn-success" href="javascript:;" onclick="wrgFaucet()"><span
+                            class="glyphicon glyphicon-thumbs-up"></span><span id="faucetText">Get free Thanks coins</span>
+                            <img id="faucetLoader" src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
+                        </a>
                         <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins_(THX)" target="_parent"><span
                             class="glyphicon"></span>What are Thanks coins?</a>
                     </span>
