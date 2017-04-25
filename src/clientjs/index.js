@@ -114,16 +114,27 @@ window.addEventListener("message", msg => {
     if (msgdata.closePopup) {
       cancelUnlock();
     }
+    if (msgdata.cancelPopup) {
+      console.log("Canceling popup");
+      activateButton();
+      cancelUnlock();
+    }
     if (msgdata.txId) {
       console.log("GOT TX id to watch!", msgdata.txId);
+      resultMsg(
+          "You've donated " +
+          window.savedAmount +
+          " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed."
+      );
+      activateButton();
       watchTX("...", msgdata.txId)
         .then(() => {
-          activateButton();
+          //afterDonate(window.savedAmount);
         })
         .catch(err => {
           console.log(err);
-          $("#faucetMsg").html(
-            "Failed to process trasaction, reason:" + err.responseText
+          resultMsg(
+            "Failed to process trasaction, reason:" + err.responseText,true
           );
           $("#faucetLoader").hide();
           activateButton();
@@ -135,44 +146,49 @@ window.addEventListener("message", msg => {
 window.cancelUnlock = function() {
   $("#titter-id").show();
   $("#unlock").hide();
-  window.cburl = "";
+
 };
 
-function afterDonate(data) {
+function resultMsg(text,error) {
+  let cls = error ? "alert-danger" : 'alert-success';
+  let $donatedStats = $("#donatedStats");
+  $donatedStats.show();
+  $donatedStats.attr("class", "alert "+cls);
+  window.cburl = "";
+  $("#donatedAmount").html(text);
+}
+function resultHide() {
+  let $donatedStats = $("#donatedStats");
+  $donatedStats.hide();
+}
+
+function afterDonate(amount) {
   activateButton();
   document.getElementById("comment").value = "";
   document.getElementById("IDtweet_title").value = "";
   console.log("successfully sent");
   $("#result").html("Successfully sent!").removeClass("redError");
   $(".comment-limit").html("Ok");
-  var $donatedStats = $("#donatedStats");
 
-  //prev: "You've donated " + data.donated + " WRG. The author received "+ data.feePercent + " %, which amounts to a " + data.amountUser + "WRG or 0.19 USD. Thank you!"
-  if (data.status == "Done") {
-    if (data.donated > 0) {
-      $donatedStats.show();
-      $donatedStats.attr("class", "alert alert-success");
-      $("#donatedAmount").html(
-        "You've donated " +
-          data.donated +
-          " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed."
-      );
-      return;
-    }
+
+  if (amount == 0) {
+    resultMsg("Your message has been sent, it may take a few minutes before you comment is displayed.");
   }
-  $donatedStats.hide();
 
   frameReady();
 }
 
 function sendTitterComment(amount) {
   $(".comment-limit").html("Loading");
+  // empty /donatePopup is opened. it's waiting for the message to arrive with callback address
   let popup;
   let params = "";
   if (amount > 0 && recipientWrioID) {
     params = "to=" + recipientWrioID + "&amount=" + amount;
     popup = raiseUnlockPopup('/donatePopup');
   }
+
+  window.savedAmount = amount; //saving amount as global, quick hack, TODO : fix it later
   deactivateButton();
   let command = amount > 0 ? sendDonateRequest : sendCommentRequest;
   command(genFormData(), params)
@@ -183,7 +199,7 @@ function sendTitterComment(amount) {
         return;
       }
 
-      //afterDonate(donate);
+      afterDonate(amount);
     })
     .fail(function(request) {
 
@@ -200,12 +216,8 @@ function sendTitterComment(amount) {
           errCode = request.responseJSON.error;
         }
       }
-
-      var $donatedStats = $("#donatedStats");
-      $donatedStats.show();
-      $donatedStats.attr("class", "alert alert-danger");
-      $("#donatedAmount").html(
-        'There was error during donation: "' + errCode + '"'
+      resultMsg(
+        'There was error during donation: "' + errCode + '"',true
       );
       frameReady();
     });
@@ -292,49 +304,62 @@ function InitTitter() {
 var faucetInterval = false;
 window.wrgFaucet = () =>
   (async () => {
+    const disableButton = () => {
+      $('#faucetButton').addClass('disabled');
+    };
+    const enableButton = () => {
+      $('#faucetButton').removeClass('disabled');
+      $("#faucetText").html("Get free Thanks coins");
+    };
+    const startProgress = (timeleft) =>{
+      const setText = (minutes) => $("#faucetText").html(`Wait ${Math.round(minutes)} minutes`);
+      setText(timeleft);
+      let minutes = timeleft;
+      faucetInterval = setInterval(() => {
+        setText(minutes--);
+        if (minutes < 0) {
+          clearInterval(faucetInterval);
+          enableButton();
+        }
+      }, 60 * 1000);
+    };
     try {
+      disableButton();
+      $('#faucetLoader').show();
       let data = await freeWrgRequest();
+      $('#faucetLoader').hide();
+      resultMsg("Success! You'll get 10THX in a minute");
+      startProgress(60);
       await watchTX(data.txUrl, data.txhash);
     } catch (err) {
+      $('#faucetLoader').hide();
       if (err.responseJSON) {
         let r = err.responseJSON;
         if (r.reason == "wait") {
           if (r.timeleft > 0) {
-            $("#faucetMsg").html(`Wait ${Math.round(r.timeleft)} minutes`);
-            let minutes = r.timeleft;
-            faucetInterval = setInterval(() => {
-              $("#faucetMsg").html(`Wait ${Math.round(minutes)} minutes`);
-              minutes--;
-              if (minutes < 0) {
-                clearInterval(faucetInterval);
-                $("#faucetLoader").hide();
-                $("#faucetGroup").show();
-                $("#faucetMsg").html("");
-              }
-            }, 60 * 1000);
-            $("#faucetLoader").hide();
+            startProgress(r.timeleft);
             return;
           }
         }
       }
-      $("#faucetMsg").html(
-        "Failed to receive free THX, reason:" + err.responseText
+      resultMsg(
+        "Failed to receive free THX, reason:" + err.responseText,true
       );
-      $("#faucetLoader").hide();
+      enableButton();
     }
   })();
 
 async function watchTX(txUrl, txHash) {
-  $("#faucetLoader").show();
-  $("#faucetGroup").hide();
+  //$("#faucetLoader").show();
+  //$("#faucetGroup").hide();
   if (faucetInterval) {
     clearInterval(faucetInterval);
   }
   const NUM_TRIES = 5;
   const TRY_DELAY = 15000;
-  $("#faucetMsg").html(
+  /*$("#faucetMsg").html(
     `<a href="${txUrl}">Transaction</a> processing, please wait`
-  );
+  );*/
   for (let i = 0; i < NUM_TRIES; i++) {
     await delay(TRY_DELAY);
     let txStatus = await txStatusRequest(txHash);
@@ -344,9 +369,9 @@ async function watchTX(txUrl, txHash) {
     }
   }
   await queryBalance();
-  $("#faucetLoader").hide();
-  $("#faucetGroup").show();
-  $("#faucetMsg").html("");
+  //$("#faucetLoader").hide();
+  //$("#faucetGroup").show();
+  //$("#faucetMsg").html("");
 }
 
 var noAccount = false;
