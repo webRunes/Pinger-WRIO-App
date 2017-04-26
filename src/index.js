@@ -152,6 +152,14 @@ function server_setup(db) {
 
   /* Request donate from webgold via api*/
 
+    app.use('/', express.static(path.join(__dirname, '..', '/hub/')));
+    app.use('/js/', express.static(path.join(__dirname, '.', '/clientjs/')));
+
+    app.use(function (err, req, res, next) {
+        dumpError(err);
+        res.status(403).send("There was an error processing your request. The error might be caused by Adblock or other disablers.");
+    });
+
   async function requestDonate(from, to, amount) {
     let proto = "https:";
     if (nconf.get("server:workdomain") == ".wrioos.local") {
