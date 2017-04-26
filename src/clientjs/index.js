@@ -156,10 +156,12 @@ function resultMsg(text,error) {
   $donatedStats.attr("class", "alert "+cls);
   window.cburl = "";
   $("#donatedAmount").html(text);
+  frameReady();
 }
 function resultHide() {
   let $donatedStats = $("#donatedStats");
   $donatedStats.hide();
+  frameReady();
 }
 
 function afterDonate(amount) {
