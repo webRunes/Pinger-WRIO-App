@@ -223,18 +223,12 @@ function sendTitterComment(amount) {
     });
 }
 
-var exchangeRate;
-
 function updateBalance(balance, rtx) {
   $("#balancestuff").show();
   if (balance) {
     $("#wrgBalance").html("&nbsp" + balance);
   }
   $("#rtx").html("&nbsp" + rtx);
-  if (exchangeRate && balance) {
-    var usdBalance = exchangeRate * balance / 10000;
-    $("#usdBalance").html("&nbsp" + usdBalance.toFixed(2));
-  }
   frameReady();
 }
 
@@ -247,20 +241,6 @@ const queryBalance = async () => {
     frameReady();
   } catch (err) {
     $("#wrgBalance").html("&nbsp" + 0);
-    if (!noAccount) $("#balancePane").show();
-    frameReady();
-  }
-};
-
-const queryRates = async () => {
-  try {
-    let data = await getAddFundsDataRequest();
-    console.log(data);
-    exchangeRate = data.exchangeRate;
-    updateBalance();
-  } catch (err) {
-    $("#balancestuff").hide();
-    throw new Error("Cannot get exchange rates!!!!");
     if (!noAccount) $("#balancePane").show();
     frameReady();
   }
@@ -298,7 +278,6 @@ function InitTitter() {
     );
   }
   queryBalance();
-  queryRates();
 }
 
 var faucetInterval = false;
