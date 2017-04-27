@@ -60,7 +60,7 @@ gulp.task('lint', function () {
 gulp.task('babel-server', function() {
 
 
-    return gulp.src(['src/**/*.*',"!src/views/*.*"])
+    return gulp.src(['src/**/*.*',"!src/views/**.*"])
         .pipe(babel())
         .on('error', function(err) {
             console.log('Babel server:', err.toString());

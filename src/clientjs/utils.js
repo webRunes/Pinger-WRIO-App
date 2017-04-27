@@ -50,5 +50,6 @@ export function saveDraft() {
     window.localStorage['draft_title'] = title;
 }
 
+
 export const delay = (time) => new Promise((resolve,reject) => setTimeout(resolve,time));
 
