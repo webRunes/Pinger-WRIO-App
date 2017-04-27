@@ -11,10 +11,8 @@
     </style>
     <script type="text/javascript">
 
-        var posturl = '<%= host %>';
-        var filename = posturl.substring(posturl.lastIndexOf('/')+1);
-        if (filename == "") {
-            posturl = posturl + "index.html";
+        var url_params = {
+            posturl: '<%= host %>'
         }
 
         <% if (user) { %>
@@ -30,8 +28,7 @@
 <body>
 <div id="frame_container">
     <div id="titter-id">
-        <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment"
-              role="form">
+        <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
 
             <form class="margin-bottom" role="form" >
                 <div class="well" style="display: none;" id="balancePane">
@@ -40,20 +37,21 @@
                         <sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
                     </sup></h4>
                     <p>You can receive 10 THX every hour free of charge</p>
-                    <p>Rating <span id="rtx">0</span> RTX</p>
+                    <p>Rating <span id="rtx">0</span></p>
                     <br />
-                    <img id="faucetLoader" src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
                     <span id="faucetMsg"> </span>
                     <span id="faucetGroup">
-                        <a class="btn btn-sm btn-success" href="javascript:wrgFaucet();"><span
-                            class="glyphicon glyphicon-thumbs-up"></span>Get free Thanks coins</a>
+                        <a id="faucetButton" class="btn btn-sm btn-success" href="javascript:;" onclick="wrgFaucet()"><span
+                            class="glyphicon glyphicon-thumbs-up"></span><span id="faucetText">Get free Thanks coins</span>
+                            <img id="faucetLoader" src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
+                        </a>
                         <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins_(THX)" target="_parent"><span
                             class="glyphicon"></span>What are Thanks coins?</a>
                     </span>
                 </div>
                 <div id="createwallet" style="display:none" class="well">
                     <h4> You don't have a wallet yet.
-                    <a href="javascript:;" target="popup" class="btn btn-sm btn-success" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=800,height=500')">Create</a>
+                    <button type="button" target="popup" class="btn btn-sm btn-success" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=800,height=500')">Create</button>
                     </h4>
                 </div>
                 <div class="callout warning col-xs-12" style="display:none" id="noAuthor">

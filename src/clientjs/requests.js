@@ -13,6 +13,15 @@ export const sendCommentRequest = (data,params) => $.ajax({
     data: data
 });
 
+export const sendDonateRequest = (data,params) => $.ajax({
+    url: '/requestDonate?' + params,
+    type: 'post',
+    processData: false, // Не обрабатываем файлы (Don't process the files)
+    contentType: false,
+    dataType: 'json',
+    data: data
+});
+
 export const getBalanceRequest = () => $.ajax({
     url: getWebgoldUrl() + '/api/webgold/get_balance',
     type: "GET",
@@ -48,6 +57,17 @@ export const getEthereumIdRequest = () => $.ajax({
 
 export const freeWrgRequest = () => $.ajax({
     url: getWebgoldUrl() + '/api/webgold/free_wrg?amount=100',
+    type: "GET",
+    xhrFields: {
+        withCredentials: true
+    },
+    headers: {
+        'X-Requested-With':"XMLHttpRequest"
+    }
+});
+
+export const txStatusRequest = (hash) => $.ajax({
+    url: getWebgoldUrl() +`/api/webgold/tx_poll?txhash=${hash}`,
     type: "GET",
     xhrFields: {
         withCredentials: true
