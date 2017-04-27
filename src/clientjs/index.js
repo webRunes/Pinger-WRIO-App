@@ -110,7 +110,7 @@ function sendTitterComment(amountdonated) {
                 var $donatedStats = $('#donatedStats');
                 $donatedStats.show();
                 $donatedStats.attr('class','alert alert-success');
-                $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed.");
+                $('#donatedAmount').html("You've donated " + data.donated + " THX. Thank you! It may take a few minutes before your comment is displayed.");
 
             }
         }
