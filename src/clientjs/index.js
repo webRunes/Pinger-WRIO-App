@@ -119,6 +119,12 @@ window.addEventListener("message", msg => {
       activateButton();
       cancelUnlock();
     }
+
+    if (msgdata.reload) {
+      console.log("Reload required");
+      window.location.reload();
+    }
+
     if (msgdata.txId) {
       console.log("GOT TX id to watch!", msgdata.txId);
       resultMsg(
