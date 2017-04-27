@@ -130,7 +130,7 @@ window.addEventListener("message", msg => {
       resultMsg(
           "You've donated " +
           window.savedAmount +
-          " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed."
+          " THX. Thank you! It may take a few minutes before your comment is displayed."
       );
       activateButton();
       watchTX("...", msgdata.txId)
