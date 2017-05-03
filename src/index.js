@@ -226,7 +226,7 @@ function server_setup(db) {
     multer().array("images[]"),
     wrioAuth,
     wrap(async (request, response) => {
-      let text = request.body.text || " ";
+      let text = request.body.text ;
       let title = request.body.title || "";
       let message = request.body.comment || "";
 
@@ -242,7 +242,7 @@ function server_setup(db) {
         await extractFiles(creds, request.files),
         creds
       );
-      response.send({  status: "Done", });
+      response.send({  status: "Done" });
     })
   );
 
@@ -295,6 +295,9 @@ async function sendTitterComment(cred, amount, text, images, title, message) {
 
 async function sendTweet(amount, text, title, message, files, creds) {
   console.log("got keys", creds);
+  if (text == "" && files.length == 0) {
+    text = " "; // to address issue, when empty message is sent
+  }
   await sendTitterComment(creds, amount, text, files, title, message);
 }
 
