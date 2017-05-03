@@ -85,10 +85,6 @@ const genFormData = () => {
     comment: posturl
   };
 
-  if (comment == "") {
-    comment = " "; // to address issue, when empty message is sent
-  }
-
   var len = files.length;
   if (len > 3) len = 3;
 
