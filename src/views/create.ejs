@@ -29,7 +29,10 @@
 <div id="frame_container">
     <div id="titter-id">
         <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
-
+            <div class="alert alert-success" style="display:none;" id="donatedStats">
+                <button type="button" class="close" data-dismiss="alert">×</button>
+                <span id="donatedAmount"></span>
+            </div>
             <form class="margin-bottom" role="form" >
                 <div class="well" style="display: none;" id="balancePane">
                     <h4 id="balancestuff">Current balance
@@ -50,7 +53,7 @@
                     </span>
                 </div>
                 <div id="createwallet" style="display:none" class="well">
-                    <h4> You don't have a wallet yet.
+                    <h4>You don't have a wallet yet.
                     <button type="button" target="popup" class="btn btn-sm btn-success" onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=800,height=500')">Create</button>
                     </h4>
                 </div>
@@ -63,10 +66,6 @@
                     You're still able to make promised donations up to 500 WRG.
                     <span><a href="javascript:goAddFunds();">Add funds</a></span>
                 </div>-->
-                <div class="alert alert-success" style="display:none;" id="donatedStats">
-                    <button type="button" class="close" data-dismiss="alert">×</button>
-                    <span id="donatedAmount"></span>
-                </div>
             </form>
 
             <div id="donationStuff">
