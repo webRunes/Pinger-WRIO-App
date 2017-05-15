@@ -176,7 +176,7 @@ function afterDonate(amount) {
 
 
   if (amount == 0) {
-    resultMsg("Your message has been sent, it may take a few minutes before your comment is displayed.");
+    resultMsg("Message has been sent, it may take a few minutes before your comment is displayed.");
   }
 
   frameReady();
