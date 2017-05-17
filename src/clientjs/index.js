@@ -14,6 +14,7 @@ import {
   getBalanceRequest,
   getAddFundsDataRequest,
   getEthereumIdRequest,
+    getUserEthereumId,
   freeWrgRequest,
   txStatusRequest
 } from "./requests.js";
@@ -244,8 +245,8 @@ const queryBalance = async () => {
     if (!noAccount) $("#balancePane").show();
     frameReady();
   } catch (err) {
-    $("#wrgBalance").html("&nbsp" + 0);
-    if (!noAccount) $("#balancePane").show();
+    $("#balancePane").hide();
+    $("#inputAmount").prop("disabled", true);
     frameReady();
   }
 };
@@ -300,7 +301,7 @@ window.wrgFaucet = () =>
       let minutes = timeleft;
       faucetInterval = setInterval(() => {
         setText(minutes--);
-        if (minutes < 0) {
+        if (minutes < 0)  {
           clearInterval(faucetInterval);
           enableButton();
         }
@@ -359,16 +360,43 @@ async function watchTX(txUrl, txHash) {
 
 var noAccount = false;
 
-function getEthereumId() {
-  getEthereumIdRequest()
-    .done(data => {
-      frameReady();
-    })
-    .fail(err => {
-      $("#createwallet").show();
+async function getEthereumId() {
+  const getUserId = async () => {
+    try {
+      const userId = await getEthereumIdRequest();
+      console.log("GOT user ethereum id's", userId);
+      return true;
+    } catch (err) {
+      if (err.responseText == "User don't have ethereum wallet yet") {
+        $("#createwallet").show();
+      } else {
+        console.log("Error during getUserId request",err);
+        $("#nowebgold").show();
+      }
+      return false;
+    }
+  };
+  const getTargetId = async () => {
+    try {
+      const userId = await getUserEthereumId(recipientWrioID);
+      console.log("GOT target ethereum id's", userId);
+      if (!userId.wallet) {
+        $("#authorNoWallet").show();
+      }
+      return !!userId.wallet;
+    } catch (err) {
+      console.log("Error during getTargetId request",err);
+      return false;
+    }
+  };
+  $("#inputAmount").prop("disabled", false);
+    const [status1, status2] = await Promise.all([getUserId(), getTargetId()]);
+    if (!status1 || !status2) {
+      $("#inputAmount").prop("disabled", true);
       noAccount = true;
-      frameReady();
-    });
+    }
+    frameReady();
+
 }
 getEthereumId();
 
