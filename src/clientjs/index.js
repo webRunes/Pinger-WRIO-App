@@ -380,6 +380,9 @@ async function getEthereumId() {
     try {
       const userId = await getUserEthereumId(recipientWrioID);
       console.log("GOT target ethereum id's", userId);
+      if (!userId.wallet) {
+        $("#authorNoWallet").show();
+      }
       return !!userId.wallet;
     } catch (err) {
       console.log("Error during getTargetId request",err);
