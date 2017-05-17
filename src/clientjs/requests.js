@@ -55,6 +55,18 @@ export const getEthereumIdRequest = () => $.ajax({
     }
 });
 
+
+export const getUserEthereumId = (wrioID) => $.ajax({
+    url: getWebgoldUrl() + `/api/webgold/get_user_wallet?wrioID=${wrioID}`,
+    type: "GET",
+    xhrFields: {
+        withCredentials: true
+    },
+    headers: {
+        'X-Requested-With':"XMLHttpRequest"
+    }
+});
+
 export const freeWrgRequest = () => $.ajax({
     url: getWebgoldUrl() + '/api/webgold/free_wrg?amount=100',
     type: "GET",
