@@ -129,10 +129,11 @@ window.addEventListener("message", msg => {
           window.savedAmount +
           " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed."
       );
-      activateButton();
+      resetFields();
+      afterDonate(window.savedAmount);
       watchTX("...", msgdata.txId)
         .then(() => {
-          //afterDonate(window.savedAmount);
+
         })
         .catch(err => {
           console.log(err);
@@ -167,10 +168,15 @@ function resultHide() {
   frameReady();
 }
 
-function afterDonate(amount) {
-  activateButton();
+function resetFields () {
   document.getElementById("comment").value = "";
   document.getElementById("IDtweet_title").value = "";
+  document.getElementById("inputAmount").value = 0;
+}
+
+function afterDonate(amount) {
+  activateButton();
+  resetFields();
   console.log("successfully sent");
   $("#result").html("Successfully sent!").removeClass("redError");
   $(".comment-limit").html("Ok");
