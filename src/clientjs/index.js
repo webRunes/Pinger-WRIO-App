@@ -172,6 +172,7 @@ function resetFields () {
   document.getElementById("comment").value = "";
   document.getElementById("IDtweet_title").value = "";
   document.getElementById("inputAmount").value = 0;
+  activateButton();
 }
 
 function afterDonate(amount) {
@@ -251,7 +252,8 @@ const queryBalance = async () => {
     if (!noAccount) $("#balancePane").show();
     frameReady();
   } catch (err) {
-    $("#balancePane").hide();
+    if (!noAccount) $("#balancePane").show();
+    $("#faucetGroup").hide();
     $("#inputAmount").prop("disabled", true);
     frameReady();
   }
