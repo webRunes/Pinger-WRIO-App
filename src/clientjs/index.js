@@ -249,14 +249,13 @@ const queryBalance = async () => {
     let data = await getBalanceRequest();
     console.log(data);
     updateBalance(data.balance, data.rtx);
-    if (!noAccount) $("#balancePane").show();
     frameReady();
   } catch (err) {
-    if (!noAccount) $("#balancePane").show();
     $("#faucetGroup").hide();
     $("#inputAmount").prop("disabled", true);
     frameReady();
   }
+  $("#balancePane").show();
 };
 
 function InitTitter() {
@@ -366,7 +365,6 @@ async function watchTX(txUrl, txHash) {
   //$("#faucetMsg").html("");
 }
 
-var noAccount = false;
 
 async function getEthereumId() {
   const getUserId = async () => {
@@ -377,6 +375,7 @@ async function getEthereumId() {
     } catch (err) {
       if (err.responseText == "User don't have ethereum wallet yet") {
         $("#createwallet").show();
+        $("#faucetGroup").hide();
       } else {
         console.log("Error during getUserId request",err);
         $("#nowebgold").show();
@@ -385,6 +384,9 @@ async function getEthereumId() {
     }
   };
   const getTargetId = async () => {
+    if (!recipientWrioID) {
+      return false;
+    }
     try {
       const userId = await getUserEthereumId(recipientWrioID);
       console.log("GOT target ethereum id's", userId);
@@ -401,7 +403,6 @@ async function getEthereumId() {
     const [status1, status2] = await Promise.all([getUserId(), getTargetId()]);
     if (!status1 || !status2) {
       $("#inputAmount").prop("disabled", true);
-      noAccount = true;
     }
     frameReady();
 
