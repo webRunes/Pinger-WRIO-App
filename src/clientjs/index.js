@@ -249,13 +249,12 @@ const queryBalance = async () => {
     let data = await getBalanceRequest();
     console.log(data);
     updateBalance(data.balance, data.rtx);
-    frameReady();
   } catch (err) {
     $("#faucetGroup").hide();
     $("#inputAmount").prop("disabled", true);
-    frameReady();
   }
   $("#balancePane").show();
+  frameReady();
 };
 
 function InitTitter() {
