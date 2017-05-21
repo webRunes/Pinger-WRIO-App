@@ -127,7 +127,7 @@ window.addEventListener("message", msg => {
       resultMsg(
           "You've donated " +
           window.savedAmount +
-          " THX. Thank you! Your message has been sent, it may take a few minutes before you comment is displayed."
+          " THX. Thank you! It may take a few minutes before your comment is displayed."
       );
       resetFields();
       afterDonate(window.savedAmount);
@@ -184,7 +184,7 @@ function afterDonate(amount) {
 
 
   if (amount == 0) {
-    resultMsg("Your message has been sent, it may take a few minutes before you comment is displayed.");
+    resultMsg("Message has been sent, it may take a few minutes before your comment is displayed.");
   }
 
   frameReady();
