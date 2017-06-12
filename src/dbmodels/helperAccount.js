@@ -3,14 +3,13 @@
  */
 
 const logger = require('winston');
-const db = require('wriocommon').db.getInstance();
+
 
 class HelperAccount {
 
     constructor () {
-
+        const db = require('wriocommon').db.getInstance();
         this.widgets = db.collection('titterHelperAccounts');
-
     }
 
     create(id,pass) {

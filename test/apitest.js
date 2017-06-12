@@ -1,7 +1,6 @@
-import app from "../src/index.js";
-import request from 'supertest';
-import assert from 'assert';
-import should from 'should';
+const app = require("../src/index.js");
+const request = require('supertest');
+
 
 var stdout_write = process.stdout._write,
     stderr_write = process.stderr._write;
@@ -26,13 +25,13 @@ describe("API unit tests", function() {
 
         }, 1000);
     });
-    it ("shoud return default page",function (done){
+    it ("should return default page",function (done){
         request(app)
             .get('/')
             .expect(200,done);
     });
 
-    it("shoud fail with empty credentials", function (done) {
+    it("should fail with empty credentials", function (done) {
         var postdata = {
             twitterCreds: {
                 access_token:"",
@@ -48,7 +47,7 @@ describe("API unit tests", function() {
 
     });
 
-    it("shoud fail with empty body", function (done) {
+    it("should fail with empty body", function (done) {
         var postdata = {};
         request(app)
             .post('/api/search')
@@ -57,7 +56,7 @@ describe("API unit tests", function() {
 
     });
 
-    it("shoud fail with empty body", function (done) {
+    it("should fail with empty body", function (done) {
         var postdata = {};
         request(app)
             .post('/api/reply')
@@ -66,7 +65,7 @@ describe("API unit tests", function() {
 
     });
 
-    it("shoud fail with empty body", function (done) {
+    it("should fail with empty body", function (done) {
         var postdata = {};
         request(app)
             .post('/api/replyAll')
