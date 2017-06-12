@@ -82,6 +82,11 @@ function server_setup(db) {
       }
       console.log("User found " + user);
 
+      response.render("create.ejs", {
+        user: user,
+        userID: request.query.author,
+        host: decodeURIComponent(origin)
+      });
     } catch (e) {
       console.log("User not found:", e);
     }
