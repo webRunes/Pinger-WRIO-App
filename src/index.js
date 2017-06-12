@@ -73,7 +73,7 @@ function server_setup(db) {
 
   app.get("/iframe/", wrioAuth, async (request, response) => {
     response.render("create.ejs", {
-      production: DOMAIN === 'wrioos.com'
+      production: DOMAIN === '.wrioos.com'
     });
   });
 
