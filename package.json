@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1328",
+  "version": "1.0.1329",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
