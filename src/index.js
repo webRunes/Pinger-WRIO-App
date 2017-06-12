@@ -75,22 +75,6 @@ function server_setup(db) {
     var origin = request.query.origin;
     console.log("ORIGIN: ", origin);
 
-    try {
-      var user = request.user;
-      if (user.temporary) {
-        throw new Error("Temporary user, allow to login");
-      }
-      console.log("User found " + user);
-
-      response.render("create.ejs", {
-        user: user,
-        userID: request.query.author,
-        host: decodeURIComponent(origin)
-      });
-    } catch (e) {
-      console.log("User not found:", e);
-    }
-
     response.render("create.ejs", {
       production: DOMAIN === 'wrioos.com'
     });
