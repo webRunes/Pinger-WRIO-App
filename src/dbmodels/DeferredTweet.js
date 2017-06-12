@@ -1,9 +1,10 @@
 const logger = require('winston');
-const db = require('wriocommon').db.getInstance();
+
 
 class DeferredTweet {
 
     constructor () {
+        const db = require('wriocommon').db.getInstance();
         this.widgets = db.collection('deferredTweets');
         this.record_id = null;
     }
