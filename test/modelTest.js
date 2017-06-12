@@ -2,16 +2,14 @@
  * Created by michbil on 26.04.16.
  */
 
-import request from 'supertest';
-import assert from 'assert';
-import should from 'should';
-import {db} from 'wriocommon';
-import helperAccount from '../src/dbmodels/helperAccount.js';
+const should = require('should');
+const {init} = require('wriocommon').db;
+const helperAccount = require('../src/dbmodels/helperAccount.js');
 
 
 describe('test data models', () => {
     before(async () => {
-        await db.init();
+        await init();
     });
     it("Shoud return correct filename", async () => {
         var acc = new helperAccount();

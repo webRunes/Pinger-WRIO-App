@@ -1,6 +1,6 @@
-import nconf from "./wrio_nconf.js";
-import TwitterClient from "./utils/twitter-client";
-import promisify from 'es6-promisify';
+const nconf = require('./wrio_nconf.js');
+const TwitterClient = require('./utils/twitter-client');
+const promisify = require('es6-promisify');
 
 
 var titterSender = {};

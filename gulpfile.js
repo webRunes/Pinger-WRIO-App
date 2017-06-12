@@ -1,16 +1,13 @@
 /**
  * Created by michbil on 23.11.15.
  */
-require ('babel-core/register');
-require('regenerator-runtime/runtime');
+
 
 var gulp = require('gulp');
 var nodemon = require('gulp-nodemon');
 var mocha = require('gulp-mocha');
 var eslint = require('gulp-eslint');
-var babel = require('gulp-babel');
-var babelify = require('babelify');
-var webpack = require('webpack');
+
 
 function restart_nodemon () {
     if (nodemon_instance) {
@@ -57,34 +54,6 @@ gulp.task('lint', function () {
 
 
 
-gulp.task('babel-server', function() {
-
-
-    return gulp.src(['src/**/*.*',"!src/views/**.*"])
-        .pipe(babel())
-        .on('error', function(err) {
-            console.log('Babel server:', err.toString());
-        })
-        .pipe(gulp.dest('app/'))
-        .on('end',function() {
-            restart_nodemon();
-        });
-});
-
-gulp.task('client', (callback)=>{
-
-    gulp.src('src/views/**/*.*')
-        .pipe(gulp.dest('app/views'));
-    return  webpack(require('./webpack.config.js'),
-        function(err, stats) {
-            if(err) throw new gutil.PluginError("webpack", err);
-            console.log("[webpack]", stats.toString({
-                // output options
-            }));
-            callback();
-        });
-});
-
 var nodemon_instance;
 
 gulp.task('nodemon', function() {
@@ -104,9 +73,9 @@ gulp.task('nodemon', function() {
 
 });
 
-gulp.task('default', ['lint','babel-server','client']);
+gulp.task('default', ['lint']);
 
 gulp.task('watch', ['default', 'nodemon'], function() {
-    gulp.watch(['./src/**/*.js','!./src/clientjs/*.js'], ['babel-server']);
-    gulp.watch(['./src/clientjs/*.js','./src/views/*.ejs'], ['client']);
+    gulp.watch(['./src/**/*.js'], restart_nodemon);
+
 });

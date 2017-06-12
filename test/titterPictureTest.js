@@ -1,8 +1,5 @@
-import request from 'supertest';
-import assert from 'assert';
-import should from 'should';
-import titterPicture from '../src/titter-picture.js';
-
+const should = require('should');
+const titterPicture = require('../src/titter-picture.js');
 
 describe('titter-picture test', () => {
     before(() => {

@@ -3,13 +3,13 @@
  */
 
 
-import logger from 'winston';
-import {db} from 'wriocommon';var dbInst = db.db;
+const logger = require('winston');
+const db = require('wriocommon').db.getInstance();
 
-export default class WidgetID {
+class WidgetID {
 
     constructor () {
-        this.widgets = dbInst.db.collection('titterWidgetID');
+        this.widgets = db.collection('titterWidgetID');
     }
 
     create(widgetId,userID,q) {
@@ -53,3 +53,5 @@ export default class WidgetID {
     }
 
 }
+
+module.exports = WidgetID;
