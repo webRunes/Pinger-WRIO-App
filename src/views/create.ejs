@@ -1,139 +1,36 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="//code.jquery.com/jquery-1.11.2.min.js"></script>
-    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/css/bootstrap.min.css" rel="stylesheet">
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Core editor">
+    <meta name="author" content="webRunes">
+    <title>Titter iframe</title>
+
+    <link href="https://default.wrioos.com/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://default.wrioos.com/css/webrunes.css" rel="stylesheet">
-    <style>
-        body {
-            height: auto !important;
-        }
-    </style>
-    <script type="text/javascript">
+    <link href="https://default.wrioos.com/css/core.css" rel="stylesheet">
+    <script src="https://code.jquery.com/jquery-1.12.4.js"> </script>
 
-        var url_params = {
-            posturl: '<%= host %>'
-        }
-
-        <% if (user) { %>
-        var loggedUserID = '<%= user.wrioID %>';
-        <% } else { %>
-        var loggedUserID = null;
-        <% } %>
-        var recipientWrioID = '<%= userID %>';
-
-    </script>
-    <script src="/js/bundle.js"></script>
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
 </head>
 <body>
-<div id="frame_container">
-    <div id="titter-id">
-        <form enctype="multipart/form-data" method='POST' action="/sendComment" class="margin-bottom form-send-comment" role="form">
-            <div class="alert alert-success" style="display:none;" id="donatedStats">
-                <button type="button" class="close" data-dismiss="alert">×</button>
-                <span id="donatedAmount"></span>
-            </div>
-            <form class="margin-bottom" role="form" >
-                <div class="well" style="display: none;" id="balancePane">
-                    <h4 id="balancestuff">Current balance
-                        <span id="wrgBalance">0</span><small class="currency">THX</small>
-                        <sup class="currency" style="display:none;"><span id="usdBalance" style="display: none;"></span><span>·</span><span class="currency">USD</span>
-                    </sup></h4>
-                    <p>You can receive 10 THX every hour free of charge</p>
-                    <p>Rating <span id="rtx">0</span></p>
-                    <br />
-                    <span id="faucetMsg"> </span>
-                    <span id="faucetGroup">
-                        <a id="faucetButton" class="btn btn-sm btn-success" href="javascript:;" onclick="wrgFaucet()"><span
-                            class="glyphicon glyphicon-thumbs-up"></span><span id="faucetText">Get free Thanks coins</span>
-                            <img id="faucetLoader" src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
-                        </a>
-                        <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins_(THX)" target="_parent">What are Thanks coins?</a>
-                    </span>
+<div id="frame_container"></div>
+<img src="https://default.wrioos.com/img/loading.gif" id="loadingInd"/>
 
-                    <span id="createwallet" style="display: none;">
-                    <button  type="button" target="popup" class="btn btn-sm btn-success"
-                            onclick="window.open(getWebgoldUrl()+'/create_wallet','name','width=800,height=500')">Create wallet and get free Thanks coins</button>
-                        <a class="btn btn-link" href="https://wrioos.com/#Thanks_coins_(THX)" target="_parent">
-                            <span class="glyphicon"></span>What are Thanks coins?</a>
-                        </span>
+<% if (production) { %>
 
-                </div>
-                <div id="nowebgold" style="display:none" class="callout warning col-xs-12">
-                    <h4>We are experiencing technical difficulties with payment service. We are working to fix the problem.</h4>
-                </div>
-                <div class="callout warning col-xs-12" style="display:none" id="noAuthor">
-                    <h5>Author unknown</h5>
-                    <p>You can comment, but donations disabled</p>
-                </div>
-                <div class="callout warning col-xs-12" style="display:none" id="authorNoWallet">
-                    <h5>The author has no wallet</h5>
-                    <p>You can comment, but donations disabled</p>
-                </div>
-                <!--<div class="callout" style="display:none">
-                    <h5>No funds</h5>
-                    You're still able to make promised donations up to 500 WRG.
-                    <span><a href="javascript:goAddFunds();">Add funds</a></span>
-                </div>-->
-            </form>
+<script type="text/javascript" src="https://wrioos.com/common.js"></script>
+<script type="text/javascript" src="https://wrioos.com/titter.js"></script>
 
-            <div id="donationStuff">
-                <div class="form-group send-comment-form-donation donation-form col-xs-12 col-sm-6 col-md-4 col-lg-3">
-                    <div class="input-group input-group-sm tooltip-demo">
-                        <span class="input-group-addon">Donation</span>
-                        <input type="number" class="form-control" id="inputAmount" value="0" min="0" onchange="keyPress();" onkeyup="keyPress();"><span class="input-group-addon">THX</span>
-                    </div>
-                    <div class="help-block" style="display: none">
-                        <span>Insufficient funds</span>
-                    </div>
-                </div>
-                <div class="form-group send-comment-form-donation col-xs-12 col-sm-6 col-md-4 col-lg-7">
-                    <div class="input-group input-group-sm">
-                        <span class="input-group-addon twitter-limit">72</span>
-                        <input id="IDtweet_title" name="tweet_title" class="form-control" maxlength="72"
-                               placeholder="Title, hashtags or mentions. Max 72 characters" type="text" onkeyup="keyPress();">
-                    </div>
-                </div>
-            </div>
-            <div class="form-group send-comment-form col-xs-12">
-                <textarea maxlength="1024" rows="3" class="form-control"
-                          placeholder="Let us know your thoughts! Max 1024 characters" name="comment" id="comment"
-                          onkeyup="keyPress();"></textarea>
+<% } else { %>
 
-            </div>
-            <div class="form-group send-comment-form col-xs-12">
-                <div style="height:0px;overflow:hidden">
-                    <input type="file" accept="image/*" multiple id="fileInput" name="fileInput"/>
-                </div>
-                <div class="pull-left">
-                    <button type="button" class="btn btn-default" onclick="chooseFile();">
-                        <span class="glyphicon glyphicon-camera"></span>
-                        Photo
-                    </button>
-                </div>
-                <div class="pull-right">
-                    <label class="comment-limit">1024</label>
-                    <% if (user) { %>
-                    <button type="button" id="sendButton" class="btn btn-primary" onclick="sendComment();">
-                        <span class="glyphicon glyphicon-ok"></span>
-                        <img src="https://wrioos.com/Default-WRIO-Theme/img/loading.gif" style="display:none;">
-                        Send
-                    </button>
-                    <% } else { %>
-                    <button type="button" onclick="saveDraft();openAuthPopup();" class="btn btn-primary">
-                        <span class="glyphicon glyphicon-ok"></span>
-                        Login and submit
-                    </button>
-                    <% } %>
-                </div>
-            </div>
-        </form>
-    </div>
-    <div style="display:none">
-        <h3 id="result" class="centertext"></h3>
-    </div>
+<script type="text/javascript" src="http://localhost:3033/common.js"></script>
+<script type="text/javascript" src="http://localhost:3033/titter.js"></script>
 
-</div>
-<script src="//maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+<% } %>
+
 </body>
 </html>

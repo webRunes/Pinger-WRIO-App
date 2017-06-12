@@ -1,6 +1,7 @@
-import promisify from 'es6-promisify';
-import fs from 'fs';
-import Canvas from 'canvas';
+const promisify = require('es6-promisify');
+const fs = require('fs');
+const path = require('path');
+const Canvas = require('canvas');
 
 var titterPicture = {};
 var temp = require('temp');
@@ -31,6 +32,14 @@ function wrapText(context, text, x, y, maxWidth, lineHeight, simulate) {
 
 }
 
+
+function fontFile (name) {
+    return path.join(__dirname, '/fonts/', name);
+}
+
+var robotoFont = new Canvas.Font('Roboto', fontFile('Roboto-Regular.ttf'));
+console.log("FONT",robotoFont);
+
 function createImage(text, done) {
     var lineHeight = 14;
     var canvas = new Canvas(500, 650);
@@ -42,7 +51,8 @@ function createImage(text, done) {
 
     ctx.fillStyle = "#ffffff";
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    ctx.font = "12px sans-serif";
+    //ctx.addFont(robotoFont);
+    ctx.font = "12px Roboto";
     ctx.fillStyle = '#292f33';
     wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight);
 

@@ -1,16 +1,20 @@
-FROM webrunes/wriobase:latest
+FROM mhart/alpine-node:7
 MAINTAINER denso.ffff@gmail.com
 
 # Titter
-
-# quick fix for docker and npm3 compatibility
-
-RUN cd $(npm root -g)/npm \
- && npm install fs-extra \
- && sed -i -e s/graceful-fs/fs-extra/ -e s/fs\.rename/fs.move/ ./lib/utils/rename.js
+RUN apk add --no-cache \
+        git \
+        build-base \
+        g++ \
+        cairo-dev \
+        jpeg-dev \
+        pango-dev \
+        giflib-dev
 
 COPY package.json /srv/package.json
 RUN cd /srv/ && npm install # packages are installed globally to not modify titter directory
+
+RUN npm install -g gulp
 
 WORKDIR /srv/www
 COPY . /srv/www/

@@ -1,10 +1,10 @@
-import logger from 'winston';
-import {db} from 'wriocommon';var dbInst = db.db;
+const logger = require('winston');
+const db = require('wriocommon').db.getInstance();
 
-export default class DeferredTweet {
+class DeferredTweet {
 
     constructor () {
-        this.widgets = dbInst.db.collection('deferredTweets');
+        this.widgets = db.collection('deferredTweets');
         this.record_id = null;
     }
 
@@ -38,3 +38,5 @@ export default class DeferredTweet {
 
 
 }
+
+module.exports = DeferredTweet;
