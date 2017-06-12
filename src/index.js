@@ -1,19 +1,17 @@
-import nconf from "./wrio_nconf.js";
-import multer from "multer";
-import fs from "fs";
-import path from "path";
-import session from "express-session";
-import cookieParser from "cookie-parser";
-//import {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} from './wriologin.js';
-import titterPicture from "./titter-picture";
-import titterSender from "./titter-sender";
-import express from "express";
-import request from "superagent";
-import { startPhantom, getSharedWidgetID } from "./widget-extractor/phantom.js";
-import { server, db, utils, login } from "wriocommon";
-import logger from "winston";
-import DeferredTweet from "./dbmodels/DeferredTweet.js";
-import amqplib from "amqplib";
+const nconf = require('./wrio_nconf.js');
+const multer = require('multer');
+const fs = require('fs');
+const path = require('path');
+const session = require('express-session');
+const cookieParser = require('cookie-parser');
+//const {loginWithSessionId, getTwitterCredentials, getLoggedInUser, wrap, wrioAuth} = require('./wriologin.js');
+const titterPicture = require('./titter-picture');
+const titterSender = require('./titter-sender');
+const express = require('express');
+const request = require('superagent');
+const { server, db, utils, login } = require('wriocommon');
+const logger = require('winston');
+const amqplib = require('amqplib');
 
 var DOMAIN = nconf.get("db:workdomain");
 var dumpError = utils.dumpError;
@@ -61,8 +59,10 @@ function getTwitterCredentials(request) {
 }
 
 function server_setup(db) {
+  const {startPhantom, getSharedWidgetID} = require('./widget-extractor/phantom.js');
+  const DeferredTweet = require('./dbmodels/DeferredTweet.js');
+
   handleDeferred();
-  //wrioLogin = require('./wriologin')(db);
 
   app.set("views", __dirname + "/views");
   app.set("view engine", "ejs");
@@ -81,20 +81,14 @@ function server_setup(db) {
         throw new Error("Temporary user, allow to login");
       }
       console.log("User found " + user);
-      response.render("create.ejs", {
-        user: user,
-        userID: request.query.id,
-        host: decodeURIComponent(origin)
-      });
+
     } catch (e) {
       console.log("User not found:", e);
-      response.render("create.ejs", {
-        error: "Not logged in",
-        user: undefined,
-        host: decodeURIComponent(origin),
-        userID: request.query.id
-      });
     }
+
+    response.render("create.ejs", {
+      production: DOMAIN === 'wrioos.com'
+    });
   });
 
   app.get("/logoff", function(request, response) {

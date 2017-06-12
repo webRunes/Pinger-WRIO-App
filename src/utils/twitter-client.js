@@ -1,5 +1,5 @@
-import Twitter from 'node-twitter-api';
-import nconf from "../wrio_nconf.js";
+const Twitter = require('node-twitter-api');
+const nconf = require('../wrio_nconf.js');
 
 module.exports.Client = function(creds) {
     creds = creds || {};

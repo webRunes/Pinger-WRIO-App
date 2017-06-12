@@ -1,12 +1,11 @@
 /**
  * Created by michbil on 23.04.16.
  */
-import phantom from 'phantom';
-import {utils} from 'wriocommon';var dumpError = utils.dumpError;
-import fs from 'fs';
-
-import helperAccount from  '../dbmodels/helperAccount.js';
-import widgetID from '../dbmodels/widgetID.js';
+const phantom = require('phantom');
+const {utils} = require('wriocommon');var dumpError = utils.dumpError;
+const fs = require('fs');
+const helperAccount = require('../dbmodels/helperAccount.js');
+const widgetID = require('../dbmodels/widgetID.js');
 
 var sitepage = null;
 var phInstance = null;
@@ -144,7 +143,7 @@ async function createTimeline(page,url) {
 
     }
 
-export async function startPhantom (login,pass,url) {
+async function startPhantom (login,pass,url) {
 
     try {
         phInstance = await phantom.create();//["--remote-debugger-port=9000"]); // ["--cookies-file=/tmp/cookies.txt"]);
@@ -183,7 +182,7 @@ async function obtainWidgetID(userID,query) {
     return wID;
 }
 
-export async function getSharedWidgetID(userID,query) {
+async function getSharedWidgetID(userID,query) {
 
     try {
         console.log("Getting widget ID from shared pool");
@@ -202,3 +201,4 @@ export async function getSharedWidgetID(userID,query) {
     }
 }
 
+module.exports = {getSharedWidgetID,startPhantom};

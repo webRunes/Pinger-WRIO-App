@@ -2,14 +2,14 @@
  * Created by michbil on 26.04.16.
  */
 
-import logger from 'winston';
-import {db} from 'wriocommon';var dbInst = db.db;
+const logger = require('winston');
+const db = require('wriocommon').db.getInstance();
 
-export default class HelperAccount {
+class HelperAccount {
 
     constructor () {
 
-        this.widgets = dbInst.db.collection('titterHelperAccounts');
+        this.widgets = db.collection('titterHelperAccounts');
 
     }
 
@@ -76,3 +76,5 @@ export default class HelperAccount {
     }
 
 }
+
+module.exports = HelperAccount;
