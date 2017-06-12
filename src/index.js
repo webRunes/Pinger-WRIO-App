@@ -12,6 +12,7 @@ const request = require('superagent');
 const { server, db, utils, login } = require('wriocommon');
 const logger = require('winston');
 const amqplib = require('amqplib');
+const DeferredTweet = require('./dbmodels/DeferredTweet.js');
 
 var DOMAIN = nconf.get("db:workdomain");
 var dumpError = utils.dumpError;
@@ -60,7 +61,7 @@ function getTwitterCredentials(request) {
 
 function server_setup(db) {
   const {startPhantom, getSharedWidgetID} = require('./widget-extractor/phantom.js');
-  const DeferredTweet = require('./dbmodels/DeferredTweet.js');
+
 
   handleDeferred();
 
