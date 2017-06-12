@@ -72,9 +72,6 @@ function server_setup(db) {
   app.use(express.static(__dirname + "/"));
 
   app.get("/iframe/", wrioAuth, async (request, response) => {
-    var origin = request.query.origin;
-    console.log("ORIGIN: ", origin);
-
     response.render("create.ejs", {
       production: DOMAIN === 'wrioos.com'
     });
