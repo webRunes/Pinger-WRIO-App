@@ -1,6 +1,6 @@
 {
   "name": "titter-wrio-app",
-  "version": "1.0.1333",
+  "version": "1.0.1336",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
@@ -14,7 +14,7 @@
     "node-twitter": "^0.5.3",
     "node-twitter-api": "^1.7.4",
     "p3p": "0.0.2",
-    "phantom": "^2.0.10",
+    "phantom": "^4.0.8",
     "prettier": "^1.2.2",
     "should": "^6.0.3",
     "temp": "^0.8.3",
