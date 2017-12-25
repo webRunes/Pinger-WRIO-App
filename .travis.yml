@@ -8,9 +8,9 @@ before_install:
   - docker run --name mongo -p 27017:27017 -d mongo mongod --smallfiles
   - docker pull rabbitmq:latest
   - docker run -d --hostname rabbitmq --name rabbitmq rabbitmq:latest
-  - docker build --tag titter .
+  - docker build --tag pinger .
   - docker ps -a
-  - docker run --link mongo:mongo --link rabbitmq:rabbitmq -v `pwd`:/srv/host titter /bin/sh -c "cp /srv/host/config.json.travis /srv/www/config.json && gulp test"
+  - docker run --link mongo:mongo --link rabbitmq:rabbitmq -v `pwd`:/srv/host pinger /bin/sh -c "cp /srv/host/config.json.travis /srv/www/config.json && gulp test"
 
 script:
   - docker ps -a

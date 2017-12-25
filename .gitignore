@@ -38,5 +38,5 @@ node_module/
 comment.png
 *.swp
 config.json
-js/titter.js
+js/pinger.js
 src/widget-extractor/comp/**
