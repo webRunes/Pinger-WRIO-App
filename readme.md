@@ -1,10 +1,10 @@
-[![Build Status](https://travis-ci.org/webRunes/Titter-WRIO-App.svg?branch=master)](https://travis-ci.org/webRunes/Titter-WRIO-App)
+[![Build Status](https://travis-ci.org/webRunes/Pinger-WRIO-App.svg?branch=master)](https://travis-ci.org/webRunes/Pinger-WRIO-App)
 
-#Titter <sup>[WRIO](https://wrioos.com) App</sup>
-(coming  soon)
+#Pinger <sup>[WRIO](https://wrioos.com) App</sup>
+(coming soon)
 
 ##Official Hub
-[titter.wrioos.com](https://titter.wrioos.com)
+[pinger.wrioos.com](https://pinger.wrioos.com)
 
 Added mocha unit tests, can be run with
 '''
