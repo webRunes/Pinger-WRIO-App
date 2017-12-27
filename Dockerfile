@@ -1,7 +1,7 @@
-FROM mhart/alpine-node:7
+FROM mhart/alpine-node:8
 MAINTAINER denso.ffff@gmail.com
 
-# Titter
+# Pinger
 RUN apk add --no-cache \
         curl \
         git \
@@ -20,7 +20,7 @@ RUN apk update && apk add --no-cache fontconfig curl && \
   && phantomjs --version        
 
 COPY package.json /srv/package.json
-RUN cd /srv/ && npm install # packages are installed globally to not modify titter directory
+RUN cd /srv/ && npm install # packages are installed globally to not modify Pinger directory
 
 RUN npm install -g gulp
 

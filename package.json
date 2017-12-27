@@ -1,5 +1,5 @@
 {
-  "name": "titter-wrio-app",
+  "name": "pinger-wrio-app",
   "version": "1.0.1337",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "dependencies": {
@@ -36,17 +36,17 @@
     "bumpVersion": "npm run version",
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
-    "shell": "docker exec -it wriolocaldev_titter_1 sh",
+    "shell": "docker exec -it wriolocaldev_pinger_1 sh",
     "test": "gulp start"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/webRunes/Titter-WRIO-App.git"
+    "url": "https://github.com/webRunes/Pinger-WRIO-App.git"
   },
   "author": "webRunes",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/webRunes/Titter-WRIO-App/issues"
+    "url": "https://github.com/webRunes/Pinger-WRIO-App/issues"
   },
-  "homepage": "https://github.com/webRunes/Titter-WRIO-App"
+  "homepage": "https://github.com/webRunes/Pinger-WRIO-App"
 }
