@@ -1,6 +1,6 @@
 {
   "name": "pinger-wrio-app",
-  "version": "1.0.1337",
+  "version": "1.0.1338",
   "description": "https://github.com/webRunes/Titter-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
