@@ -5,9 +5,9 @@ mv deploy_key ~/.ssh/id_rsa
 git config user.email "AlexeyAnshakov@users.noreply.github.com"
 git config user.name "Alexey Anshakov"
 cd /tmp
-git clone https://github.com/webRunes/Titter-WRIO-App.git
-cd Titter-WRIO-App/
+git clone https://github.com/webRunes/Pinger-WRIO-App.git
+cd Pinger-WRIO-App/
 git checkout master
 npm version patch -m '%s[ci skip]'
-git remote set-url origin git@github.com:webRunes/Titter-WRIO-App.git
+git remote set-url origin git@github.com:webRunes/Pinger-WRIO-App.git
 git push origin master
