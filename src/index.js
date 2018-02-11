@@ -113,22 +113,16 @@ function server_setup(db) {
 
   app.get("/obtain_widget_id", wrioAuth, async (request, response) => {
     var query = request.query.query;
-
     //console.log("DBG:",request.session);
-
     if (!query) {
       return response.status(403).send("Wrong parameters");
     }
-
     // hack to prevent different links for http and https,
     // always overwrite protocol to https://
-
     query = query.replace('http://','https://');
-
     try {
       var user = request.user;
       var code = await getSharedWidgetID(user.wrioID, query);
-
       response.send(code);
     } catch (e) {
       dumpError(e);
@@ -274,7 +268,7 @@ async function sendTitterComment(cred, amount, text, images, title, message) {
   }
   return await titterSender.replyP(
     cred,
-    title + "\n" + message + " Donated " + amount + " THX",
+    title + " \n " + message + " Donated " + amount + " THX",
     images
   );
 }
