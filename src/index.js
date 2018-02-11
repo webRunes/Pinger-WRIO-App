@@ -182,7 +182,7 @@ function server_setup(db) {
       let donateResult = {};
 
       donateResult = await requestDonate(request.user.wrioID, to, amount);
-      console.log("Donation request result", donateResult);
+      console.log("Crediting request result", donateResult);
       if (donateResult.success == false) {
         return response.status(403).send({ error: donateResult.error });
       }
@@ -196,7 +196,7 @@ function server_setup(db) {
         amountUser: amountUser,
         callback: donateResult.callback
       };
-      console.log("Donation result: ", donateResult);
+      console.log("Crediting result: ", donateResult);
       response.send(donateResult);
     })
   );
@@ -268,7 +268,7 @@ async function sendTitterComment(cred, amount, text, images, title, message) {
   }
   return await titterSender.replyP(
     cred,
-    title + " \n " + message + " Donated " + amount + " THX",
+    title + " \n " + message + " Credited " + amount + " CRD",
     images
   );
 }
