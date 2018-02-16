@@ -6,7 +6,7 @@
     "amqplib": "^0.5.1",
     "canvas": "1.6.5",
     "cookie-parser": "^1.4.0",
-    "ejs": "^1.0.0",
+    "ejs": "2.5.5",
     "es6-promise": "^2.1.1",
     "es6-promisify": "^3.0.0",
     "eslint-plugin-ideal": "^0.1.2",
@@ -37,7 +37,7 @@
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
     "shell": "docker exec -it wriolocaldev_pinger_1 sh",
-    "test": "gulp start"
+    "test": "gulp lint"
   },
   "repository": {
     "type": "git",
