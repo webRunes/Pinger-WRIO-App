@@ -268,7 +268,7 @@ async function sendTitterComment(cred, amount, text, images, title, message) {
   }
   return await titterSender.replyP(
     cred,
-    title + " \n " + message + " Credited " + amount + " CRD",
+    title + " \n " + message + " *Credited " + amount + " CRD",
     images
   );
 }
