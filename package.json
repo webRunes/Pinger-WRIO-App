@@ -11,6 +11,7 @@
     "es6-promisify": "^3.0.0",
     "eslint-plugin-ideal": "^0.1.2",
     "multer": "^1.1.0",
+    "nconf": "^0.10.0",
     "node-twitter": "^0.5.3",
     "node-twitter-api": "^1.7.4",
     "p3p": "0.0.2",
@@ -37,7 +38,8 @@
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
     "shell": "docker exec -it wriolocaldev_pinger_1 sh",
-    "test": "gulp lint"
+    "lint": "gulp lint",
+    "test": "gulp test"
   },
   "repository": {
     "type": "git",
