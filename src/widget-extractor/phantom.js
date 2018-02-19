@@ -109,7 +109,7 @@ async function createTimeline(page, url) {
 
   var r = await page.evaluate(function(url) {
     console.log("Creating widget for url");
-    document.getElementsByName("timeline_config[query]")[0].value = url + ' +exclude:retweets';
+    document.getElementsByName("timeline_config[query]")[0].value = url;
     var $formactions = document.getElementsByClassName("form-actions")[0]
       .children[0];
     $formactions.click();
