@@ -103,8 +103,7 @@ function createImage(text, done) {
 titterPicture.drawComment = function(imageText, callback) {
   createImage(imageText, function(filename) {
     console.log("Create image callback finished");
-    if (filename) callback(null, filename);
-    else callback(null);
+    callback(null, filename || undefined);
   });
 };
 

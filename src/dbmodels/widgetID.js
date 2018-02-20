@@ -9,7 +9,7 @@ const db = require('wriocommon').db.getInstance();
 class WidgetID {
 
     constructor () {
-        this.widgets = db.collection('titterWidgetID');
+        this.widgets = db.collection('titterWidgetID'); 
     }
 
     create(widgetId,userID,q) {

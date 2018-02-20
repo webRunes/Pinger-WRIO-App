@@ -37,6 +37,7 @@
     "version": "sh version.sh",
     "bundle": "sh bundle.sh",
     "shell": "docker exec -it wriolocaldev_pinger_1 sh",
+    "lint": "gulp lint",
     "test": "gulp lint"
   },
   "repository": {
