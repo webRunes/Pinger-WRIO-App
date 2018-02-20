@@ -11,6 +11,7 @@
     "es6-promisify": "^3.0.0",
     "eslint-plugin-ideal": "^0.1.2",
     "multer": "^1.1.0",
+    "nconf": "0.8.5",
     "node-twitter": "^0.5.3",
     "node-twitter-api": "^1.7.4",
     "p3p": "0.0.2",

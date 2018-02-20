@@ -4,12 +4,12 @@
 
 
 const logger = require('winston');
-const db = require('wriocommon').db.getInstance();
+const db = require('wriocommon').db;
 
 class WidgetID {
 
     constructor () {
-        this.widgets = db.collection('titterWidgetID'); 
+        this.widgets = db.getInstance().collection('titterWidgetID');
     }
 
     create(widgetId,userID,q) {
