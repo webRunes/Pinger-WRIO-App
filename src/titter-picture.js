@@ -38,27 +38,31 @@ var robotoFont = new Canvas.Font("Roboto", fontFile("Roboto-Regular.ttf"));
 console.log("FONT", robotoFont);
 
 function createImage(text, done) {
-  var lineHeight = 14;
-  var canvas = new Canvas(500, 650);
+  var quality = 4;
+  var fontSize = 12 * quality;
+  var w = 500 * quality;
+  var h = 650 * quality;
+  var lineHeight = (14 / 650) * h;
+  var canvas = new Canvas(w, h);
   var ctx = canvas.getContext("2d");
 
   var ms_height =
-    wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight, true) +
+    wrapText(ctx, text, Math.round((10 / 500) * w), Math.round((20 / 650) * h), w - (10 / 500) * w, lineHeight, true) +
     lineHeight * 2;
-  canvas.height = ms_height + 5;
+  canvas.height = Math.round(ms_height + (5 / 650) * h);
   console.log(ms_height, canvas.height);
 
   ctx.fillStyle = "#ffffff";
   ctx.fillRect(0, 0, canvas.width, canvas.height);
   //ctx.addFont(robotoFont);
-  ctx.font = "12px Roboto";
+  ctx.font = fontSize + "px Roboto";
   ctx.fillStyle = "#292f33";
-  wrapText(ctx, text, 10, 20, canvas.width - 10, lineHeight);
+  wrapText(ctx, text, Math.round((10 / 500) * w), Math.round((20 / 650) * h), Math.round(canvas.width - (10 / 500) * w), lineHeight);
 
   ctx.fillStyle = "#aaa";
   ctx.fillText(
     "Posted via Pinger — Advanced tweets, visit pinger.wrioos.com",
-    10,
+    Math.round((10 / 500) * w),
     ms_height
   );
 
