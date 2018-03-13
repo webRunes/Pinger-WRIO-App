@@ -27,13 +27,13 @@ module.exports = (ctx, font, fontSize, text, maxWidth) => {
         line = '';
         words.unshift(word);
       }
-      line = ''
+      line = '';
     } else {
-      line = test
+      line = test;
     }
   }
 
   line && lines.push(line);
 
-  return lines
-}
+  return lines;
+};

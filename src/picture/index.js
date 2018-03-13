@@ -19,7 +19,7 @@ function drawComment(text, cb) {
             ? cb(err)
             : save(buf, cb)
         )
-  )
+  );
 }
 
 module.exports = drawComment;

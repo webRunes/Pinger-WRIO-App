@@ -13,6 +13,6 @@ module.exports = (font_path, cb) =>
           ? cb(err)
           : function () {
               cache = font;
-              cb(null, font)
+              cb(null, font);
             }()
-      )
+      );

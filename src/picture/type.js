@@ -15,7 +15,7 @@ function type(text, w, h, ctx, canvas, font, cb) {
   var x = Math.round((10 / 500) * w);
   var y = Math.round((20 / 650) * h);
   var maxWidth = w - 2 * x;
-  var lines = splitTextByLines(ctx, font, fontSize, text, maxWidth)
+  var lines = splitTextByLines(ctx, font, fontSize, text, maxWidth);
 
   canvas.height = lineHeight * (lines.length + 3) + Math.round((5 / 650) * h);
   ctx.fillStyle = '#ffffff';
@@ -37,7 +37,7 @@ function type(text, w, h, ctx, canvas, font, cb) {
   path.fill = '#aaa';
   path.draw(ctx);
 
-  canvas.toBuffer(cb)
+  canvas.toBuffer(cb);
 }
 
-module.exports = type
+module.exports = type;

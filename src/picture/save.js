@@ -13,4 +13,4 @@ module.exports = (buf, cb) =>
             ? cb(err)
             : cb(null, file.fd)
         )
-  )
+  );
