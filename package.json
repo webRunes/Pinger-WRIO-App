@@ -4,7 +4,7 @@
   "description": "https://github.com/webRunes/Pinger-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
-    "canvas": "^1.6.9",
+    "canvas-prebuilt": "1.6.5-prerelease.1",
     "cookie-parser": "^1.4.0",
     "ejs": "2.5.5",
     "es6-promise": "^2.1.1",

@@ -1,8 +1,10 @@
-window.splitTextByLines = (ctx, font, fontSize, text, maxWidth) => {
+const
+  fit = require('./fit');
+
+module.exports = (ctx, font, fontSize, text, maxWidth) => {
   var words = text.split(' ');
   var line = '';
   var notFit = fit(font, fontSize, maxWidth);
-  //var notFit = fit(ctx, maxWidth);
   var lines = [];
 
   while (words.length) {

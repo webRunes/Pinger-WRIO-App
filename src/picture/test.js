@@ -1,21 +1,6 @@
-var phantom = require('phantom');
+const drawComment = require('./index');
 
-try {
-  var
-    phInstance = await phantom.create([], {
-      phantomPath: "/usr/bin/phantomjs",
-      logLevel: "debug"
-    }),
-    page = await phInstance.createPage();
-
-  page.open('index.html', status => {
-    page.evaluateAsync(() => {
-      drawComment(
-        'This is my text with quite large word. Here it will be. ',
-        (err, filename) => console.log(err || filename)
-      )
-    })
-  })
-} catch (error) {
-  phInstance && phInstance.exit();
-}
+drawComment(
+  'This is my text with quite large word. Here it will be. 50 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW 123 WWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWWW more 3',
+  (err, filename) => console.log(err || filename)
+)
