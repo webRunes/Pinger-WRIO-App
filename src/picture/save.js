@@ -1,17 +1,16 @@
 const
-  temp = require('temp');
+  temp = require('temp'),
+  fs = require('fs');
 
 temp.track();
 
-module.exports = (canvas, cb) =>
-  canvas.toBuffer((err, buf) =>
+module.exports = (buf, cb) =>
+  temp.open({suffix: ".png"}, (err, file) =>
     err
       ? cb(err)
-      : //temp.open({suffix: ".png"}, (err, file) =>
+      : fs.writeFile(file.fd, buf, err =>
           err
             ? cb(err)
-            //: fs.writeFile(file.fd, buf, err =>
-            : fs.writeFile('a.png', buf, err =>
-                cb(err, 'file.path ---> a.png'))
-        //)
+            : cb(null, file.fd)
+        )
   )
