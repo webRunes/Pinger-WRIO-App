@@ -4,7 +4,7 @@
   "description": "https://github.com/webRunes/Pinger-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
-    "canvas-prebuilt": "1.6.5-prerelease.1",
+    "canvas": "1.6.5",
     "cookie-parser": "^1.4.0",
     "ejs": "2.5.5",
     "es6-promise": "^2.1.1",
@@ -18,7 +18,6 @@
     "p3p": "0.0.2",
     "phantom": "^4.0.8",
     "prettier": "^1.2.2",
-    "pureimage": "^0.1.4",
     "should": "^6.0.3",
     "temp": "^0.8.3",
     "wriocommon": "webRunes/WRIOOS-Common"

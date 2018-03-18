@@ -1,4 +1,4 @@
-FROM mhart/alpine-node:8.5.0
+FROM mhart/alpine-node:8
 MAINTAINER denso.ffff@gmail.com
 
 # Pinger
