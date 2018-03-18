@@ -1,5 +1,5 @@
 const should = require('should');
-const titterPicture = require('../src/titter-picture.js');
+const titterPicture = require('../src/titter-picture');
 
 describe('titter-picture test', () => {
     before(() => {
