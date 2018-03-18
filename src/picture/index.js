@@ -1,5 +1,5 @@
 const
-  Canvas = require('canvas-prebuilt'),
+  Canvas = require('canvas'),
   save = require('./save'),
   type = require('./type'),
   getFont = require('./get_font');
