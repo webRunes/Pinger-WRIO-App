@@ -11,6 +11,6 @@ module.exports = (buf, cb) =>
       : fs.writeFile(file.fd, buf, err =>
           err
             ? cb(err)
-            : cb(null, file.fd)
+            : cb(null, file.path)
         )
   );
