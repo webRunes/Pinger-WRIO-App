@@ -6,4 +6,4 @@ module.exports = (ctx, font, fontSize, x, lineHeight, fillStyle) => (y, line) =>
   path.draw(ctx);
 
   return y + lineHeight;
-}
+};
