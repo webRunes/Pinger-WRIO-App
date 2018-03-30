@@ -1,6 +1,6 @@
 {
   "name": "pinger-wrio-app",
-  "version": "1.0.1382",
+  "version": "1.0.1385",
   "description": "https://github.com/webRunes/Pinger-WRIO-App/",
   "dependencies": {
     "amqplib": "^0.5.1",
@@ -24,14 +24,15 @@
   },
   "devDependencies": {
     "babel-eslint": "^6.0.0",
-    "supertest": "^1.0.1",
+    "eslint": "2.2.0",
+    "gulp": "^3.9.0",
+    "gulp-eslint": "2.0.0",
+    "gulp-mocha": "^2.2.0",
+    "gulp-nodemon": "^2.0.4",
+    "husky": "^0.15.0-rc.13",
     "request": "2.74.0",
     "superagent": "1.6.0",
-    "gulp": "^3.9.0",
-    "gulp-nodemon": "^2.0.4",
-    "gulp-mocha": "^2.2.0",
-    "eslint": "2.2.0",
-    "gulp-eslint": "2.0.0"
+    "supertest": "^1.0.1"
   },
   "scripts": {
     "start": "echo Ok",
@@ -41,6 +42,11 @@
     "shell": "docker exec -it wriolocaldev_pinger_1 sh",
     "lint": "gulp lint",
     "test": "gulp lint"
+  },
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint"
+    }
   },
   "repository": {
     "type": "git",
