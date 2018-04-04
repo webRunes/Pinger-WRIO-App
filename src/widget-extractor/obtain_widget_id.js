@@ -1,5 +1,5 @@
-const helperAccount = require('../../dbmodels/helperAccount');
-const widgetID = require('../../dbmodels/widgetID');
+const helperAccount = require('../dbmodels/helperAccount');
+const widgetID = require('../dbmodels/widgetID');
 const {startPhantom} = require('./phantom');
 
 async function obtainWidgetID(userID, query) {
