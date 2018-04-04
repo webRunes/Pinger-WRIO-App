@@ -13,6 +13,7 @@ const { server, db, utils, login } = require('wriocommon');
 const logger = require('winston');
 const amqplib = require('amqplib');
 const DeferredTweet = require('./dbmodels/DeferredTweet.js');
+const updateCommentID = require('./update_comment_id');
 
 var DOMAIN = nconf.get("db:workdomain");
 var dumpError = utils.dumpError;
@@ -60,7 +61,7 @@ function getTwitterCredentials(request) {
 }
 
 function server_setup(db) {
-  const {startPhantom, getSharedWidgetID} = require('./widget-extractor/phantom.js');
+  const {startPhantom, obtainWidgetID} = require('./widget-extractor/phantom.js');
 
 
   handleDeferred();
@@ -117,12 +118,9 @@ function server_setup(db) {
     if (!query) {
       return response.status(403).send("Wrong parameters");
     }
-    // hack to prevent different links for http and https,
-    // always overwrite protocol to https://
-    query = query.replace('http://','https://');
     try {
       var user = request.user;
-      var code = await getSharedWidgetID(user.wrioID, query);
+      var code = await obtainWidgetID(user.wrioID, query);
       response.send(code);
     } catch (e) {
       dumpError(e);
@@ -206,9 +204,13 @@ function server_setup(db) {
     multer().array("images[]"),
     wrioAuth,
     wrap(async (request, response) => {
-      let text = request.body.text ;
-      let title = request.body.title || "";
-      let message = request.body.comment || "";
+      const text = request.body.text ;
+      const title = request.body.title || "";
+      const message = request.body.comment || "";
+      const first = Boolean(request.body.first);
+      const wrioID = request.user.wrioID;
+
+      first && updateCommentID(wrioID, message);
 
       console.log("Sending comment " + message);
       let creds = getTwitterCredentials(request);

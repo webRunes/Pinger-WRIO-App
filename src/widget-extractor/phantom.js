@@ -5,8 +5,6 @@ const phantom = require("phantom");
 const { utils } = require("wriocommon");
 var dumpError = utils.dumpError;
 const fs = require("fs");
-const helperAccount = require("../dbmodels/helperAccount.js");
-const widgetID = require("../dbmodels/widgetID.js");
 
 var sitepage = null;
 var phInstance = null;
@@ -170,36 +168,4 @@ async function startPhantom(login, pass, url) {
   }
 }
 
-async function obtainWidgetID(userID, query) {
-  var helper = new helperAccount();
-  var widget = new widgetID();
-
-  var workAccount = await helper.getLeastUsedAccount();
-  console.log("Obtaing user id with ", workAccount.id, " account");
-  var wID = await startPhantom(workAccount.id, workAccount.password, query);
-
-  await widget.create(wID, userID, query);
-  return wID;
-}
-
-async function getSharedWidgetID(userID, query) {
-  try {
-    console.log("Getting widget ID from shared pool");
-
-    var helper = new helperAccount();
-    var widget = new widgetID();
-
-    var existingID = await widget.get({ query: query });
-    if (existingID) {
-      console.log("Got shared");
-      return existingID.widgetId;
-    } else {
-      console.log("Getting new one");
-      return await obtainWidgetID(userID, query);
-    }
-  } catch (error) {
-    dumpError(error);
-  }
-}
-
-module.exports = { getSharedWidgetID, startPhantom };
+module.exports = { startPhantom };
