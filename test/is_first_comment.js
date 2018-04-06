@@ -1,12 +1,13 @@
 const
   assert = require('assert'),
   db = require('wriocommon').db,
-  nconf = require('../src/wrio_nconf'),
+  //nconf = require('../src/wrio_nconf'),
   isFirstComment = require('../src/utils/is_first_comment');
 
 describe('isFirstComment', () => {
     before(async () => {
-        await db.init(nconf);
+        //await db.init(nconf);
+        await db.init();
     });
 
     it('Existing article with not default widgetId should return false', done => {
