@@ -14,6 +14,7 @@ const logger = require('winston');
 const amqplib = require('amqplib');
 const DeferredTweet = require('./dbmodels/DeferredTweet.js');
 const updateCommentID = require('./update_comment_id');
+const isFirstComment = require('./utils/is_first_comment');
 
 var DOMAIN = nconf.get("db:workdomain");
 var dumpError = utils.dumpError;
@@ -206,13 +207,14 @@ function server_setup(db) {
     wrap(async (request, response) => {
       const text = request.body.text ;
       const title = request.body.title || "";
-      const message = request.body.comment || "";
-      const first = Boolean(request.body.first);
+      const articleUrl = request.body.comment || "";
       const wrioID = request.user.wrioID;
 
-      first && updateCommentID(wrioID, message);
+      isFirstComment(articleUrl).then(() =>
+        updateCommentID(wrioID, articleUrl)
+      );
 
-      console.log("Sending comment " + message);
+      console.log("Sending comment " + articleUrl);
       let creds = getTwitterCredentials(request);
 
       console.log("Sending tweet right away");
@@ -220,7 +222,7 @@ function server_setup(db) {
         0,
         text,
         title,
-        message,
+        articleUrl,
         await extractFiles(creds, request.files),
         creds
       );
