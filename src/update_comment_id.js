@@ -1,6 +1,6 @@
 const
   request = require('superagent'),
-  obtainWidgetID = require('./widget-extractor/obtain_widget_id'),
+  obtainWidgetID = require('./widget-extractor/obtain_widget_id').obtainWidgetID,
   domain = () => process.env.DOMAIN,
   protocol = () => (process.env.NODE_ENV == 'development' ? 'https:' : ''),
   nconf = require('./wrio_nconf');
