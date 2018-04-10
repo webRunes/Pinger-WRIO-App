@@ -4,8 +4,8 @@ const
 
 function type(text, w, h, ctx, canvas, font, cb) {
   const
-    fontSize = 86,
-    lineHeight = Math.round((27 / 650) * h);
+    fontSize = 34,
+    lineHeight = Math.round((14 / 650) * h);
 
   ctx.filter = 'best';
   ctx.mozImageSmoothingEnabled = false;
@@ -13,7 +13,7 @@ function type(text, w, h, ctx, canvas, font, cb) {
   ctx.msImageSmoothingEnabled = false;
   ctx.imageSmoothingEnabled = false;
 
-  var x = Math.round((10 / 500) * w);
+  var x = Math.round((9 / 500) * w);
   var y = Math.round((20 / 650) * h);
   var currentY = y;
   var maxWidth = w - 2 * x;
@@ -23,7 +23,7 @@ function type(text, w, h, ctx, canvas, font, cb) {
 
   var totalCountLines = [linesComment, linesOffsetEmpty, linesFooter].reduce((count, lines) => count + lines.length, 0);
 
-  canvas.height = lineHeight * totalCountLines + Math.round((5 / 650) * h);
+  canvas.height = lineHeight * totalCountLines + Math.round((20 / 650) * h);
 
   ctx.fillStyle = '#ffffff';
   ctx.fillRect(0, 0, canvas.width, canvas.height);
