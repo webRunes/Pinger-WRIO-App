@@ -4,8 +4,8 @@ const
 
 function type(text, w, h, ctx, canvas, font, cb) {
   const
-    fontSize = 34,
-    lineHeight = Math.round((14 / 650) * h);
+    fontSize = 64,
+    lineHeight = Math.round((22 / 650) * h);
 
   ctx.filter = 'best';
   ctx.mozImageSmoothingEnabled = false;
